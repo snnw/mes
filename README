@@ -48,17 +48,13 @@ General Public Licence version 3 or later.  See the file [[file:COPYING][COPYING
 * REPL it
 
    #+BEGIN_SRC bash
-   src/mes.gcc-out            # default (64 bit) gcc-compiled
-   src/mes.mes-gcc-out        # 32 bit, gcc -nostdlib, Mes C Lib
-   src/mes.mes-out            # 32 bit, bootstrapped, mes.M1+MesCC-compiled
-   src/mes.x86_64-mes-gcc-out # 64 bit, gcc -nostdlib, Mes C Lib
-   src/mes.x86_64-mes-out     # 64 bit, bootstrapped, mes.M1+MesCC-compiled
+   ./pre-inst-env mes
    #+END_SRC
 
 * MesCC compiler
 
    #+BEGIN_SRC bash
-   ./pre-inst env mescc -c scaffold/main.c
+   ./pre-inst-env mescc -c scaffold/main.c
    #+END_SRC
 
 * Bugs
@@ -79,7 +75,7 @@ General Public Licence version 3 or later.  See the file [[file:COPYING][COPYING
   [10] https://github.com/oriansj/stage0
 
 * Legalese
-Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <[[mailto:janneke@gnu.org][janneke@gnu.org]]>
+Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <[[mailto:janneke@gnu.org][janneke@gnu.org]]>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
