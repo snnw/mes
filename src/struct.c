@@ -29,9 +29,25 @@ make_struct (SCM type, SCM fields, SCM printer)
   long size = 2 + length__ (fields);
   SCM v = alloc (size);
   SCM x = make_cell__ (TSTRUCT, size, v);
+#if __M2_PLANET__
+  SCM vt = vector_entry (type);
+  TYPE (v) = TYPE (vt);
+  CAR (v) = CAR (vt);
+  CDR (v) = CDR (vt);
+  SCM vp = vector_entry (printer);
+  TYPE (v+1) = TYPE (vp);
+  CAR (v+1) = CAR (vp);
+  CDR (v+1) = CDR (vp);
+#else
   g_cells[v] = g_cells[vector_entry (type)];
   g_cells[v+1] = g_cells[vector_entry (printer)];
+#endif
+#if __M2_PLANET__
+  long i;
+  for (i=2; i<size; i=i+1)
+#else
   for (long i=2; i<size; i++)
+#endif
     {
       SCM e = cell_unspecified;
       if (fields != cell_nil)
@@ -39,7 +55,15 @@ make_struct (SCM type, SCM fields, SCM printer)
           e = CAR (fields);
           fields = CDR (fields);
         }
+#if __M2_PLANET__
+      //SCM ve = g_cells[vector_entry (e)];
+      SCM ve = vector_entry (e);
+      TYPE (v+i) = TYPE (ve);
+      CAR (v+i) = CAR (ve);
+      CDR (v+i) = CDR (ve);
+#else
       g_cells[v+i] = g_cells[vector_entry (e)];
+#endif
     }
   return x;
 }

@@ -26,7 +26,13 @@
 #include <string.h>
 #include <libmes.h>
 
-//#define MES_MINI 1
+#if __M2_PLANET__
+int open (char const*,int,int);
+int assert_fu;
+#undef assert
+#define assert(x) assert_fu
+#endif
+
 #if WITH_GLIBC
 long ARENA_SIZE = 100000000; // 2.3GiB
 #else
@@ -387,6 +393,47 @@ struct scm *g_news = 0;
 
 #include "builtins.h"
 
+#if __M2_PLANET__
+
+#define struct_size 12
+#define CELL(x) ((x*struct_size)+g_cells)
+#define TYPE(x) ((x*struct_size)+g_cells)->type
+#define CAR(x) ((x*struct_size)+g_cells)->car
+#define CDR(x) ((x*struct_size)+g_cells)->cdr
+
+#define NTYPE(x) ((x*struct_size)+g_news)->type
+#define NCAR(x) ((x*struct_size)+g_news)->car
+#define NCDR(x) ((x*struct_size)+g_news)->cdr
+
+
+#define BYTES(x) ((x*struct_size)+g_cells)->car
+#define LENGTH(x) ((x*struct_size)+g_cells)->car
+#define MACRO(x) ((x*struct_size)+g_cells)->car
+#define PORT(x) ((x*struct_size)+g_cells)->car
+#define REF(x) ((x*struct_size)+g_cells)->car
+#define VARIABLE(x) ((x*struct_size)+g_cells)->car
+
+#define CLOSURE(x) ((x*struct_size)+g_cells)->cdr
+#define CONTINUATION(x) ((x*struct_size)+g_cells)->cdr
+
+#define CBYTES(x) (((x*struct_size)+g_cells) + 8)
+
+#define NAME(x) ((x*struct_size)+g_cells)->cdr
+#define STRING(x) ((x*struct_size)+g_cells)->cdr
+#define STRUCT(x) ((x*struct_size)+g_cells)->cdr
+#define VALUE(x) ((x*struct_size)+g_cells)->cdr
+#define VECTOR(x) ((x*struct_size)+g_cells)->cdr
+
+#define NLENGTH(x) ((x*struct_size)+g_news)->car
+
+#define NCBYTES(x) (((x*struct_size)+g_news) + 8)
+#define NVALUE(x) ((x*struct_size)+g_news)->cdr
+#define NSTRING(x) ((x*struct_size)+g_news)->cdr
+#define NVECTOR(x) ((x*struct_size)+g_news)->cdr
+
+
+#else // !__M2_PLANET__
+
 #define TYPE(x) g_cells[x].type
 #define CAR(x) g_cells[x].car
 #define CDR(x) g_cells[x].cdr
@@ -397,27 +444,25 @@ struct scm *g_news = 0;
 
 #define BYTES(x) g_cells[x].car
 #define LENGTH(x) g_cells[x].car
+#define MACRO(x) g_cells[x].car
+#define PORT(x) g_cells[x].car
 #define REF(x) g_cells[x].car
-#define START(x) (g_cells[x].car >> 16)
-#define LEN(x) (g_cells[x].car & 0xffff)
 #define VARIABLE(x) g_cells[x].car
 
 #define CLOSURE(x) g_cells[x].cdr
 #define CONTINUATION(x) g_cells[x].cdr
 
 #define CBYTES(x) (char*)&g_cells[x].cdr
-#define CSTRING_STRUCT(x) (char*)&g_cells[x.cdr].cdr
 
-#define MACRO(x) g_cells[x].car
 #define NAME(x) g_cells[x].cdr
-#define PORT(x) g_cells[x].car
 #define STRING(x) g_cells[x].cdr
 #define STRUCT(x) g_cells[x].cdr
 #define VALUE(x) g_cells[x].cdr
 #define VECTOR(x) g_cells[x].cdr
 
 #define NLENGTH(x) g_news[x].car
-#define NCBYTES(x) (char*)&g_news[x].cdr
+
+#define NCBYTES(x) &g_news[x].cdr
 #define NVALUE(x) g_news[x].cdr
 #define NSTRING(x) g_news[x].cdr
 #define NVECTOR(x) g_news[x].cdr
@@ -455,7 +500,7 @@ SCM
 alloc (long n)
 {
   SCM x = g_free;
-  g_free += n;
+  g_free = g_free + n;
   if (g_free > ARENA_SIZE)
     assert (!"alloc: out of memory");
   return x;
@@ -477,7 +522,21 @@ make_cell_ (SCM type, SCM car, SCM cdr)
   assert (TYPE (type) == TNUMBER);
   long t = VALUE (type);
   if (t == TCHAR || t == TNUMBER)
+#if __M2_PLANET__
+    {
+      if (car != 0)
+        car = CAR (car);
+      else
+        car = 0;
+      if (cdr != 0)
+        cdr = CDR (cdr);
+      else
+        cdr = 0;
+      return make_cell__ (t, car, cdr);
+    }
+#else
     return make_cell__ (t, car ? CAR (car) : 0, cdr ? CDR (cdr) : 0);
+#endif
   return make_cell__ (t, car, cdr);
 }
 
@@ -487,7 +546,9 @@ assoc_string (SCM x, SCM a) ///((internal))
   while (a != cell_nil && (TYPE (CAAR (a)) != TSTRING
                            || string_equal_p (x, CAAR (a)) == cell_f))
     a = CDR (a);
-  return a != cell_nil ? CAR (a) : cell_f;
+  if (a != cell_nil)
+    return CAR (a);
+  return cell_f;
 }
 
 SCM
@@ -523,25 +584,29 @@ type_ (SCM x)
 SCM
 car_ (SCM x)
 {
-  return (TYPE (x) != TCONTINUATION
+  if (TYPE (x) != TCONTINUATION
           && (TYPE (CAR (x)) == TPAIR // FIXME: this is weird
               || TYPE (CAR (x)) == TREF
               || TYPE (CAR (x)) == TSPECIAL
               || TYPE (CAR (x)) == TSYMBOL
-              || TYPE (CAR (x)) == TSTRING)) ? CAR (x) : MAKE_NUMBER (CAR (x));
+              || TYPE (CAR (x)) == TSTRING))
+    return CAR (x);
+  return MAKE_NUMBER (CAR (x));
 }
 
 SCM
 cdr_ (SCM x)
 {
-  return (TYPE (x) != TCHAR
+  if (TYPE (x) != TCHAR
           && TYPE (x) != TNUMBER
           && TYPE (x) != TPORT
           && (TYPE (CDR (x)) == TPAIR
               || TYPE (CDR (x)) == TREF
               || TYPE (CDR (x)) == TSPECIAL
               || TYPE (CDR (x)) == TSYMBOL
-              || TYPE (CDR (x)) == TSTRING)) ? CDR (x) : MAKE_NUMBER (CDR (x));
+              || TYPE (CDR (x)) == TSTRING))
+    return CDR (x);
+  return MAKE_NUMBER (CDR (x));
 }
 
 SCM
@@ -579,20 +644,23 @@ list (SCM x) ///((arity . n))
 SCM
 null_p (SCM x)
 {
-  return x == cell_nil ? cell_t : cell_f;
+  if (x == cell_nil)
+    return cell_t;
+  return cell_f;
 }
 
 SCM
 eq_p (SCM x, SCM y)
 {
-  return (x == y
+  if (x == y
           || ((TYPE (x) == TKEYWORD && TYPE (y) == TKEYWORD
                && string_equal_p (x, y) == cell_t))
           || (TYPE (x) == TCHAR && TYPE (y) == TCHAR
               && VALUE (x) == VALUE (y))
           || (TYPE (x) == TNUMBER && TYPE (y) == TNUMBER
               && VALUE (x) == VALUE (y)))
-    ? cell_t : cell_f;
+    return cell_t;
+  return cell_f;
 }
 
 SCM
@@ -615,7 +683,7 @@ length__ (SCM x) ///((internal))
   long n = 0;
   while (x != cell_nil)
     {
-      n++;
+      n = n + 1;
       if (TYPE (x) != TPAIR)
         return -1;
       x = CDR (x);
@@ -661,7 +729,11 @@ SCM make_string (char const* s, size_t length);
 SCM
 check_formals (SCM f, SCM formals, SCM args) ///((internal))
 {
-  long flen = (TYPE (formals) == TNUMBER) ? VALUE (formals) : length__ (formals);
+  long flen;
+  if (TYPE (formals) == TNUMBER)
+    flen = VALUE (formals);
+  else
+    flen = length__ (formals);
   long alen = length__ (args);
   if (alen != flen && alen != -1 && flen != -1)
     {
@@ -702,7 +774,11 @@ check_apply (SCM f, SCM e) ///((internal))
   if (TYPE (f) == TBROKEN_HEART)
     type = "<3";
 
+#if __M2_PLANET__
+  if (type != 0)
+#else
   if (type)
+#endif
     {
       char *s = "cannot apply: ";
       eputs (s);
@@ -721,11 +797,12 @@ gc_push_frame () ///((internal))
 {
   if (g_stack < 5)
     assert (!"STACK FULL");
-  g_stack_array[--g_stack] = cell_f;
-  g_stack_array[--g_stack] = r0;
-  g_stack_array[--g_stack] = r1;
-  g_stack_array[--g_stack] = r2;
-  g_stack_array[--g_stack] = r3;
+  g_stack_array[g_stack-1] = cell_f;
+  g_stack_array[g_stack-2] = r0;
+  g_stack_array[g_stack-3] = r1;
+  g_stack_array[g_stack-4] = r2;
+  g_stack_array[g_stack-5] = r3;
+  g_stack = g_stack -5;
   return g_stack;
 }
 
@@ -743,7 +820,7 @@ SCM
 gc_pop_frame () ///((internal))
 {
   SCM x = gc_peek_frame ();
-  g_stack += 5;
+  g_stack = g_stack + 5;
   return x;
 }
 
@@ -831,7 +908,9 @@ assq (SCM x, SCM a)
     /* pointer equality, e.g. on strings. */
     while (a != cell_nil && x != CAAR (a))
       a = CDR (a);
-  return a != cell_nil ? CAR (a) : cell_f;
+  if (a != cell_nil)
+    return CAR (a);
+  return cell_f;
 }
 
 SCM
@@ -841,7 +920,9 @@ assoc (SCM x, SCM a)
     return assoc_string (x, a);
   while (a != cell_nil && equal2_p (x, CAAR (a)) == cell_f)
     a = CDR (a);
-  return a != cell_nil ? CAR (a) : cell_f;
+  if (a != cell_nil)
+    return CAR (a);
+  return cell_f;
 }
 
 SCM
@@ -1131,9 +1212,13 @@ eval_apply ()
   else if (t == TCONTINUATION)
     {
       v = CONTINUATION (CAR (r1));
+#if __M2_PLANET__
+      if (LENGTH (v) != 0)
+#else
       if (LENGTH (v))
+#endif
         {
-          for (t=0; t < LENGTH (v); t++)
+          for (t=0; t < LENGTH (v); t=t+1)
             g_stack_array[STACK_SIZE-LENGTH (v)+t] = vector_ref_ (v, t);
           g_stack = STACK_SIZE-LENGTH (v);
         }
@@ -1278,12 +1363,20 @@ eval_apply ()
             {
               global_p = CAAR (r0) != cell_closure;
               macro_p = CAR (r1) == cell_symbol_define_macro;
+#if __M2_PLANET__
+              if (global_p != 0)
+#else
               if (global_p)
+#endif
                 {
                   name = CADR (r1);
                   if (TYPE (CADR (r1)) == TPAIR)
                     name = CAR (name);
+#if __M2_PLANET__
+                  if (macro_p != 0)
+#else
                   if (macro_p)
+#endif
                     {
                       entry = assq (name, g_macros);
                       if (entry == cell_f)
@@ -1314,17 +1407,25 @@ eval_apply ()
                   push_cc (r1, r2, p, cell_vm_eval_define);
                   goto eval;
                 }
-            eval_define:;
+            eval_define:
               name = CADR (r2);
               if (TYPE (CADR (r2)) == TPAIR)
                 name = CAR (name);
+#if __M2_PLANET__
+              if (macro_p != 0)
+#else
               if (macro_p)
+#endif
                 {
                   entry = macro_get_handle (name);
                   r1 = MAKE_MACRO (name, r1);
                   set_cdr_x (entry, r1);
                 }
+#if __M2_PLANET__
+              else if (global_p != 0)
+#else
               else if (global_p)
+#endif
                 {
                   entry = module_variable (r0, name);
                   set_cdr_x (entry, r1);
@@ -1519,6 +1620,9 @@ eval_apply ()
               goto eval; // FIXME: expand too?!
             begin_expand_primitive_load:
               if (TYPE (r1) == TNUMBER && VALUE (r1) == 0)
+#if __M2_PLANET__
+                x = x
+#endif
                 ;
               else if (TYPE (r1) == TSTRING)
                 input = set_current_input_port (open_input_file (r1));
@@ -1583,9 +1687,10 @@ eval_apply ()
 
  call_with_current_continuation:
   gc_push_frame ();
-  x = MAKE_CONTINUATION (g_continuations++);
+  x = MAKE_CONTINUATION (g_continuations);
+  g_continuations = g_continuations + 1;
   v = make_vector__ (STACK_SIZE-g_stack);
-  for (t=g_stack; t < STACK_SIZE; t++)
+  for (t=g_stack; t < STACK_SIZE; t=t+1)
     vector_set_x_ (v, t-g_stack, g_stack_array[t]);
   CONTINUATION (x) = v;
   gc_pop_frame ();
@@ -1593,7 +1698,7 @@ eval_apply ()
   goto apply;
  call_with_current_continuation2:
   v = make_vector__ (STACK_SIZE-g_stack);
-  for (t=g_stack; t < STACK_SIZE; t++)
+  for (t=g_stack; t < STACK_SIZE; t=t+1)
     vector_set_x_ (v, t-g_stack, g_stack_array[t]);
   CONTINUATION (r2) = v;
   goto vm_return;
@@ -1642,13 +1747,18 @@ gc_init_cells () ///((internal))
 {
   long arena_bytes = (ARENA_SIZE+JAM_SIZE)*sizeof (struct scm);
   void *p = malloc (arena_bytes+STACK_SIZE*sizeof (SCM));
+#if __M2_PLANET__
+  g_cells = p;
+  g_stack_array = p + arena_bytes;
+#else
   g_cells = (struct scm *)p;
   g_stack_array = (SCM*)(p + arena_bytes);
+#endif
 
   TYPE (0) = TVECTOR;
   LENGTH (0) = 1000;
   VECTOR (0) = 0;
-  g_cells++;
+  g_cells = g_cells + 1;
   TYPE (0) = TCHAR;
   VALUE (0) = 'c';
 
@@ -1677,6 +1787,11 @@ mes_symbols () ///((internal))
   g_free = cell_symbol_test + 1;
   g_symbol_max = g_free;
   g_symbols = make_hash_table_ (500);
+
+  int size = VALUE (struct_ref_ (g_symbols, 3));
+  // Weird: m2-planet exits 67 here...[printing size = 100]
+  // if (size == 0) exit (66);
+  // if (!size) exit (67);
 
   init_symbol (cell_nil, TSPECIAL, "()");
   init_symbol (cell_f, TSPECIAL, "#f");
@@ -1862,18 +1977,25 @@ mes_environment (int argc, char *argv[])
 #endif
   a = acons (cell_symbol_arch, MAKE_STRING0 (arch), a);
 
-#if !MES_MINI
   SCM lst = cell_nil;
+#if __M2_PLANET__
+  int i;
+  for (i=argc-1; i>=0; i=i-1)
+#else
   for (int i=argc-1; i>=0; i--)
+#endif
     lst = cons (MAKE_STRING0 (argv[i]), lst);
   a = acons (cell_symbol_argv, lst, a);
-#endif
 
   return mes_g_stack (a);
 }
 
 SCM
+#if __M2_PLANET__
+init_builtin (SCM builtin_type, char const* name, int arity, long function, SCM a)
+#else
 init_builtin (SCM builtin_type, char const* name, int arity, SCM (*function) (SCM), SCM a)
+#endif
 {
   SCM s = cstring_to_symbol (name);
   return acons (s, make_builtin (builtin_type, symbol_to_string (s), MAKE_NUMBER (arity), MAKE_NUMBER (function)), a);
@@ -1915,7 +2037,7 @@ builtin_arity (SCM builtin)
   return struct_ref_ (builtin, 4);
 }
 
-#if __MESC__
+#if __MESC__ || __M2_PLANET__
 long
 builtin_function (SCM builtin)
 {
@@ -1932,8 +2054,9 @@ SCM
 SCM
 builtin_p (SCM x)
 {
-  return (TYPE (x) == TSTRUCT && struct_ref_ (x, 2) == cell_symbol_builtin)
-    ? cell_t : cell_f;
+  if (TYPE (x) == TSTRUCT && struct_ref_ (x, 2) == cell_symbol_builtin)
+    return cell_t;
+  return cell_f;
 }
 
 SCM
@@ -1948,9 +2071,18 @@ builtin_printer (SCM builtin)
   else
     {
       fdputc ('(', __stdout);
+#if __M2_PLANET__
+      int i;
+      for (i = 0; i < arity; i=i+1)
+#else
       for (int i = 0; i < arity; i++)
+#endif
         {
+#if __M2_PLANET__
+          if (i != 0)
+#else
           if (i)
+#endif
             fdputc (' ', __stdout);
           fdputc ('_', __stdout);
         }
@@ -1970,7 +2102,7 @@ apply_builtin (SCM fn, SCM x) ///((internal))
     x = cons (CAR (x), cons (CDADAR (x), CDR (x)));
 
 #if __M2_PLANET__
-  FUNCTION fp = builtin_function (fn)
+  FUNCTION fp = builtin_function (fn);
   if (arity == 0)
     return fp ();
   else if (arity == 1)
@@ -2194,7 +2326,11 @@ open_boot (char *prefix, char const *boot, char const *location)
       eputs ("\n");
     }
   int fd = open (prefix, O_RDONLY);
+#if __M2_PLANET__
+  if (g_debug != 0 && fd > 0)
+#else
   if (g_debug && fd > 0)
+#endif
     {
       eputs ("mes: read boot-0: ");
       eputs (prefix);
@@ -2206,13 +2342,47 @@ open_boot (char *prefix, char const *boot, char const *location)
 SCM
 read_boot () ///((internal))
 {
+  eputs ("read_boot\n");
   __stdin = -1;
+#if __M2_PLANET__
+  char *prefix = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+  char *boot = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+#else
   char prefix[1024];
   char boot[1024];
+#endif
+#if __M2_PLANET__
+  if (getenv ("MES_BOOT") != 0)
+    {
+      eputs ("read_boot 04\n");
+      strcpy (&boot, getenv ("MES_BOOT"));
+      eputs ("read_boot 05\n");
+    }
+  else
+    {
+      eputs ("read_boot 06\n");
+      strcpy (&boot, "boot-0.scm");
+      eputs ("read_boot 07\n");
+    }
+  eputs ("read_boot 10\n");
+  eputs ("boot:"); eputs (&boot); eputs ("\n");
+  //eputs ("prefix:"); eputs (getenv ("MES_PREFIX")); eputs ("\n");
+#else
   if (getenv ("MES_BOOT"))
     strcpy (boot, getenv ("MES_BOOT"));
   else
     strcpy (boot, "boot-0.scm");
+#endif
+#if __M2_PLANET__
+  if (getenv ("MES_PREFIX") != 0)
+    {
+      eputs ("HIERO!!!!!!!!!!!!!!!\n");
+      strcpy (&prefix, getenv ("MES_PREFIX"));
+      strcpy (&prefix + strlen (&prefix), "/module");
+      strcpy (&prefix + strlen (&prefix), "/mes/");
+      g_stdin = open_boot (&prefix, &boot, "MES_PREFIX");
+    }
+#else
   if (getenv ("MES_PREFIX"))
     {
       strcpy (prefix, getenv ("MES_PREFIX"));
@@ -2220,6 +2390,8 @@ read_boot () ///((internal))
       strcpy (prefix + strlen (prefix), "/mes/");
       __stdin = open_boot (prefix, boot, "MES_PREFIX");
     }
+#endif
+  // TODO: M2-Planet'ify
   if (__stdin < 0)
     {
       char const *p = MODULEDIR "/mes/";
@@ -2313,12 +2485,20 @@ main (int argc, char *argv[])
     }
   r3 = cell_vm_begin_expand;
   r1 = eval_apply ();
+#if __M2_PLANET__
+  if (g_debug != 0)
+#else
   if (g_debug)
+#endif
     {
       write_error_ (r1);
       eputs ("\n");
     }
+#if __M2_PLANET__
+  if (g_debug != 0)
+#else
   if (g_debug)
+#endif
     {
       if (g_debug > 3)
         module_printer (m0);

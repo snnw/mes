@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,44 +18,29 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libmes.h>
-#include <string.h>
+char *p = "01234567890";
+struct scm
+{
+  int type;
+  int car;
+  int cdr;
+};
+struct scm *g_cells;
+
+#define struct_size 12
+#define TYPE(x) ((x*struct_size)+g_cells)->type
 
 int
-strcmp (char const* a, char const* b)
+main (int argc, char **argv)
 {
-  while (a[0] && b[0] && a[0] == b[0])
-    {
-      a = a + 1;
-      b = b + 1;
-    }
-  return a[0] - b[0];
-}
+  g_cells = &p;
+  TYPE (0) = 1;      // This works, but expands to unreadable .M2 code
 
-int
-main (int argc, char *argv[])
-{
-  eputs ("Hi Mes!\n");
 #if __M2_PLANET__
-  eputs ("m2-planet\n");
-#elif __MESC_MES__
-  eputs ("mes.mes\n");
-#elif __MESC_GCC__
-  eputs ("mes.mlibc\n");
+  g_cells[0]->type = 0;
 #else
-  eputs ("mes.gcc\n");
+  g_cells[0].type = 0;
 #endif
-  if (argc == 0)
-    eputs ("argc = 0\n");
-  else if (argc == 1)
-    eputs ("argc == 1\n");
-  else
-    eputs ("argc > 1\n");
-  // FIXME: m2-planet's output segfaults here
-  if (argc > 1 && !strcmp (argv[1], "--help"))
-    {
-      eputs ("argc > 1 && --help\n");
-      return argc;
-    }
-  return 42;
+
+  return 0;
 }

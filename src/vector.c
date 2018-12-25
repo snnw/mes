@@ -23,7 +23,12 @@ make_vector__ (long k)
 {
   SCM v = alloc (k);
   SCM x = make_cell__ (TVECTOR, k, v);
+#if __M2_PLANET__
+  long i;
+  for (i=0; i<k; i=i+1)
+#else
   for (long i=0; i<k; i++)
+#endif
     g_cells[v+i] = g_cells[vector_entry (cell_unspecified)];
   return x;
 }
@@ -93,7 +98,8 @@ list_to_vector (SCM x)
   SCM p = VECTOR (v);
   while (x != cell_nil)
     {
-      g_cells[p++] = g_cells[vector_entry (car (x))];
+      g_cells[p] = g_cells[vector_entry (car (x))];
+      p = p + 1;
       x = cdr (x);
     }
   return v;
@@ -103,7 +109,12 @@ SCM
 vector_to_list (SCM v)
 {
   SCM x = cell_nil;
+#if __M2_PLANET__
+  long i;
+  for (i = LENGTH (v); i; i=i-1)
+#else
   for (long i = LENGTH (v); i; i--)
+#endif
     {
       SCM e = VECTOR (v)+i-1;
       if (TYPE (e) == TREF)

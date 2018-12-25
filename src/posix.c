@@ -42,7 +42,11 @@ peekchar ()
   SCM port = current_input_port ();
   SCM string = STRING (port);
   size_t length = LENGTH (string);
+#if __M2_PLANET__
+   if (length == 0)
+#else
   if (!length)
+#endif
     return -1;
   char const *p = CSTRING (string);
   return p[0];
@@ -56,10 +60,19 @@ readchar ()
   SCM port = current_input_port ();
   SCM string = STRING (port);
   size_t length = LENGTH (string);
+#if __M2_PLANET__
+   if (length == 0)
+#else
   if (!length)
+#endif
     return -1;
   char const *p = CSTRING (string);
+#if __M2_PLANET__
+  int c = p[0];
+  p = p + 1;
+#else
   int c = *p++;
+#endif
   STRING (port) = make_string (p, length-1);
   return c;
 }
@@ -73,7 +86,7 @@ unreadchar (int c)
   SCM string = STRING (port);
   size_t length = LENGTH (string);
   char *p = CSTRING (string);
-  p--;
+  p = p - 1;
   string = make_string (p, length+1);
   p = CSTRING (string);
   p[0] = c;
@@ -154,13 +167,23 @@ getenv_ (SCM s) ///((name . "getenv"))
 {
   char *p;
   p = getenv (CSTRING (s));
-  return p ? MAKE_STRING0 (p) : cell_f;
+#if __M2_PLANET__
+  if (p != 0)
+#else
+  if (p)
+#endif
+    return MAKE_STRING0 (p);
+  return cell_f;
 }
 
 SCM
 setenv_ (SCM s, SCM v) ///((name . "setenv"))
 {
+#if __M2_PLANET__
+  char buf = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+#else
   char buf[1024];
+#endif
   strcpy (buf, CSTRING (s));
   setenv (buf, CSTRING (v), 1);
   return cell_unspecified;
@@ -169,7 +192,9 @@ setenv_ (SCM s, SCM v) ///((name . "setenv"))
 SCM
 access_p (SCM file_name, SCM mode)
 {
-  return access (CSTRING (file_name), VALUE (mode)) == 0 ? cell_t : cell_f;
+  if (access (CSTRING (file_name), VALUE (mode)) == 0)
+    return cell_t;
+  return cell_f;
 }
 
 SCM
@@ -202,7 +227,17 @@ set_current_input_port (SCM port)
 {
   SCM prev = current_input_port ();
   if (TYPE (port) == TNUMBER)
-    __stdin = VALUE (port) ? VALUE (port) : STDIN;
+    {
+      int p = VALUE (port);
+#if __M2_PLANET__
+      if (p != 0)
+#else
+      if (p)
+#endif
+        __stdin = p;
+      else
+        __stdin = STDIN;
+    }
   else if (TYPE (port) == TPORT)
     __stdin = PORT (port);
   return prev;
@@ -234,14 +269,28 @@ open_output_file (SCM x) ///((arity . n))
 SCM
 set_current_output_port (SCM port)
 {
-  __stdout = VALUE (port) ? VALUE (port) : STDOUT;
+#if __M2_PLANET__
+  if (VALUE (port) != 0)
+#else
+  if (VALUE (port))
+#endif
+    __stdout = VALUE (port);
+  else
+    __stdout = STDOUT;
   return current_output_port ();
 }
 
 SCM
 set_current_error_port (SCM port)
 {
-  __stderr = VALUE (port) ? VALUE (port) : STDERR;
+#if __M2_PLANET__
+  if (VALUE (port) != 0)
+#else
+  if (VALUE (port))
+#endif
+    __stderr = VALUE (port);
+  else
+    __stderr = STDERR;
   return current_error_port ();
 }
 
@@ -261,7 +310,13 @@ chmod_ (SCM file_name, SCM mode) ///((name . "chmod"))
 SCM
 isatty_p (SCM port)
 {
-  return isatty (VALUE (port)) ? cell_t : cell_f;
+#if __M2_PLANET__
+  if (isatty (VALUE (port)) != 0)
+#else
+  if (isatty (VALUE (port)))
+#endif
+    return cell_t;
+  return cell_f;
 }
 
 SCM
@@ -273,7 +328,12 @@ primitive_fork ()
 SCM
 execl_ (SCM file_name, SCM args) ///((name . "execl"))
 {
+#if __M2_PLANET__
+  char *helper = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+  char **c_argv = helper[0];    // FIXME: how to?  will this work?
+#else
   char *c_argv[1000];           // POSIX minimum 4096
+#endif
   int i = 0;
 
   if (length__ (args) > 1000)
@@ -281,11 +341,13 @@ execl_ (SCM file_name, SCM args) ///((name . "execl"))
            cons (file_name,
                  cons (MAKE_STRING0 ("too many arguments"),
                        cons (file_name, args))));
-  c_argv[i++] = CSTRING (file_name);
+  c_argv[i] = CSTRING (file_name);
+  i = i + 1;
   while (args != cell_nil)
     {
       assert (TYPE (CAR (args)) == TSTRING);
-      c_argv[i++] = CSTRING (CAR (args));
+      c_argv[i] = CSTRING (CAR (args));
+      i = i + 1;
       args = CDR (args);
       if (g_debug > 2)
         {
@@ -354,7 +416,11 @@ get_internal_run_time ()
 SCM
 getcwd_ () ///((name . "getcwd"))
 {
+#if __M2_PLANET__
+  char buf = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+#else
   char buf[PATH_MAX];
+#endif
   return MAKE_STRING0 (getcwd (buf, PATH_MAX));
 }
 

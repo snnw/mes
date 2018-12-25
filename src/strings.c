@@ -42,11 +42,16 @@ list_to_cstring (SCM list, size_t* size)
     {
       if (i > MAX_STRING)
         assert_max_string (i, "list_to_string", g_buf);
-      g_buf[i++] = VALUE (car (list));
+      g_buf[i] = VALUE (car (list));
+      i = i + 1;
       list = cdr (list);
     }
   g_buf[i] = 0;
+#if __M2_PLANET__
+  size[0] = i;                  // FIXME: will this work?
+#else
   *size = i;
+#endif
   return g_buf;
 }
 
@@ -56,6 +61,25 @@ bytes_cells (size_t length)
   return (1 + sizeof (long) + sizeof (long) + length + sizeof (SCM)) / sizeof (SCM);
 }
 
+#if __M2_PLANET__
+// Hmm...does m2-planet use a different calling convention?
+#define memcpy xmemcpy
+void *
+memcpy (void *dest, void const *src, size_t n)
+{
+  char* p = dest;
+  char const* q = src;
+  while (n != 0)
+    {
+      n = n - 1;
+      p[0] = q[0];
+      p = p + 1;
+      q = q + 1;
+    }
+  return dest;
+}
+#endif
+
 SCM
 make_bytes (char const* s, size_t length)
 {
@@ -63,11 +87,25 @@ make_bytes (char const* s, size_t length)
   SCM x = alloc (size);
   TYPE (x) = TBYTES;
   LENGTH (x) = length;
-  char *p = (char*)&g_cells[x].cdr;
+#if __M2_PLANET__
+  // char *p = (char*)&g_cells[x].cdr;
+  char *p;
+  p = (char*)&g_cells[x].cdr + 8;
+  if (length == 0)
+    {
+      p[0] = 0;
+    }
+  else
+    {
+      memcpy (p, s, length + 1);
+    }
+#else
+  char *p = &CDR (x);
   if (!length)
     *(char*)p = 0;
   else
     memcpy (p, s, length + 1);
+#endif
   return x;
 }
 
@@ -95,12 +133,21 @@ string_equal_p (SCM a, SCM b) ///((name . "string=?"))
       assert ((TYPE (a) == TSTRING && TYPE (b) == TSTRING)
               || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD));
     }
+#if __M2_PLANET__
+  if (a == b
+      || STRING (a) == STRING (b)
+      || (LENGTH (a) == 0 && LENGTH (b) == 0)
+      || (LENGTH (a) == LENGTH (b)
+          && !memcmp (CSTRING (a), CSTRING (b), LENGTH (a))))
+    return cell_t;
+#else
   if (a == b
       || STRING (a) == STRING (b)
       || (!LENGTH (a) && !LENGTH (b))
       || (LENGTH (a) == LENGTH (b)
           && !memcmp (CSTRING (a), CSTRING (b), LENGTH (a))))
     return cell_t;
+#endif
   return cell_f;
 }
 
@@ -143,8 +190,13 @@ SCM
 bytes_to_list (char const* s, size_t i)
 {
   SCM p = cell_nil;
-  while (i--)
+#if __M2_PLANET__
+  while (i != 0)
+#else
+  while (i)
+#endif
     {
+      i = i - 1;
       int c = (0x100 + s[i]) % 0x100;
       p = cons (MAKE_CHAR (c), p);
     }
@@ -190,7 +242,8 @@ read_string (SCM port) ///((arity . n))
     {
       if (i > MAX_STRING)
         assert_max_string (i, "read_string", g_buf);
-      g_buf[i++] = c;
+      g_buf[i] = c;
+      i = i + 1;
       c = readchar ();
     }
   g_buf[i] = 0;
@@ -209,8 +262,8 @@ string_append (SCM x) ///((arity . n))
       SCM string = CAR (x);
       assert (TYPE (string) == TSTRING);
       memcpy (p, CSTRING (string), LENGTH (string) + 1);
-      p += LENGTH (string);
-      size += LENGTH (string);
+      p = p + LENGTH (string);
+      size = size + LENGTH (string);
       if (size > MAX_STRING)
         assert_max_string (size, "string_append", g_buf);
       x = CDR (x);

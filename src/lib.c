@@ -37,7 +37,11 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
   int t = TYPE (x);
   if (t == TCHAR)
     {
+#if __M2_PLANET__
+      if (write_p == 0)
+#else
       if (!write_p)
+#endif
         fdputc (VALUE (x), fd);
       else
         {
@@ -91,7 +95,11 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
     }
   else if (t == TPAIR)
     {
+#if __M2_PLANET__
+      if (cont == 0)
+#else
       if (!cont)
+#endif
         fdputs ("(", fd);
       if (CAR (x) == cell_circular
           && CADR (x) != cell_closure)
@@ -99,8 +107,9 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
           fdputs ("(*circ* . ", fd);
           int i = 0;
           x = CDR (x);
-          while (x != cell_nil && i++ < 10)
+          while (x != cell_nil && i < 10)
             {
+              i = i + 1;
               fdisplay_ (CAAR (x), fd, write_p); fdputs (" ", fd);
               x = CDR (x);
             }
@@ -119,7 +128,11 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
               fdisplay_ (CDR (x), fd, write_p);
             }
         }
+#if __M2_PLANET__
+      if (cont == 0)
+#else
       if (!cont)
+#endif
         fdputs (")", fd);
     }
   else if (t == TKEYWORD
@@ -146,9 +159,20 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
 #else
       size_t length = LENGTH (x);
 #endif
+#if __M2_PLANET__
+      size_t i;
+      for (i=0; i < length; i=i+1)
+#else
       for (size_t i=0; i < length; i++)
+#endif
         {
-          long v = write_p ? s[i] : -1;
+          long v = -1;
+#if __M2_PLANET__
+          if (write_p != 0)
+#else
+          if (write_p)
+#endif
+            v = s[i];
           if (v == '\0') fdputs ("\\0", fd);
           else if (v == '\a') fdputs ("\\a", fd);
           else if (v == '\b') fdputs ("\\b", fd);
@@ -191,7 +215,12 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
           fdisplay_ (STRUCT (x), fd, write_p);
           SCM t = CAR (x);
           long size = LENGTH (x);
+#if __M2_PLANET__
+          long i;
+          for (i=2; i<size; i=i+1)
+#else
           for (long i=2; i<size; i++)
+#endif
             {
               fdputc (' ', fd);
               fdisplay_ (STRUCT (x) + i, fd, write_p);
@@ -203,9 +232,18 @@ display_helper (SCM x, int cont, char* sep, int fd, int write_p)
     {
       fdputs ("#(", fd);
       SCM t = CAR (x);
+#if __M2_PLANET__
+      long i;
+      for (i = 0; i<LENGTH (x); i=i+1)
+#else
       for (long i = 0; i<LENGTH (x); i++)
+#endif
         {
+#if __M2_PLANET__
+          if (i != 0)
+#else
           if (i)
+#endif
             fdputc (' ', fd);
           fdisplay_ (VECTOR (x) + i, fd, write_p);
         }
@@ -304,7 +342,11 @@ make_frame (SCM stack, long index)
   SCM frame_type = make_frame_type ();
   long array_index = (STACK_SIZE-(index*FRAME_SIZE));
   SCM procedure = g_stack_array[array_index+FRAME_PROCEDURE];
+#if __M2_PLANET__
+  if (procedure == 0)
+#else
   if (!procedure)
+#endif
     procedure = cell_f;
   SCM values = cell_nil;
   values = cons (procedure, values);
@@ -329,7 +371,12 @@ make_stack (SCM stack) ///((arity . n))
   SCM stack_type = make_stack_type ();
   long size = (STACK_SIZE-g_stack) / FRAME_SIZE;
   SCM frames = make_vector__ (size);
+#if __M2_PLANET__
+  long i;
+  for (i=0; i<size; i=i+1)
+#else
   for (long i=0; i<size; i++)
+#endif
     {
       SCM frame = make_frame (stack, i);
       vector_set_x_ (frames, i, frame);
@@ -359,7 +406,9 @@ xassq (SCM x, SCM a) ///for speed in core only
 {
   while (a != cell_nil && x != CDAR (a))
     a = CDR (a);
-  return a != cell_nil ? CAR (a) : cell_f;
+  if (a != cell_nil)
+    return CAR (a);
+  return cell_f;
 }
 
 SCM
@@ -383,7 +432,9 @@ memq (SCM x, SCM a)
     else
       while (a != cell_nil && x != CAR (a))
         a = CDR (a);
-  return a != cell_nil ? a : cell_f;
+  if (a != cell_nil)
+    return a;
+  return cell_f;
 }
 
 SCM
@@ -408,7 +459,12 @@ equal2_p (SCM a, SCM b)
     {
       if (LENGTH (a) != LENGTH (b))
         return cell_f;
+#if __M2_PLANET__
+      long i;
+      for (i=0; i < LENGTH (a); i=i+1)
+#else
       for (long i=0; i < LENGTH (a); i++)
+#endif
         {
           SCM ai = VECTOR (a) + i;
           SCM bi = VECTOR (b) + i;
@@ -435,5 +491,7 @@ last_pair (SCM x)
 SCM
 pair_p (SCM x)
 {
-  return TYPE (x) == TPAIR ? cell_t : cell_f;
+  if (TYPE (x) == TPAIR)
+    return cell_t;
+  return cell_f;
 }

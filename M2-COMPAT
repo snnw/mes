@@ -1,0 +1,28 @@
+<OriansJ> [23:15:00] janneke: well the FUNCTION_ bit only matters if one is
+          mixing generated assembly, handwritten assembly on the other hand
+          can ignore the FUNCTION_ bit unless you are doing function calls in
+          assembly (probably a bad idea)
+<OriansJ> [23:18:18] !x only works if x is a boolean; I did that way to force
+          myself to write if(NULL !=x) to be explicit about what I am trying
+          to do for clarity sake
+<OriansJ> [23:21:47] You can do pointer arithmetic if you are careful as is
+          seen in functions/string.c but struct f++ is not equal to f = f + 1
+          but rather f = f + sizeof(struct); a simple #define struct_size 1
+          and // CONSTANT struct_size 16 will allow full compatibility
+          (assuming struct size is 16bytes large)
+<OriansJ> [23:24:21] Remember Your primary goal is not focus on M2-Planet
+          capability but rather reducing and simplifying the build using gcc
+          down to gcc *.c -o mes (steal the tricks from M2-Planet's gcc build)
+          and once it is there, I'll have a far easier time building Mes.c
+          with M2-Planet
+<OriansJ> [23:30:09] Assume memset, calloc, free, exit, _exit, waitpid,
+          execve, exit (with EXIT_SUCCESS and EXIT_FAILURE), fgetc (with
+          stdin, stdout, stderr and EOF), fputc, open, fopen, close, fclose,
+          fork, getchar, malloc (with NULL), putchar, and uname (with utsname
+          type). It'll make your build simpler and make the conversion easier
+          (you'll only need your own versions of those for your self-host)
+<OriansJ> [23:44:50] The CFLAGS= in M2-Planet are just to enable strict c99
+          formating, gdb debugging, turn off optimizations (Not required, I
+          just prefer less optimization done by compilers by default) and
+          -D_GNU_SOURCE was requested but not actually required in the build
+          for gcc (I believe clang needs it but I haven't checked yet)

@@ -72,31 +72,53 @@ reader_read_identifier_or_number (int c)
   int i = 0;
   long n = 0;
   int negative_p = 0;
+#if __M2_PLANET__
+  if (c == '+' && isdigit (peekchar ()) != 0)
+#else
   if (c == '+' && isdigit (peekchar ()))
+#endif
     c = readchar ();
+#if __M2_PLANET__
+  else if (c == '-' && isdigit (peekchar () != 0))
+#else
   else if (c == '-' && isdigit (peekchar ()))
+#endif
     {
       negative_p = 1;
       c = readchar ();
     }
+#if __M2_PLANET__
+  while (isdigit (c) != 0)
+#else
   while (isdigit (c))
+#endif
     {
-      g_buf[i++] = c;
-      n *= 10;
-      n += c - '0';
+      g_buf[i] = c;
+      i = i + 1;
+      n = n * 10;
+      n = n + c - '0';
       c = readchar ();
     }
   if (reader_end_of_word_p (c))
     {
       unreadchar (c);
+#if __M2_PLANET__
+      if (negative_p != 0)
+#else
       if (negative_p)
+#endif
         n = 0 - n;
       return MAKE_NUMBER (n);
     }
   /* Fallthrough: Note that `4a', `+1b' are identifiers */
+#if __M2_PLANET__
+  while (reader_end_of_word_p (c) == 0)
+#else
   while (!reader_end_of_word_p (c))
+#endif
     {
-      g_buf[i++] = c;
+      g_buf[i] = c;
+      i = i + 1;
       c = readchar ();
     }
   unreadchar (c);
@@ -145,7 +167,11 @@ reset_reader:
                  cons (reader_read_sexp_ (readchar (), a), cell_nil));
   if (c == '"')
     return reader_read_string ();
+#if __M2_PLANET__
+  if (c == '.' && (reader_identifier_p (peekchar ()) == 0))
+#else
   if (c == '.' && (!reader_identifier_p (peekchar ())))
+#endif
     return cell_dot;
   return reader_read_identifier_or_number (c);
 }
@@ -153,7 +179,11 @@ reset_reader:
 int
 reader_eat_whitespace (int c)
 {
+#if __M2_PLANET__
+  while (isspace (c) != 0)
+#else
   while (isspace (c))
+#endif
     c = readchar ();
   if (c == ';')
     return reader_eat_whitespace (reader_read_line_comment (c));
@@ -274,8 +304,8 @@ reader_read_character ()
       c = c - '0';
       while (p >= '0' && p <= '7')
         {
-          c <<= 3;
-          c += readchar () - '0';
+          c = c << 3;
+          c = c + readchar () - '0';
           p = peekchar ();
         }
     }
@@ -294,7 +324,11 @@ reader_read_character ()
            && ((p >= 'a' && p <= 'z')
                || p == '*'))
     {
+#if __M2_PLANET__
+      char buf = "xxxxxxxxxx";
+#else
       char buf[10];
+#endif
       buf[i] = c;
       i = i + 1;
       while ((p >= 'a' && p <= 'z')
@@ -305,6 +339,40 @@ reader_read_character ()
           p = peekchar ();
         }
       buf[i] = 0;
+#if __M2_PLANET__
+      if (strcmp (buf, "*eof*") == 0) c = EOF;
+      else if (strcmp (buf, "nul") == 0) c = '\0';
+      else if (strcmp (buf, "alarm") == 0) c = '\a';
+      else if (strcmp (buf, "backspace") == 0) c = '\b';
+      else if (strcmp (buf, "tab") == 0) c = '\t';
+      else if (strcmp (buf, "linefeed") == 0) c = '\n';
+      else if (strcmp (buf, "newline") == 0) c = '\n';
+      else if (strcmp (buf, "vtab") == 0) c = '\v';
+      else if (strcmp (buf, "page") == 0) c = '\f';
+#if 1 //__MESC__
+      //Nyacc bug
+      else if (strcmp (buf, "return") == 0) c = 13;
+      else if (strcmp (buf, "esc") == 0) c = 27;
+#else
+      else if (strcmp (buf, "return") == 0) c = '\r';
+      //Nyacc crash else if (strcmp (buf, "esc") == 0) c = '\e';
+#endif
+      else if (strcmp (buf, "space") == 0) c = ' ';
+
+#if 1 // Nyacc uses old abbrevs
+      else if (strcmp (buf, "bel") == 0) c = '\a';
+      else if (strcmp (buf, "bs") == 0) c = '\b';
+      else if (strcmp (buf, "ht") == 0) c = '\t';
+      else if (strcmp (buf, "vt") == 0) c = '\v';
+
+#if 1 //__MESC__
+      //Nyacc bug
+      else if (strcmp (buf, "cr") == 0) c = 13;
+#else
+      else if (strcmp (buf, "cr") == 0) c = '\r';
+#endif
+#endif // Nyacc uses old abbrevs
+#else // ! __M2_PLANET__
       if (!strcmp (buf, "*eof*")) c = EOF;
       else if (!strcmp (buf, "nul")) c = '\0';
       else if (!strcmp (buf, "alarm")) c = '\a';
@@ -337,7 +405,7 @@ reader_read_character ()
       else if (!strcmp (buf, "cr")) c = '\r';
 #endif
 #endif // Nyacc uses old abbrevs
-
+#endif // ! __M2_PLANET__
       else
         {
           eputs ("char not supported: ");
@@ -369,7 +437,11 @@ reader_read_binary ()
       readchar ();
       c = peekchar ();
     }
+#if __M2_PLANET__
+  if (negative_p != 0)
+#else
   if (negative_p)
+#endif
     n = 0 - n;
   return MAKE_NUMBER (n);
 }
@@ -393,7 +465,11 @@ reader_read_octal ()
       readchar ();
       c = peekchar ();
     }
+#if __M2_PLANET__
+  if (negative_p != 0)
+#else
   if (negative_p)
+#endif
     n = 0 - n;
   return MAKE_NUMBER (n);
 }
@@ -424,7 +500,11 @@ reader_read_hex ()
       readchar ();
       c = peekchar ();
     }
+#if __M2_PLANET__
+  if (negative_p != 0)
+#else
   if (negative_p)
+#endif
     n = 0 - n;
   return MAKE_NUMBER (n);
 }
@@ -445,6 +525,9 @@ reader_read_string ()
         {
           c = readchar ();
           if (c == '\\' || c == '"')
+#if __M2_PLANET__
+            c = c
+#endif
             ;
           else if (c == '0')
             c = '\0';
@@ -471,7 +554,8 @@ reader_read_string ()
           else if (c == 'x')
             c = VALUE (reader_read_hex ());
         }
-      g_buf[i++] = c;
+      g_buf[i] = c;
+      i = i + 1;
     }
   while (1);
   g_buf[i] = 0;

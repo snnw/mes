@@ -28,15 +28,25 @@ gc_up_arena () ///((internal))
   long old_arena_bytes = (ARENA_SIZE+JAM_SIZE)*sizeof (struct scm);
   if (ARENA_SIZE >> 1 < MAX_ARENA_SIZE >> 2)
     {
+#if __M2_PLANET__
+      ARENA_SIZE = ARENA_SIZE << 1;
+      JAM_SIZE = JAM_SIZE << 1;
+      GC_SAFETY = GC_SAFETY << 1;
+#else
       ARENA_SIZE <<= 1;
       JAM_SIZE <<= 1;
       GC_SAFETY <<= 1;
+#endif
     }
   else
     ARENA_SIZE = MAX_ARENA_SIZE -JAM_SIZE;
   long arena_bytes = (ARENA_SIZE+JAM_SIZE)*sizeof (struct scm);
   void *p = realloc (g_cells-1, arena_bytes+STACK_SIZE*sizeof (SCM));
+#if __M2_PLANET__
+  if (p == 0)
+#else
   if (!p)
+#endif
     {
       eputs ("realloc failed, g_free=");
       eputs (itoa (g_free));
@@ -46,9 +56,13 @@ gc_up_arena () ///((internal))
       assert (0);
       exit (1);
     }
+#if __M2_PLANET__
+  g_cells = p;
+#else
   g_cells = (struct scm*)p;
+#endif
   memcpy (p + arena_bytes, p + old_arena_bytes, STACK_SIZE*sizeof (SCM));
-  g_cells++;
+  g_cells = g_cells + 1;
 
   return 0;
 }
@@ -72,14 +86,24 @@ gc_copy (SCM old) ///((internal))
 {
   if (TYPE (old) == TBROKEN_HEART)
     return g_cells[old].car;
-  SCM new = g_free++;
+  SCM new = g_free;
+  g_free = g_free + 1;
   g_news[new] = g_cells[old];
   if (NTYPE (new) == TSTRUCT
       || NTYPE (new) == TVECTOR)
     {
       NVECTOR (new) = g_free;
+#if __M2_PLANET__
+      long i;
+      for (i=0; i<LENGTH (old); i=i+1)
+        {
+          g_news[g_free] = g_cells[VECTOR (old)+i];
+          g_free = g_free + 1;
+        }
+#else
       for (long i=0; i<LENGTH (old); i++)
         g_news[g_free++] = g_cells[VECTOR (old)+i];
+#endif
     }
   else if (NTYPE (new) == TBYTES)
     {
@@ -87,7 +111,7 @@ gc_copy (SCM old) ///((internal))
       char *dest = NCBYTES (new);
       size_t length = NLENGTH (new);
       memcpy (dest, src, length + 1);
-      g_free += bytes_cells (length) - 1;
+      g_free = g_free + bytes_cells (length) - 1;
 
       if (g_debug > 4)
         {
@@ -151,8 +175,8 @@ gc_loop (SCM scan) ///((internal))
           gc_relocate_cdr (scan, cdr);
         }
       if (NTYPE (scan) == TBYTES)
-        scan += bytes_cells (NLENGTH (scan)) - 1;
-      scan++;
+        scan = scan + bytes_cells (NLENGTH (scan)) - 1;
+      scan = scan + 1;
     }
   gc_flip ();
 }
@@ -172,7 +196,7 @@ gc_init_news () ///((internal))
   NTYPE (0) = TVECTOR;
   NLENGTH (0) = 1000;
   NVECTOR (0) = 0;
-  g_news++;
+  g_news = g_news + 1;
   NTYPE (0) = TCHAR;
   NVALUE (0) = 'n';
   return 0;
@@ -194,7 +218,7 @@ gc_ () ///((internal))
     }
   g_free = 1;
 
-#if __MESC__
+#if __MESC__ && ! __M2_PLANET__
   if (ARENA_SIZE < MAX_ARENA_SIZE && (long)g_news > 0)
 #else
   if (ARENA_SIZE < MAX_ARENA_SIZE && g_news > 0)
@@ -205,9 +229,15 @@ gc_ () ///((internal))
       if (g_debug > 2)
         {
           eputs (" up[");
+#if __M2_PLANET__
+          eputs (itoa (g_cells));  // We'll see...
+          eputs (",");
+          eputs (itoa (g_news));
+#else
           eputs (itoa ((unsigned long)g_cells));
           eputs (",");
           eputs (itoa ((unsigned long)g_news));
+#endif
           eputs (":");
           eputs (itoa (ARENA_SIZE));
           eputs (",");
@@ -217,14 +247,24 @@ gc_ () ///((internal))
       gc_up_arena ();
     }
 
+#if __M2_PLANET__
+  long i;
+  for (i=g_free; i<g_symbol_max; i=i+1)
+#else
   for (long i=g_free; i<g_symbol_max; i++)
+#endif
     gc_copy (i);
   g_symbols = gc_copy (g_symbols);
   g_macros = gc_copy (g_macros);
   g_ports = gc_copy (g_ports);
   m0 = gc_copy (m0);
+#if __M2_PLANET__
+  long i;
+  for (i=g_stack; i<STACK_SIZE; i=i+1)
+#else
   for (long i=g_stack; i<STACK_SIZE; i++)
-    g_stack_array[i]= gc_copy (g_stack_array[i]);
+#endif
+    g_stack_array[i] = gc_copy (g_stack_array[i]);
   gc_loop (1);
 }
 

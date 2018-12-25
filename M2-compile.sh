@@ -25,9 +25,7 @@ MES_PREFIX=${MES_PREFIX-mes}
 HEX2=${HEX2-hex2}
 M1=${M1-M1}
 M2_PLANET=${M2_PLANET-../m2-planet/bin/M2-Planet}
-MES_SEED=${MES_SEED-../mes-seed}
-BLOOD_ELF=${BLOOD_ELF-blood-elf}
-CRT0_M1=../m2-planet/test/functions/libc-core.M1
+CRT1=lib/x86-mes/crt1.o
 X86_M1=../m2-planet/test/common_x86/x86_defs.M1
 X86_ELF=../m2-planet/test/common_x86/ELF-i386.hex2
 PREFIX=
@@ -43,12 +41,26 @@ VERSION=git
 # Try: ./boot.sh scaffold/cons-mes
 # ...but our target is of course: src/mes.c (and also lib/libc.c)
 mes=${1-src/mes}
+shift ||:
 
-# These compile, but segfault with M2-Planet
-# scaffold/argv
+# These behave in an unexpected way
+# scaffold/bug4
+
+# These segfault unless linked with M2-Planet's crt1
+# scaffold/malloc
+# scaffold/memset
 # scaffold/milli-mes
+
+# These segfaults unless linked with M2-PLanet's crt1 *and* given an argument
+# scaffold/argv
+
+# These compile, but segfault with M2-Planet -- any crt will do
+# src/read-boot
+# src/mes
 # scaffold/bug
 # scaffold/bug2
+# scaffold/bug3
+# scaffold/bug4
 
 rm -f $mes.M2
 rm -f $mes.S
@@ -77,9 +89,6 @@ i686-unknown-linux-gnu-cpp -E \
     -D MODULEDIR=\"$MODULEDIR/\"\
     -D PREFIX=\"$PREFIX\"\
     -D VERSION=\"$VERSION\"\
-    -D __call_at_exit=underscore_underscore_call_at_exit\
-    -D _exit=underscore_exit\
-    -D _write=underscore_write\
     -I .\
     -I lib\
     -I src\
@@ -99,13 +108,24 @@ i686-unknown-linux-gnu-cpp -E \
           -e 's,int int,int,g'\
           -e 's,intptr_t,int,g'\
           -e 's,ssize_t,int,g'\
-          -e 's,size_t,int,g'\
+          -e 's,size_t,unsigned,g'\
+          -e 's,clockid_t,int,g'\
           -e 's,gid_t,int,g'\
+          -e 's,mode_t,int,g'\
           -e 's,pid_t,int,g'\
           -e 's,off_t,int,g'\
+          -e 's,time_t,unsigned,g'\
           -e 's,uid_t,int,g'\
           -e 's,unsigned int,unsigned,g'\
-          -e 's,unsigned long,unsigned,g'\
+          -e 's,unsigned short,unsigned /*FIXME: short*/,g'\
+          -e 's,[]][.],]->,g'\
+          -e 's,ts[.],ts->,g'\
+          -e 's,time[.],time->,g'\
+          -e 's,/" ",/,g'\
+          -e "s,'[\\]0',0,g"\
+          -e "s,'[\\]a',7,g"\
+          -e "s,'[\\]b',8,g"\
+          -e "s,'[\\]0',0,g"\
     > $mes.M2
 
 if [ "$V" = 2 ]; then
@@ -119,27 +139,49 @@ trace "M2-Planet  $mes.M2" $M2_PLANET\
 test -s $mes.S || exit 101
 
 trace "M1         $mes.M1" $M1\
-    --LittleEndian\
-    --Architecture 1\
-    -f lib/x86-mes/x86.M1\
-    -f $X86_M1\
-    -f $mes.S\
-    -o $mes.o
-sed -i -e s,FUNCTION_,, $mes.o
+      --LittleEndian\
+      --Architecture 1\
+      -f lib/x86-mes/x86.M1\
+      -f $X86_M1\
+      -f $mes.S\
+      -o $mes.o
 
-if [ -z "$NOLINK" ]; then
-    trace "HEX2       $mes.hex2" $HEX2\
+sed -i\
+    -e s,GLOBAL_,,\
+    -e s,FUNCTION_,,\
+  $mes.o
+
+# FIXME: scaffold/malloc segfaults with Mes' crt1?!
+# src/mes runs better initially (up to malloc) with Mes' crt1
+if [ "$mes" == scaffold/argv \
+     -o "$mes" == scaffold/malloc \
+     -o "$mes" == scaffold/memset \
+     -o "$mes" == scaffold/milli-mes ]; then
+    CRT1=lib/x86-mes-m2/crt1.o
+    mkdir -p lib/x86-mes-m2
+    trace "M1         crt1-m2" $M1\
           --LittleEndian\
           --Architecture 1\
-          --BaseAddress 0x1000000\
-          -f $X86_ELF\
-          -f lib/x86-mes/crt1.o\
-          -f lib/x86-mes/libc.o\
-          -f $mes.o\
-          --exec_enable\
-          -o $mes.m2-out
+          -f $X86_M1\
+          -f ../m2-planet/functions/libc-core.M1 \
+          -o lib/x86-mes-m2/crt1.o
 
-    # FIXME: to find boot-0.scm; rename to MES_DATADIR
-    trace "TEST       $mes.m2-out"
-    $mes.m2-out
+    sed -i\
+        -e s,GLOBAL_,,\
+        -e s,FUNCTION_,,\
+        lib/x86-mes-m2/crt1.o
 fi
+
+trace "HEX2       $mes.hex2" $HEX2\
+      --LittleEndian\
+      --Architecture 1\
+      --BaseAddress 0x1000000\
+      -f $X86_ELF\
+      -f $CRT1\
+      -f lib/x86-mes/libc.o\
+      -f $mes.o\
+      --exec_enable\
+      -o $mes.m2-out
+
+trace "TEST       $mes.m2-out"
+MES_DEBUG=2 ./pre-inst-env $mes.m2-out "$@"

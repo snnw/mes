@@ -26,7 +26,11 @@ int
 hash_cstring (char const* s, long size)
 {
   int hash = s[0] * 37;
+#if __M2_PLANET__
+  if (s[0] != 0 && s[1] != 0)
+#else
   if (s[0] && s[1])
+#endif
     hash = hash + s[1] * 43;
   assert (size);
   hash = hash % size;
@@ -178,7 +182,12 @@ hash_table_printer (SCM table)
   fdputs ("size: ", __stdout); display_ (struct_ref_ (table, 3)); fdputc (' ', __stdout);
   SCM buckets = struct_ref_ (table, 4);
   fdputs ("buckets: ", __stdout);
+#if __M2_PLANET__
+  int i;
+  for (i=0; i<LENGTH (buckets); i=i+1)
+#else
   for (int i=0; i<LENGTH (buckets); i++)
+#endif
     {
       SCM e = vector_ref_ (buckets, i);
       if (e != cell_unspecified)
@@ -212,7 +221,11 @@ make_hashq_type () ///((internal))
 SCM
 make_hash_table_ (long size)
 {
+#if __M2_PLANET__
+  if (size == 0)
+#else
   if (!size)
+#endif
     size = 100;
   SCM hashq_type = make_hashq_type ();
 
