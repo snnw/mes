@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -22,8 +22,7 @@
 //V=2 CC64=gcc build-aux/cc64-mes.sh scaffold/main
 
 int
-main (int argc, char *argv[])
+main (int argc, char **argv)
 {
-  argc = 42;
-  return argc;
+  return 42;
 }

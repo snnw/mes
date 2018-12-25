@@ -21,26 +21,39 @@
 #include <libmes.h>
 #include <string.h>
 
+#if __M2_PLANET__
 int
 strcmp (char const* a, char const* b)
 {
-  while (*a && *b && *a == *b)
+  while (a[0] && b[0] && a[0] == b[0])
     {
-      a++;
-      b++;
+      a = a + 1;
+      b = b + 1;
     }
-  return *a - *b;
+  return a[0] - b[0];
 }
+#endif
 
 int
 main (int argc, char *argv[])
 {
   eputs ("Hi Mes!\n");
-#if __MESC_MES__
-  eputs ("MESC.MES\n");
+#if __M2_PLANET__
+  eputs ("m2-planet\n");
+#elif __MESC_MES__
+  eputs ("mes.mes\n");
+#elif __MESC_GCC__
+  eputs ("mes.mlibc\n");
 #else
-  eputs ("MESC.GUILE\n");
+  eputs ("mes.gcc\n");
 #endif
+  if (argc ==0 )
+    eputs ("argc = 0\n");
+  else if (argc == 1)
+    eputs ("argc == 1\n");
+  else
+    eputs ("argc > 1\n");
+  // FIXME: m2-planet's output segfaults here
   if (argc > 1 && !strcmp (argv[1], "--help"))
     {
       eputs ("argc > 1 && --help\n");

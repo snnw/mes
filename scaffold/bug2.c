@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -21,36 +21,22 @@
 #if WITH_GLIBC
 #error "WITH_GLIBC not supported"
 #endif
+int eputs (char const*);
 
-#include <libmes.h>
-#include <stdio.h>
-#include <stdlib.h>
+void
+eval_apply ()
+{
+  int x;
+
+ eval_apply:
+  return;
+}
 
 int
-main (int argc, char *argv[])
+main (int argc, char **argv)
 {
-  int size = 5000;
-  puts ("m!\n");
-  //int *p = 0;
-  char *p = 0;
-  p = malloc (size);
-  size = 5000;
-  puts ("p=");
-  puts (itoa (p));
-  puts ("\n");
-  for (int i = 0; i < size; i++)
-    {
-      puts ("set ");
-      puts (itoa (i));
-      puts ("\n");
-      p[i] = i;
-    }
-  for (int i = 0; i < size; i++)
-    {
-      puts (itoa (i));
-      puts (": ");
-      puts (itoa (p[i]));
-      puts ("\n");
-    }
+  eputs ("Hello!\n");
+  eval_apply ();
+  eputs ("back!\n");
   return 0;
 }

@@ -126,7 +126,7 @@ struct scm
   SCM cdr;
 };
 
-#if __MESC__
+#if 0 //__MESC__
 //FIXME
 char *foobar = 0;
 struct scm *g_cells = foobar;

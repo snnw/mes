@@ -22,6 +22,7 @@
 #error "WITH_GLIBC not supported"
 #endif
 
+#include <libmes.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,14 +32,19 @@ typedef int SCM;
 int g_debug = 0;
 #endif
 
-int g_free = 0;
+int g_free;
 
-SCM g_symbols = 0;
-SCM g_stack = 0;
-SCM r0 = 0; // a/env
-SCM r1 = 0; // param 1
-SCM r2 = 0; // save 2+load/dump
-SCM r3 = 0; // continuation
+SCM g_symbols;
+SCM g_stack;
+
+/* a/env */
+SCM r0;
+/* param 1 */
+SCM r1;
+/* save 2+load/dump */
+SCM r2;
+/* continuation */
+SCM r3;
 
 SCM
 mes_environment ()
@@ -54,20 +60,10 @@ bload_env (SCM a) ///((internal))
 }
 
 int
-main (int argc, char *argv[])
+main (int argc, char **argv)
 {
-#if __GNUC__
-  g_debug = (int)getenv ("MES_DEBUG");
-#endif
-  //if (getenv ("MES_ARENA")) ARENA_SIZE = atoi (getenv ("MES_ARENA"));
-
-  // FIXME
-  //if (argc > 1 && !strcmp (argv[1], "--help")) return eputs ("Usage: mes [--dump|--load] < FILE\n");
-  //if (argc > 1 && !strcmp (argv[1], "--version")) {eputs ("Mes ");eputs (VERSION);return eputs ("\n");};
-
   r0 = mes_environment ();
-
-  puts ("Hello micro-mes!\n");
+  oputs ("Hello micro-mes!\n");
   SCM program = bload_env (r0);
   int i = argc;
   return i;
