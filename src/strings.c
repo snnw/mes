@@ -67,6 +67,8 @@ bytes_cells (size_t length)
 void *
 memcpy (void *dest, void const *src, size_t n)
 {
+  if (g_debug > 4) eputs ("memcpy\n");
+  if (g_debug > 4) {eputs ("size="); eputs (itoa (n)); eputs ("\n");}
   char* p = dest;
   char const* q = src;
   while (n != 0)
@@ -83,21 +85,32 @@ memcpy (void *dest, void const *src, size_t n)
 SCM
 make_bytes (char const* s, size_t length)
 {
+  if (g_debug > 4) eputs ("make_bytes 00\n");
+  if (g_debug > 4) {eputs ("length="); eputs (itoa (length)); eputs ("\n");}
   size_t size = bytes_cells (length);
+  if (g_debug > 4) eputs ("make_bytes 01\n");
   SCM x = alloc (size);
+  if (g_debug > 4) eputs ("make_bytes 02\n");
   TYPE (x) = TBYTES;
+  if (g_debug > 4) eputs ("make_bytes 03\n");
   LENGTH (x) = length;
+  if (g_debug > 4) eputs ("make_bytes 04\n");
+  if (g_debug > 4) eputs ("make_bytes 05\n");
 #if __M2_PLANET__
   // char *p = (char*)&g_cells[x].cdr;
   char *p;
   p = (char*)&g_cells[x].cdr + 8;
   if (length == 0)
     {
+      if (g_debug > 4) eputs ("make_bytes 06\n");
       p[0] = 0;
+      if (g_debug > 4) eputs ("make_bytes 07\n");
     }
   else
     {
+      if (g_debug > 4) eputs ("make_bytes 08\n");
       memcpy (p, s, length + 1);
+      if (g_debug > 4) eputs ("make_bytes 09\n");
     }
 #else
   char *p = &CDR (x);
@@ -106,17 +119,23 @@ make_bytes (char const* s, size_t length)
   else
     memcpy (p, s, length + 1);
 #endif
+  if (g_debug > 4) eputs ("make_bytes 10\n");
   return x;
 }
 
 SCM
 make_string (char const* s, size_t length)
 {
+  if (g_debug > 4) eputs ("make_string 00\n");
   if (length > MAX_STRING)
     assert_max_string (length, "make_string", (char*)s);
+  if (g_debug > 4) eputs ("make_string 02\n");
   SCM x = make_cell__ (TSTRING, length, 0);
+  if (g_debug > 4) eputs ("make_string 03\n");
   SCM v = make_bytes (s, length);
+  if (g_debug > 4) eputs ("make_string 04\n");
   CDR (x) = v;
+  if (g_debug > 4) eputs ("make_string 05\n");
   return x;
 }
 

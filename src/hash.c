@@ -25,15 +25,22 @@ SCM vector_set_x_ (SCM x, long i, SCM e);
 int
 hash_cstring (char const* s, long size)
 {
+  if (g_debug > 4) eputs ("hash_cstring 00\n");
+  if (g_debug > 4) {eputs ("s="); eputs (s); eputs ("\n");}
   int hash = s[0] * 37;
 #if __M2_PLANET__
   if (s[0] != 0 && s[1] != 0)
 #else
+  if (g_debug > 4) eputs ("hash_cstring 01\n");
   if (s[0] && s[1])
 #endif
     hash = hash + s[1] * 43;
+  if (g_debug > 4) eputs ("hash_cstring 02\n");
   assert (size);
+  if (g_debug > 4) {eputs ("size="); eputs (itoa (size)); eputs ("\n");}
+  if (g_debug > 4) eputs ("hash_cstring 03\n");
   hash = hash % size;
+  if (g_debug > 4) eputs ("hash_cstring 04\n");
   return hash;
 }
 
@@ -49,8 +56,10 @@ hashq_ (SCM x, long size)
 int
 hash_ (SCM x, long size)
 {
+  if (g_debug > 4) eputs ("hash_ 00\n");
   if (TYPE (x) == TSTRING)
     return hash_cstring (CSTRING (x), size);
+  if (g_debug > 4) eputs ("hash_ 99\n");
   assert (0);
   return hashq_ (x, size);
 }
@@ -160,8 +169,11 @@ hashq_set_x (SCM table, SCM key, SCM value)
 SCM
 hash_set_x (SCM table, SCM key, SCM value)
 {
+  if (g_debug > 4) eputs ("hash_set_x 00\n");
   long size = VALUE (struct_ref_ (table, 3));
+  if (g_debug > 4) eputs ("hash_set_x 01\n");
   unsigned hash = hash_ (key, size);
+  if (g_debug > 4) eputs ("hash_set_x 02\n");
 #if defined (INLINE)
   return hash_set_x_ (table, hash, key, value);
 #else

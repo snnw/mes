@@ -1746,6 +1746,9 @@ SCM
 gc_init_cells () ///((internal))
 {
   long arena_bytes = (ARENA_SIZE+JAM_SIZE)*sizeof (struct scm);
+
+  if (g_debug > 4) {eputs ("gc_init_cells n="); eputs (itoa (arena_bytes+STACK_SIZE*sizeof (SCM))); eputs ("\n");}
+
   void *p = malloc (arena_bytes+STACK_SIZE*sizeof (SCM));
 #if __M2_PLANET__
   g_cells = p;
@@ -1755,7 +1758,9 @@ gc_init_cells () ///((internal))
   g_stack_array = (SCM*)(p + arena_bytes);
 #endif
 
+  if (g_debug > 4) eputs ("gc_init_cells 10\n");
   TYPE (0) = TVECTOR;
+  if (g_debug > 4) eputs ("gc_init_cells 11\n");
   LENGTH (0) = 1000;
   VECTOR (0) = 0;
   g_cells = g_cells + 1;
@@ -1771,29 +1776,45 @@ gc_init_cells () ///((internal))
 void
 init_symbol (long x, long type, char const* name)
 {
+  if (g_debug > 4) eputs ("init_symbol 00\n");
+  if (g_debug > 4) {eputs ("s="); eputs (name); eputs ("\n");}
   TYPE (x) = type;
+  if (g_debug > 4) eputs ("init_symbol 01\n");
   int length = strlen (name);
+  if (g_debug > 4) eputs ("init_symbol 02\n");
   SCM string = make_string (name, length);
+  if (g_debug > 4) eputs ("init_symbol 03\n");
   CAR (x) = length;
+  if (g_debug > 4) eputs ("init_symbol 04\n");
   CDR (x) = STRING (string);
+  if (g_debug > 4) eputs ("init_symbol 05\n");
   hash_set_x (g_symbols, string, x);
+  if (g_debug > 4) eputs ("init_symbol 06\n");
 }
 
 SCM
 mes_symbols () ///((internal))
 {
+  if (g_debug > 4) eputs ("mes_symbols\n");
   gc_init_cells ();
+  if (g_debug > 4) eputs ("mes_symbols 01\n");
 
   g_free = cell_symbol_test + 1;
+  if (g_debug > 4) eputs ("mes_symbols 02\n");
   g_symbol_max = g_free;
+  if (g_debug > 4) eputs ("mes_symbols 03\n");
   g_symbols = make_hash_table_ (500);
 
   int size = VALUE (struct_ref_ (g_symbols, 3));
+  if (g_debug > 4) {eputs ("size="); eputs (itoa (size)); eputs ("\n");}
   // Weird: m2-planet exits 67 here...[printing size = 100]
   // if (size == 0) exit (66);
   // if (!size) exit (67);
 
+  if (g_debug > 4) eputs ("mes_symbols 10\n");
   init_symbol (cell_nil, TSPECIAL, "()");
+  if (g_debug > 4) eputs ("mes_symbols 11\n");
+
   init_symbol (cell_f, TSPECIAL, "#f");
   init_symbol (cell_t, TSPECIAL, "#t");
   init_symbol (cell_dot, TSPECIAL, ".");
@@ -1961,7 +1982,9 @@ mes_symbols () ///((internal))
 SCM
 mes_environment (int argc, char *argv[])
 {
+  if (g_debug > 4) eputs ("mes_environment\n");
   SCM a = mes_symbols ();
+  if (g_debug > 4) eputs ("mes_environment01\n");
 
   char *compiler = "gnuc";
 #if __MESC__
@@ -1997,8 +2020,20 @@ init_builtin (SCM builtin_type, char const* name, int arity, long function, SCM 
 init_builtin (SCM builtin_type, char const* name, int arity, SCM (*function) (SCM), SCM a)
 #endif
 {
+  if (g_debug > 4) eputs ("init_builtin 00\n");
   SCM s = cstring_to_symbol (name);
+  if (g_debug > 4) eputs ("init_builtin 01\n");
+#if 0 // non-debug
   return acons (s, make_builtin (builtin_type, symbol_to_string (s), MAKE_NUMBER (arity), MAKE_NUMBER (function)), a);
+#else
+  SCM string = symbol_to_string (s);
+  if (g_debug > 4) eputs ("init_builtin 02\n");
+  SCM builtin = make_builtin (builtin_type, string, MAKE_NUMBER (arity), MAKE_NUMBER (function));
+  if (g_debug > 4) eputs ("init_builtin 03\n");
+  SCM result = acons (s, builtin, a);
+  if (g_debug > 4) eputs ("init_builtin 04\n");
+  return result;
+#endif
 }
 
 SCM
@@ -2017,11 +2052,13 @@ make_builtin_type () ///(internal))
 SCM
 make_builtin (SCM builtin_type, SCM name, SCM arity, SCM function)
 {
+  if (g_debug > 4) eputs ("make_builtin 00\n");
   SCM values = cell_nil;
   values = cons (function, values);
   values = cons (arity, values);
   values = cons (name, values);
   values = cons (cell_symbol_builtin, values);
+  if (g_debug > 4) eputs ("make_builtin 06\n");
   return make_struct (builtin_type, values, cstring_to_symbol ("builtin-printer"));
 }
 
@@ -2151,6 +2188,8 @@ apply_builtin (SCM fn, SCM x) ///((internal))
 SCM
 mes_builtins (SCM a) ///((internal))
 {
+  if (g_debug > 4) eputs ("mes_builtins\n");
+
   // TODO minimal: cons, car, cdr, list, null_p, eq_p minus, plus
   // display_, display_error_, getenv
 
