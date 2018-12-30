@@ -136,6 +136,25 @@ sed -i\
     -e s,FUNCTION_,,\
   $mes.o
 
+# FIXME: voodoo: scaffold/malloc, scaffold/memset segfault with Mes' crt1?!
+if [ "$mes" == lib/tests/stdlib/50-malloc \
+            -o "$mes" == scaffold/memset \
+   ]; then
+    CRT1=lib/x86-mes-m2/crt1.o
+    mkdir -p lib/x86-mes-m2
+    $M1\
+          --LittleEndian\
+          --Architecture 1\
+          -f $X86_M1\
+          -f ../m2-planet/functions/libc-core.M1 \
+          -o lib/x86-mes-m2/crt1.o
+
+    sed -i\
+        -e s,GLOBAL_,,\
+        -e s,FUNCTION_,,\
+        lib/x86-mes-m2/crt1.o
+fi
+
 LIBC=lib/x86-mes/libc.o
 $HEX2\
       --LittleEndian\
