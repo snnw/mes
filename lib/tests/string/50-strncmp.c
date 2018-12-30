@@ -24,13 +24,13 @@
 int
 main ()
 {
-  if (strncmp ("abc", "a", 1))
+  if (strncmp ("abc", "a", 1) != 0)
     return 1;
 
-  if (!strncmp ("abc", "x", 1))
+  if (!strncmp ("abc", "x", 1) != 0)
     return 2;
 
-  if (strncmp ("abc", "", 0))
+  if (strncmp ("abc", "", 0) != 0)
     return 3;
 
   return 0;

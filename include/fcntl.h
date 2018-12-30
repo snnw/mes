@@ -50,7 +50,12 @@
 int dup (int old);
 int dup2 (int old, int new);
 int fcntl (int filedes, int command, ...);
+
+#if __M2_PLANET__
+int open (char const*, int flags, int mode);
+#else // !__M2_PLANET__
 int open (char const *s, int flags, ...);
+#endif // !__M2_PLANET__
 
 #endif // ! WITH_GLIBC
 

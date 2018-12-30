@@ -88,4 +88,16 @@ size_t strlen (char const* s);
 ssize_t write (int filedes, void const *buffer, size_t size);
 #endif // !WITH_GLIBC
 
+#if __M2_PLANET__
+char **environ;
+int g_stdin = 0;
+int g_stdout = 1;
+int g_stderr = 2;
+#else // !__M2_PLANET__
+extern char **environ;
+extern int g_stdin;
+extern int g_stdout;
+extern int g_stderr;
+#endif // !__M2_PLANET__
+
 #endif //__MES_LIBMES_MINI_H

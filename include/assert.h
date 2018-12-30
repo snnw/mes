@@ -27,7 +27,12 @@
 #undef __MES_ASSERT_H
 #include_next <assert.h>
 #else // ! WITH_GLIBC
+
+#if __M2_PLANET__
+#define assert(x) if ((x) == 0) assert_fail (#x)
+#else // !__M2_PLANET__
 #define assert(x) ((x) ? (void)0 : assert_fail (#x))
+#endif // !__M2_PLANET__
 void assert_fail (char* s);
 #endif // ! WITH_GLIBC
 

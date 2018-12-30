@@ -29,37 +29,37 @@ main ()
 
   oputs ("\n");
   oputs ("t: if (strcmp (p, \"foo\"))\n");
-  if (!strcmp (p, "foo"))
+  if (strcmp (p, "foo") == 0)
     return 1;
 
   oputs ("t: if (strcmp (p, \"t.c\\n\"))\n");
-  if (strcmp (p, "mes"))
+  if (strcmp (p, "mes") != 0)
     return 2;
 
   oputs ("t: if (!strcmp (p, \"t.c\\n\"))\n");
-  if (!strcmp (p, "mes")) goto ok1;
+  if (strcmp (p, "mes") == 0) goto ok1;
   return 3;
  ok1:
 
   oputs ("t: if (strcmp (p, \"foo\"))\n");
-  if (strcmp (p, "foo")) goto ok2;
+  if (strcmp (p, "foo") != 0) goto ok2;
   return 4;
  ok2:
 
   oputs ("t: itoa (33) == \"33\"\n");
-  if (strcmp (itoa (33), "33"))
+  if (strcmp (itoa (33), "33") != 0)
     return 5;
 
   oputs ("strcmp (itoa (-1), \"-1\")\n");
-  if (strcmp (itoa (-1), "-1"))
+  if (strcmp (itoa (-1), "-1") != 0)
     return 6;
 
   oputs ("strcmp (itoa (0), \"0\")\n");
-  if (strcmp (itoa (0), "0"))
+  if (strcmp (itoa (0), "0") != 0)
     return 7;
 
   oputs ("strcmp (itoa (1), \"1\")\n");
-  if (strcmp (itoa (1), "1"))
+  if (strcmp (itoa (1), "1") != 0)
     return 8;
 
   return 0;

@@ -29,12 +29,6 @@
 #include <unistd.h>
 #include <libmes.h>
 
-#if __M2_PLANET__
-int assert_fu;
-#undef assert
-#define assert(x) assert_fu
-#endif
-
 char *g_arena;
 
 typedef int SCM;

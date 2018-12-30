@@ -18,58 +18,32 @@
 # You should have received a copy of the GNU General Public License
 # along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
 
-set -e
-. build-aux/trace.sh
+set -ex
 
-MES_PREFIX=${MES_PREFIX-mes}
-HEX2=${HEX2-hex2}
-M1=${M1-M1}
-M2_PLANET=${M2_PLANET-../m2-planet/bin/M2-Planet}
-CRT1=lib/x86-mes/crt1.o
-X86_M1=../m2-planet/test/common_x86/x86_defs.M1
-X86_ELF=../m2-planet/test/common_x86/ELF-i386.hex2
-PREFIX=
-MODULEDIR=module
-VERSION=git
-
-# These already "work" with M2-Planet!
-# scaffold/main
-# scaffold/hello
-# scaffold/micro-mes
-# scaffold/tiny-mes
-# scaffold/cons-mes
-# scaffold/lib/stdlib/getenv
-# Try: ./boot.sh scaffold/cons-mes
-# ...but our target is of course: src/mes.c (and also lib/libc.c)
+# Basename of C program to M2-Planet'ize and build
 mes=${1-src/mes}
 shift ||:
 
-# These behave in an unexpected way
-# scaffold/bug4
+CC=${CC-i686-unknown-linux-gnu-gcc}
+HEX2=${HEX2-hex2}
+M1=${M1-M1}
+M2_PLANET=${M2_PLANET-M2-Planet}
 
-# These segfault unless linked with M2-Planet's crt1
-# scaffold/malloc
-# scaffold/memset
-# scaffold/milli-mes
+MES_PREFIX=${MES_PREFIX-mes}
+PREFIX=.
+MODULEDIR=mes/module
+VERSION=wip-m2
 
-# These segfaults unless linked with M2-PLanet's crt1 *and* given an argument
-# scaffold/argv
-
-# These compile, but segfault with M2-Planet -- any crt will do
-# src/read-boot
-# src/mes
-# scaffold/bug
-# scaffold/bug2
-# scaffold/bug3
-# scaffold/bug4
+CRT1=lib/x86-mes/crt1.o
+X86_M1=../m2-planet/test/common_x86/x86_defs.M1
+X86_ELF=../m2-planet/test/common_x86/ELF-i386.hex2
 
 rm -f $mes.M2
 rm -f $mes.S
 rm -f $mes.o
-rm -f $mes.m2-out
+rm -f $mes.M2-out
 
-trace "CPP        $mes.c" true
-i686-unknown-linux-gnu-cpp -E \
+$CC -E \
     -U __GNUC__\
     -D const=\
     -D enum=\
@@ -103,6 +77,7 @@ i686-unknown-linux-gnu-cpp -E \
     | sed \
           -e 's,[*] *argv[][]],**argv,g'\
           -e 's,[*] *env[][]],**env,g'\
+          -e 's,^extern ,#extern,g'\
           -e 's,int atexit,#int atexit,g'\
           -e 's,(char[*])\([-&a-z]\),\1,g'\
           -e 's,(void[*])\([-&a-z]\),\1,g'\
@@ -142,13 +117,13 @@ if [ "$V" = 2 ]; then
     cat $mes.M2
 fi
 
-trace "M2-Planet  $mes.M2" $M2_PLANET\
+$M2_PLANET\
     -f $mes.M2 \
     -o $mes.S
 
 test -s $mes.S || exit 101
 
-trace "M1         $mes.M1" $M1\
+$M1\
       --LittleEndian\
       --Architecture 1\
       -f lib/x86-mes/x86.M1\
@@ -161,43 +136,8 @@ sed -i\
     -e s,FUNCTION_,,\
   $mes.o
 
-# FIXME: scaffold/malloc segfaults with Mes' crt1?!
-# src/mes runs better initially (up to malloc) with Mes' crt1
-if [ "$mes" == scaffold/argv \
-     -o "$mes" == scaffold/malloc \
-     -o "$mes" == scaffold/memset \
-     -o "$mes" == scaffold/milli-mes ]; then
-    CRT1=lib/x86-mes-m2/crt1.o
-    mkdir -p lib/x86-mes-m2
-    trace "M1         crt1-m2" $M1\
-          --LittleEndian\
-          --Architecture 1\
-          -f $X86_M1\
-          -f ../m2-planet/functions/libc-core.M1 \
-          -o lib/x86-mes-m2/crt1.o
-
-    sed -i\
-        -e s,GLOBAL_,,\
-        -e s,FUNCTION_,,\
-        lib/x86-mes-m2/crt1.o
-fi
-
-if [ "$mes" == lib/libc ]; then
-    mkdir -p lib/x86-mes-m2
-    mv lib/libc.S lib/x86-mes-m2
-    mv lib/libc.o lib/x86-mes-m2
-    exit
-fi
-
 LIBC=lib/x86-mes/libc.o
-# M2-Planet compiled libc won't work, it has assembly and M2-Planet
-# uses a different calling convention.
-
-# We will probably have to re-implement lower level assembly functions
-# specifically for M2-Planet as a unique target.
-
-#LIBC=lib/x86-mes-m2/libc.o
-trace "HEX2       $mes.hex2" $HEX2\
+$HEX2\
       --LittleEndian\
       --Architecture 1\
       --BaseAddress 0x1000000\
@@ -206,7 +146,4 @@ trace "HEX2       $mes.hex2" $HEX2\
       -f $LIBC\
       -f $mes.o\
       --exec_enable\
-      -o $mes.m2-out
-
-trace "TEST       $mes.m2-out"
-MES_DEBUG=2 ./pre-inst-env $mes.m2-out "$@"
+      -o $mes.M2-out

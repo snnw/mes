@@ -19,6 +19,7 @@
  */
 
 #include <libmes.h>
+#include <stdlib.h>
 #include <string.h>
 
 int
@@ -26,9 +27,13 @@ main ()
 {
   oputs ("\n");
   oputs ("t: strcpy (buf, \"mes\")\n");
+#if __M2_PLANET__
+  char *buf = "xxxxxxxxxx";
+#else
   char buf[10];
+#endif
   strcpy (buf, "mes");
-  if (strcmp (buf, "mes"))
+  if (strcmp (buf, "mes") != 0)
     return 1;
 
   return 0;

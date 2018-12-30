@@ -23,7 +23,7 @@
 #include "stdlib.h"
 
 void
-main (int argc, char **argv)
+read_boot ()
 {
   eputs ("read_boot 00\n");
 #if __M2_PLANET__
@@ -51,12 +51,18 @@ main (int argc, char **argv)
               boot, "boot-0.scm");
       eputs ("read_boot 07\n");
     }
+  eputs ("read_boot 08\n");
+  oputs ("boot:"); oputs (
+#if __M2_PLANET__
+                          &
+#endif
+                          boot); oputs ("\n");
+  eputs ("read_boot 09\n");
+  oputs ("prefix:"); oputs (getenv ("MES_PREFIX")); oputs ("\n");
   eputs ("read_boot 10\n");
-  eputs ("boot:"); eputs (&boot); eputs ("\n");
-  eputs ("prefix:"); eputs (getenv ("MES_PREFIX")); eputs ("\n");
   if (getenv ("MES_PREFIX"))
     {
-      eputs ("HIERO!!!!!!!!!!!!!!!\n");
+      eputs ("read_boot 11\n");
       strcpy (
 #if __M2_PLANET__
               &
@@ -66,6 +72,7 @@ main (int argc, char **argv)
                                &
 #endif
                                prefix), "/module");
+      eputs ("read_boot 12\n");
       strcpy (
 #if __M2_PLANET__
               &
@@ -75,19 +82,23 @@ main (int argc, char **argv)
                                &
 #endif
                                prefix), "/mes/");
+      eputs ("read_boot 13\n");
     }
-  eputs ("prefix:"); eputs (
+  eputs ("read_boot 14\n");
+  oputs ("prefix:"); oputs (
 #if __M2_PLANET__
                             &
 #endif
-                            prefix); eputs ("\n");
-  return 0;
+                            prefix); oputs ("\n");
+  eputs ("read_boot 15\n");
 }
 
 int
 main (int argc, char **argv)
 {
-   eputs ("main 00\n");
-   read_boot ();
-   return 0;
+  g_stdout = 1;
+  g_stderr = 2;
+  eputs ("main 00\n");
+  read_boot ();
+  return 0;
 }

@@ -32,9 +32,6 @@
 *.mini-hex2
 *.a
 *.o
-*.seed-out
-*.stderr
-*.stdout
 
 *.x86-out
 
@@ -109,6 +106,7 @@
 /src/vector.mes.i
 
 /src/mes
+/src/x86-mes-gcc-mes
 /src/x86-mes-mes
 /src/x86_64-mes-mes
 

@@ -1,0 +1,46 @@
+Making Mes and Mes C Library M2-Planet friendly
+
+Requirements:
+
+    hex2, M1, M2-Planet binaries in PATH
+    i686-unknown-linux-gnu-gcc in PATH
+    Nyacc-0.86.0 in GUILE_LOAD_PATH (http://savannah.nongnu.org/download/nyacc/nyacc-0.86.0.tar.gz)
+
+easiest to setup is by running
+
+    guix environment mes
+
+Phases configure and check are included in the build phase:
+
+   ./M2-build.sh
+
+This runs ./M2-compile.sh for crt1.c, libc.c, a number of scaffold tests and mes.c,
+then runs ./M2-test.sh for each of them.
+
+
+Current status:
+
+Most M2-Planet'izing work has been done in
+
+    053c1d96 mescc: Mes C Library: libc.M2 WIP
+    b824e578 core: mes.M2: WIP
+
+mostly using pretty obnoxious #if __M2_PLANET__ for now, some
+constructs may land in M2-Planet and we won't have to re-rewrite
+these.  See commit messages for details.
+
+src/mes.M2-out runs but segfaults while attempting to load boot-0.scm, try:
+
+    MES_PREFIX=mes src/mes.M2-out
+
+the problem is captured in scaffold/read-boot, try:
+
+    MES_PREFIX=mes scaffold/read-boot.M2-out
+
+
+TODO:
+
+* Fix all failing tests.
+* On "wip" branch, add tests for functions in lib/libc.c.
+* Add tests for functions in lib/linux/libc.c?
+* get src/mes.M2-out to pass all Scheme tests/*.test and MesCC scaffold/tests/*.c

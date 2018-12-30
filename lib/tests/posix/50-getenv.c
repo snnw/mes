@@ -27,5 +27,6 @@ main (int argc, char const *argv[])
   eputs ("test:getenv\n");
   if (getenv ("PATH") == 0)
     return 1;
+  oputs ("MES_PREFIX="); oputs (getenv ("MES_PREFIX")); oputs ("\n");
   return 0;
 }
