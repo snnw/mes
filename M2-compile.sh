@@ -38,6 +38,7 @@ VERSION=git
 # scaffold/micro-mes
 # scaffold/tiny-mes
 # scaffold/cons-mes
+# scaffold/lib/stdlib/getenv
 # Try: ./boot.sh scaffold/cons-mes
 # ...but our target is of course: src/mes.c (and also lib/libc.c)
 mes=${1-src/mes}
@@ -85,6 +86,7 @@ i686-unknown-linux-gnu-cpp -E \
     -D FILE=int\
     -D SCM=int\
     -D __MESC__\
+    -D __i386__\
     -D __M2_PLANET__\
     -D MODULEDIR=\"$MODULEDIR/\"\
     -D PREFIX=\"$PREFIX\"\
@@ -102,8 +104,16 @@ i686-unknown-linux-gnu-cpp -E \
           -e 's,[*] *argv[][]],**argv,g'\
           -e 's,[*] *env[][]],**env,g'\
           -e 's,int atexit,#int atexit,g'\
-          -e 's,(char[*]),,g'\
-          -e 's,void [*] bsearch,#void * bsearch,g'\
+          -e 's,(char[*])\([-&a-z]\),\1,g'\
+          -e 's,(void[*])\([-&a-z]\),\1,g'\
+          -e 's,(int)\([-&a-z]\),\1,g'\
+          -e 's/, (int)/, /g'\
+          -e 's,^void [*] bsearch,#void * bsearch,g'\
+          -e 's,^int vfprint,#int vfprint,g'\
+          -e 's,^int vprint,#int vprint,g'\
+          -e 's,^int vsprint,#int vsprint,g'\
+          -e 's,^int vsnprint,#int vsnprint,g'\
+          -e 's,^int vsscanf,#int vsscanf,g'\
           -e 's,void qsort,#void qsort,g'\
           -e 's,int int,int,g'\
           -e 's,intptr_t,int,g'\
@@ -172,13 +182,28 @@ if [ "$mes" == scaffold/argv \
         lib/x86-mes-m2/crt1.o
 fi
 
+if [ "$mes" == lib/libc ]; then
+    mkdir -p lib/x86-mes-m2
+    mv lib/libc.S lib/x86-mes-m2
+    mv lib/libc.o lib/x86-mes-m2
+    exit
+fi
+
+LIBC=lib/x86-mes/libc.o
+# M2-Planet compiled libc won't work, it has assembly and M2-Planet
+# uses a different calling convention.
+
+# We will probably have to re-implement lower level assembly functions
+# specifically for M2-Planet as a unique target.
+
+#LIBC=lib/x86-mes-m2/libc.o
 trace "HEX2       $mes.hex2" $HEX2\
       --LittleEndian\
       --Architecture 1\
       --BaseAddress 0x1000000\
       -f $X86_ELF\
       -f $CRT1\
-      -f lib/x86-mes/libc.o\
+      -f $LIBC\
       -f $mes.o\
       --exec_enable\
       -o $mes.m2-out

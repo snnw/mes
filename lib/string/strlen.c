@@ -24,7 +24,12 @@ size_t
 strlen (char const* s)
 {
   int i = 0;
+#if __M2_PLANET__
+  while (s[i] != 0)
+    i = i + 1;
+#else
   while (s[i])
     i++;
+#endif
   return i;
 }

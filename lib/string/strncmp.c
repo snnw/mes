@@ -23,6 +23,24 @@
 int
 strncmp (char const* a, char const* b, size_t size)
 {
+#if __M2_PLANET__
+  if (size == 0)
+    return 0;
+  //eputs ("strncmp a="); eputs (a); eputs (", b="); eputs (b); eputs ("\n");
+  while (a[0] != 0 && b[0] != 0 && a[0] == b[0] && size > 1)
+    {
+      // eputs ("a[0]:"); eputc (a[0]);
+      // eputs (" b[0]:"); eputc (b[0]);
+      // eputs ("\n");
+      size = size - 1;
+      a = a + 1;
+      b = b + 1;
+    }
+  // eputs ("done a[0]="); eputc (a[0]);
+  // eputs (" b[0]="); eputc (b[0]);
+  // eputs (" returning:"); eputs (itoa (a[0] - b[0])); eputs ("\n");
+  return a[0] - b[0];
+#else
   if (!size)
     return 0;
   while (*a && *b && *a == *b && --size)
@@ -31,4 +49,5 @@ strncmp (char const* a, char const* b, size_t size)
       b++;
     }
   return *a - *b;
+#endif
 }

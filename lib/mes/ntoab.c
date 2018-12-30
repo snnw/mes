@@ -20,12 +20,19 @@
 
 #include <libmes.h>
 
+#if __M2_PLANET__
+char itoa_buf = "xxxxxxxxxxxxxxxxxxxx";
+#endif
+
 char *
 ntoab (long x, int base, int signed_p)
 {
+#if !__M2_PLANET__
   static char itoa_buf[20];
+#endif
   char *p = itoa_buf + 11;
-  *p-- = 0;
+  p[0] = 0;
+  p = p - 1;
 
   int sign_p = 0;
   unsigned long u = x;
@@ -38,12 +45,19 @@ ntoab (long x, int base, int signed_p)
   do
      {
        long i = u % base;
-       *p-- = i > 9 ? 'a' + i - 10 : '0' + i;
+       if (i > 9)
+         p[0] = 'a' + i - 10;
+       else
+         p[0] = '0' + i;
+       p = p -1;
        u = u / base;
      } while (u);
 
-  if (sign_p && *(p + 1) != '0')
-    *p-- = '-';
+  if (sign_p && p[1] != '0')
+    {
+      p[0] = '-';
+      p = p - 1;
+    }
 
   return p+1;
 }

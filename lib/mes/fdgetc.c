@@ -22,7 +22,11 @@
 #include <limits.h>
 #include <sys/resource.h>
 
+#if __M2_PLANET__
+int __ungetc_buf[RLIMIT_NOFILE+1];
+#else
 int __ungetc_buf[RLIMIT_NOFILE+1] = {0};
+#endif
 
 void
 __ungetc_init ()
@@ -48,7 +52,7 @@ fdgetc (int fd)
       i = c;
    }
   if (i < 0)
-    i += 256;
+    i = i + 256;
 
   return i;
 }

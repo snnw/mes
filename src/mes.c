@@ -2432,9 +2432,22 @@ read_boot () ///((internal))
 #include "gc.c"
 #include "reader.c"
 
+#if __M2_PLANET__
+int __mes_debug;
+int _ungetc_pos;
+int _ungetc_fd;
+#endif
+
 int
 main (int argc, char *argv[])
 {
+#if __M2_PLANET__
+  // FIXME: add failed library inits
+  __mes_debug = -1;
+  _ungetc_pos = -1;
+  _ungetc_fd = -1;
+#endif
+
   char *p;
   if (p = getenv ("MES_DEBUG"))
     g_debug = atoi (p);

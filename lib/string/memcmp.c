@@ -27,10 +27,20 @@ memcmp (void const *s1, void const *s2, size_t size)
     return 0;
   char *a = s1;
   char *b = s2;
+#if __M2_PLANET__
+  while (a[0] == b[0] && size > 0)
+    {
+      size = size - 1;
+      a = a + 1;
+      b = b + 1;
+    }
+  return a[0] - b[0];
+#else
   while (*a == *b && --size)
     {
       a++;
       b++;
     }
   return *a - *b;
+#endif
 }

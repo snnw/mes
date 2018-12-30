@@ -23,7 +23,17 @@ memcpy (void *dest, void const *src, size_t n)
 {
   char* p = dest;
   char const* q = src;
+#if __M2_PLANET__
+  while (n)
+    {
+      n = n - 1;
+      p[0] = q[0];
+      p = p + 1;
+      q = q + 1;
+    }
+#else
   while (n--)
     *p++ = *q++;
+#endif
   return dest;
 }

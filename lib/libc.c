@@ -42,16 +42,34 @@
 
 void _env ();
 
+#if __M2_PLANET__
+int
+MAX(int a, int b)
+{
+  if (a > b)
+    return a;
+  return b;
+}
+#else
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+
+#if __M2_PLANET__
+int __mes_debug; // = -1;
+#endif
 
 int
 __mes_debug ()
 {
+#if !__M2_PLANET__
   static int __mes_debug = -1;
+#endif
   if (__mes_debug == -1)
     {
       char *p = getenv ("MES_DEBUG");
-      __mes_debug = p ? MAX (atoi (p), 1) : 0;
+      __mes_debug = 0;
+      if (p)
+        __mes_debug = MAX (atoi (p), 1);
     }
   return __mes_debug;
 }

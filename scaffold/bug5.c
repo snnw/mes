@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,24 +18,12 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string.h>
 
-char *
-strcpy (char *dest, char const *src)
+int g_foo = 1;
+int g_bar = -1;
+
+int
+main (int argc, char **argv)
 {
-  char *p = dest;
-#if __M2_PLANET__
-  while (src[0] != 0)
-    {
-      p[0] = src[0];
-      p + p + 1;
-      src = src + 1;
-    }
-  p[0] = 0;
-#else
-  while (*src)
-    *p++ = *src++;
-  *p = 0;
-#endif
-  return dest;
+  return g_foo - g_bar;
 }

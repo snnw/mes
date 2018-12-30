@@ -55,7 +55,15 @@ read (int filedes, void *buffer, size_t size)
     {
       if (bytes == 1)
         {
-          eputs ("read fd="); eputs (itoa ((int)filedes)); eputs (" c="); eputc (*(char*)buffer); eputs ("\n");
+          eputs ("read fd=");
+          eputs (itoa ((int)filedes));
+          eputs (" c=");
+#if __M2_PLANET__
+          eputc (buffer[0]);
+#else
+          eputc (*(char*)buffer);
+#endif
+          eputs ("\n");
         }
       else
         {
@@ -83,6 +91,15 @@ _open2 (char const *file_name, int flags)
   return _open3 (file_name, flags, mask);
 }
 
+#if __M2_PLANET__
+int
+open (char const *file_name, int flags)
+{
+  int mask = 0;
+  int r = _open3 (file_name, flags, mask);
+  return r;
+}
+#else
 int
 open (char const *file_name, int flags, ...)
 {
@@ -93,6 +110,7 @@ open (char const *file_name, int flags, ...)
   va_end (ap);
   return r;
 }
+#endif
 
 pid_t
 waitpid (pid_t pid, int *status_ptr, int options)
@@ -130,6 +148,14 @@ brk (void *addr)
   return _sys_call1 (SYS_brk, (long)addr);
 }
 
+#if __M2_PLANET__
+int
+ioctl (int filedes, unsigned long command, int data)
+{
+  int r = _sys_call3 (SYS_ioctl, (int)filedes, (long)command, (int)data);
+  return r;
+}
+#else
 int
 ioctl (int filedes, unsigned long command, ...)
 {
@@ -140,6 +166,7 @@ ioctl (int filedes, unsigned long command, ...)
   va_end (ap);
   return r;
 }
+#endif
 
 int
 fsync (int filedes)
@@ -156,13 +183,19 @@ _getcwd (char *buffer, size_t size)
   return 0;
 }
 
+#if __M2_PLANET__
+char getcwd_buf = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+#endif
+
 char *
 getcwd (char *buffer, size_t size)
 {
-  static char buf[PATH_MAX];
+#if !__M2_PLANET__
+  static char getcwd_buf[PATH_MAX];
+#endif
   if (buffer)
     return _getcwd (buffer, size);
-  return _getcwd (buf, PATH_MAX);
+  return _getcwd (getcwd_buf, PATH_MAX);
 }
 
 int

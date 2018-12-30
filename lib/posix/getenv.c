@@ -23,13 +23,33 @@
 char *
 getenv (char const* s)
 {
+  // eputs ("getenv s="); eputs (s); eputs ("\n");
   char **p = environ;
   int length = strlen (s);
+  // eputs ("length="); eputs (itoa (length)); eputs ("\n");
+#if __M2_PLANET__
+  while (p[0] != 0)
+    {
+      // eputs ("getenv p[0]="); eputs (p[0]); eputs ("\n");
+      if (strncmp (s, p[0], length) == 0)
+        {
+          // eputs ("found!\n");
+          char *q = p[0] + length;
+          if (q[0] == '=')
+            return q + 1;
+        }
+      // else
+      //   eputs ("not found!\n");
+      p = p + sizeof (char*);
+    }
+#else
   while (*p)
     {
+      // eputs ("getenv *p="); eputs (*p); eputs ("\n");
       if (!strncmp (s, *p, length) && *(*p + length) == '=')
         return (*p + length + 1);
       p++;
     }
+#endif
   return 0;
 }

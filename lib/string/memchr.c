@@ -24,11 +24,21 @@ void *
 memchr (void const *block, int c, size_t size)
 {
   char const *p = block;
+#if __M2_PLANET__
+  while (size)
+    {
+      size = size - 1;
+      if (c == p[0])
+        return p;
+      p = p + 1;
+    }
+#else
   while (size--)
     {
       if (c == *p)
         return p;
       p++;
     }
+#endif
   return 0;
 }

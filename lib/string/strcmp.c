@@ -23,10 +23,19 @@
 int
 strcmp (char const* a, char const* b)
 {
+#if __M2_PLANET__
+  while (a[0] && b[0] && a[0] == b[0])
+    {
+      a = a + 1;
+      b = b + 1;
+    }
+  return a[0] - b[0];
+#else
   while (*a && *b && *a == *b)
     {
       a++;
       b++;
     }
   return *a - *b;
+#endif
 }

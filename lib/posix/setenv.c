@@ -25,6 +25,27 @@ setenv (char const* s, char const* v, int overwrite_p)
 {
   char **p = environ;
   int length = strlen (s);
+#if __M2_PLANET__
+  while (p[0])
+    {
+      if (strncmp (s, p[0], length) == 0)
+        {
+          char *q = p[0] + length;
+          if (q[0] == '=')
+            break;
+        }
+      p = p + sizeof (char*);
+    }
+  char *entry = malloc (length + strlen (v) + 2);
+  int end_p = p[0] == 0;
+  p[0] = entry;
+  strcpy (entry, s);
+  strcpy (entry + length, "=");
+  strcpy (entry + length + 1, v);
+  entry[length + strlen (v) + 2] = 0;
+  if (end_p)
+    p[1] = 0;
+#else
   while (*p)
     {
       if (!strncmp (s, *p, length) && *(*p + length) == '=')
@@ -40,5 +61,6 @@ setenv (char const* s, char const* v, int overwrite_p)
   *(entry + length + strlen (v) + 2) = 0;
   if (end_p)
     *++p = 0;
+#endif
   return 0;
 }
