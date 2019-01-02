@@ -18,43 +18,11 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libmes.h>
-#include <unistd.h>
+#include "unistd.h"
 
 int
-vexec (char const *file_name, va_list ap)
+main (int argc, char const *argv[])
 {
-  char *arg = va_arg (ap, char const *);
-  char *argv[1000];           // POSIX minimum 4096
-  int i = 0;
-
-  argv[i++] = file_name;
-  while (arg)
-    {
-      argv[i++] = arg;
-      arg = va_arg (ap, char const *);
-      if (__mes_debug () > 2)
-        {
-          eputs ("arg["); eputs (itoa (i)); eputs ("]: "); eputs (argv[i-1]); eputs ("\n");
-        }
-    }
-  argv[i] = 0;
-  int r = execv (file_name, argv);
-  va_end (ap);
-  return r;
-}
-
-int
-execl (char const *file_name, char const *arg, ...)
-{
-  va_list ap;
-  int r;
-  va_start (ap, arg);
-  if (__mes_debug () > 2)
-    {
-      eputs ("execl "); eputs (file_name); eputs ("\n");
-    }
-  r = vexec (file_name, ap);
-  va_end (ap);
-  return r;
+  execlp ("echo", "echo", "Hello", "World!", 0);
+  return 0;
 }

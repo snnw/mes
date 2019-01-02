@@ -119,3 +119,6 @@
 #include <stub/rand.c>
 #include <stub/sigdelset.c>
 #include <stub/ttyname.c>
+
+// tar
+#include <posix/execlp.c>
