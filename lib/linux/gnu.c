@@ -197,3 +197,16 @@ sigprocmask (int how, sigset_t const *set, sigset_t *oldset)
   return _sys_call3 (SYS_rt_sigprocmask, (long)how, (long)set, (long)oldset);
 #endif
 }
+
+// tar
+int
+symlink (char const *old_name, char const *new_name)
+{
+  return _sys_call2 (SYS_symlink, (long)old_name, (long)new_name);
+}
+
+ssize_t
+readlink (char const *file_name, char *buffer, size_t size)
+{
+  return _sys_call3 (SYS_readlink, (long)file_name, (long)buffer, (long)size);
+}
