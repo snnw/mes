@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -61,6 +61,7 @@ int errno;
 #include <ctype/isupper.c>
 #include <ctype/tolower.c>
 #include <ctype/toupper.c>
+#include <mes/abtod.c> // implementation instead of stub for GNU gawk
 #include <mes/search-path.c>
 #include <posix/execvp.c>
 #include <stdio/fclose.c>
@@ -85,6 +86,7 @@ int errno;
 #include <stdio/vsscanf.c>
 #include <stdlib/calloc.c>
 #include <stdlib/qsort.c>
+#include <stdlib/strtod.c>
 #include <stdlib/strtof.c>
 #include <stdlib/strtol.c>
 #include <stdlib/strtold.c>
@@ -105,5 +107,4 @@ int errno;
 #include <stub/ldexp.c>
 #include <stub/mprotect.c>
 #include <stub/localtime.c>
-#include <stub/strtod.c>
 #include <stub/sigemptyset.c>

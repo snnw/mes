@@ -83,7 +83,6 @@
 #include <math/fabs.c>
 
 // gcc
-
 #include <stdio/freopen.c>
 #include <stub/times.c>
 #include <posix/sleep.c>
@@ -122,6 +121,7 @@
 
 // gawk
 #include <ctype/isgraph.c>
+// #include <mes/abtod.c> in libc+tcc for strtod,strtof (could be stubbed)
 
 // tar
 #include <posix/execlp.c>
