@@ -192,6 +192,7 @@ scaffold/tests/84-struct-field-list
 scaffold/tests/85-sizeof
 lib/tests/dirent/90-readdir
 lib/tests/io/90-stat
+lib/tests/mes/90-abtod
 lib/tests/posix/90-execlp
 lib/tests/posix/90-unsetenv
 lib/tests/signal/90-signal

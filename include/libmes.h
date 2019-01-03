@@ -24,6 +24,7 @@
 #include <libmes-mini.h>
 
 int __mes_debug ();
+double abtod (char const** p, int base);
 long abtol (char const** p, int base);
 char const* ntoab (long number, int base, int signed_p);
 char const* itoa (int number);
