@@ -120,5 +120,8 @@
 #include <stub/sigdelset.c>
 #include <stub/ttyname.c>
 
+// gawk
+#include <ctype/isgraph.c>
+
 // tar
 #include <posix/execlp.c>
