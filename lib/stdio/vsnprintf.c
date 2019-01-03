@@ -198,6 +198,55 @@ vsnprintf (char *str, size_t size, char const* format, va_list ap)
                 }
               break;
             }
+          case 'f':
+          case 'e':
+          case 'E':
+          case 'g':
+          case 'G':
+            {
+              double d = va_arg (ap, double);
+              char const *s = dtoab (d, 10, 1);
+              if (c == 'E' || c == 'G')
+                strupr (s);
+              int length = strlen (s);
+              if (precision == -1)
+                precision = length;
+              if (!left_p)
+                {
+                  while (width-- > precision)
+                    {
+                      if (count < size)
+                        *str++ = pad;
+                      count++;
+                    }
+                  while (precision > length)
+                    {
+                      if (count < size)
+                        *str++ = '0';
+                      precision--;
+                      width--;
+                      count++;
+                    }
+                }
+              while (*s)
+                {
+                  if (precision-- <= 0)
+                    break;
+                  width--;
+                  c = *s++;
+                  if (count < size)
+                    *str++ = c;
+                  count++;
+                }
+              while (width > 0)
+                {
+                  width--;
+                  if (count < size)
+                    *str++ = pad;
+                  count++;
+                }
+              break;
+            }
           case 'n':
             {
               int *n = va_arg (ap, int *);

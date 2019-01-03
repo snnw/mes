@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -19,31 +19,27 @@
  */
 
 #include <libmes.h>
+#include <limits.h>
 
 char const*
-ntoab (long x, int base, int signed_p)
+dtoab (double d, int base, int signed_p)
 {
-  static char itoa_buf[20];
-  char *p = itoa_buf + 11;
-  *p-- = 0;
-
-  int sign_p = 0;
-  unsigned long u = x;
-  if (signed_p && x < 0)
+  static char dtoa_buf[40];
+  long i = (long)d;
+  char *p = ntoab (i, base, signed_p);
+  strcpy (dtoa_buf, p);
+  long f = (d - (double)i) * (double)100000000000;
+  if (f)
     {
-      sign_p = 1;
-      u = -x;
+      if (f < 0)
+        f = -f;
+      strcat (dtoa_buf, ".");
+      p = ntoab (f, base, 1);
+      strcat (dtoa_buf, p);
+      p = strchr (dtoa_buf, 0);
+      p--;
+      while (*p && *p == '0')
+        *p-- = 0;
     }
-
-  do
-     {
-       long i = u % base;
-       *p-- = i > 9 ? 'a' + i - 10 : '0' + i;
-       u = u / base;
-     } while (u);
-
-  if (sign_p && *(p + 1) != '0')
-    *p-- = '-';
-
-  return p+1;
+  return dtoa_buf;
 }
