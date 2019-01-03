@@ -183,6 +183,50 @@ vfprintf (FILE* f, char const* format, va_list ap)
                 }
               break;
             }
+          case 'f':
+          case 'e':
+          case 'E':
+          case 'g':
+          case 'G':
+            {
+              double d = va_arg (ap, double);
+              char const *s = dtoab (d, 10, 1);
+              if (c == 'E' || c == 'G')
+                strupr (s);
+              int length = strlen (s);
+              if (precision == -1)
+                precision = length;
+              if (!left_p)
+                {
+                  while (width-- > precision)
+                    {
+                      fputc (pad, f);
+                      count++;
+                    }
+                  while (precision > length)
+                    {
+                      fputc ('0', f);
+                      precision--;
+                      width--;
+                      count++;
+                    }
+                }
+              while (*s)
+                {
+                  if (precision-- <= 0)
+                    break;
+                  width--;
+                  fputc (*s++, f);
+                  count++;
+                }
+              while (width > 0)
+                {
+                  width--;
+                  fputc (pad, f);
+                  count++;
+                }
+              break;
+            }
           case 'n':
             {
               int *n = va_arg (ap, int *);

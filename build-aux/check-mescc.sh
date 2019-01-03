@@ -193,6 +193,7 @@ scaffold/tests/85-sizeof
 lib/tests/dirent/90-readdir
 lib/tests/io/90-stat
 lib/tests/mes/90-abtod
+lib/tests/mes/90-dtoab
 lib/tests/posix/90-execlp
 lib/tests/posix/90-unsetenv
 lib/tests/signal/90-signal
@@ -200,6 +201,7 @@ lib/tests/stdio/90-fopen
 lib/tests/stdio/90-fopen-append
 lib/tests/stdio/90-fread-fwrite
 lib/tests/stdio/90-fseek
+lib/tests/stdio/90-sprintf
 lib/tests/stdlib/90-strtol
 lib/tests/string/90-snprintf
 lib/tests/string/90-strpbrk
@@ -218,6 +220,9 @@ scaffold/tests/17-compare-unsigned-short-le
 scaffold/tests/66-local-char-array
 scaffold/tests/a0-call-trunc-int
 scaffold/tests/a0-math-divide-signed-negative
+lib/tests/mes/90-abtod
+lib/tests/mes/90-dtoab
+lib/tests/stdio/90-sprintf
 "
 
 if [ "$mes_arch" = "x86_64-gcc" ]; then
