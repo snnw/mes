@@ -48,7 +48,7 @@
 
 // m4
 #include <stdlib/abort.c>
-#include <stub/atof.c>
+#include <stdlib/atof.c>
 #include <string/bcmp.c>
 #include <string/bcopy.c>
 #include <string/bzero.c>
