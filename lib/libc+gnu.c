@@ -127,4 +127,7 @@
 
 // tar
 #include <posix/execlp.c>
+#include <stub/getgrgid.c>
+#include <stub/getgrnam.c>
 #include <stub/mktime.c>
+#include <stub/setgrent.c>
