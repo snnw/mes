@@ -911,6 +911,7 @@
 
         ((p-expr (fixed ,value))
          (let* ((value (cstring->int value))
+                (reg-size (->size "*" info))
                 (info (allocate-register info))
                 (info (append-text info (wrap-as (as info 'value->r value)))))
            (if (or #t (> value 0) (= reg-size 4)) info
