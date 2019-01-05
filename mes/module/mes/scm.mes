@@ -56,9 +56,12 @@
        ,@body
        (loop ,@(cddar init)))))
 
-(define (for-each f l . r)
-  (if (pair? l) (if (null? r) (begin (f (car l)) (for-each f (cdr l)))
-                    (if (null? (cdr r)) (begin (f (car l) (caar r)) (for-each f (cdr l) (cdar r)))))))
+(define (for-each f l . xr)
+  (if (and (pair? l)
+           (or (null? xr)
+               (pair? (car xr))))
+      (if (null? xr) (begin (f (car l)) (for-each f (cdr l)))
+          (if (null? (cdr xr)) (begin (f (car l) (caar xr)) (for-each f (cdr l) (cdar xr)))))))
 
 (define core:error error)
 

@@ -126,7 +126,9 @@
         (#t #f)))
 
 (define (map f h . t)
-  (if (null? h) '()
+  (if (or (null? h)
+          (and (pair? t) (null? (car t)))
+          (and (pair? t) (pair? (cdr t)) (null? (cadr t)))) '()
       (if (null? t) (cons (f (car h)) (map f (cdr h)))
           (if (null? (cdr t))
               (cons (f (car h) (caar t)) (map f (cdr h) (cdar t)))
