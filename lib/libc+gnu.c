@@ -121,6 +121,8 @@
 
 // gawk
 #include <ctype/isgraph.c>
+#include <stub/getpgid.c>
+#include <stub/getpgrp.c>
 // #include <mes/abtod.c> in libc+tcc for strtod,strtof (could be stubbed)
 
 // tar
