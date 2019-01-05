@@ -222,6 +222,7 @@ scaffold/tests/a0-call-trunc-int
 scaffold/tests/a0-math-divide-signed-negative
 lib/tests/mes/90-abtod
 lib/tests/mes/90-dtoab
+lib/tests/posix/50-getenv
 lib/tests/stdio/90-sprintf
 "
 
