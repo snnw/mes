@@ -46,9 +46,9 @@
 #include <fcntl.h>
 #include <stdarg.h>
 // The Mes C Library defines and initializes these in crt1
-int g_stdin = STDIN;
-int g_stdout = STDOUT;
-int g_stderr = STDERR;
+int __stdin = STDIN;
+int __stdout = STDOUT;
+int __stderr = STDERR;
 
 int
 mes_open (char const *file_name, int flags, ...)
