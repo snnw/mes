@@ -23,6 +23,11 @@
 
 #include <libmes-mini.h>
 
+#if POSIX
+int mes_open (char const *file_name, int flags, ...);
+#define open mes_open
+#endif
+
 int __mes_debug ();
 double abtod (char const** p, int base);
 long abtol (char const** p, int base);
