@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,6 +18,7 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <libmes.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -32,7 +33,7 @@ vfprintf (FILE* f, char const* format, va_list ap)
     if (*p != '%')
       {
         count++;
-        fputc (*p++, fd);
+        fputc (*p++, f);
       }
     else
       {
@@ -87,7 +88,7 @@ vfprintf (FILE* f, char const* format, va_list ap)
           {
           case '%':
             {
-              fputc (*p, fd);
+              fputc (*p, f);
               count++;
               break;
             }
@@ -95,7 +96,7 @@ vfprintf (FILE* f, char const* format, va_list ap)
             {
               char _c;
               _c = va_arg (ap, long);
-              fputc (_c, fd);
+              fputc (_c, f);
               break;
             }
           case 'd':
@@ -109,7 +110,7 @@ vfprintf (FILE* f, char const* format, va_list ap)
               int base = c == 'o' ? 8
                 : c == 'x' || c == 'X' ? 16
                 : 10;
-              char const *s = ntoab (d, base, c != 'u' && c != 'x' && c != 'X');
+              char *s = ntoab (d, base, c != 'u' && c != 'x' && c != 'X');
               if (c == 'X')
                 strupr (s);
               int length = strlen (s);
@@ -190,7 +191,7 @@ vfprintf (FILE* f, char const* format, va_list ap)
           case 'G':
             {
               double d = va_arg (ap, double);
-              char const *s = dtoab (d, 10, 1);
+              char *s = dtoab (d, 10, 1);
               if (c == 'E' || c == 'G')
                 strupr (s);
               int length = strlen (s);
