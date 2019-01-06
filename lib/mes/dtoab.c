@@ -21,7 +21,7 @@
 #include <libmes.h>
 #include <limits.h>
 
-char const*
+char *
 dtoab (double d, int base, int signed_p)
 {
   static char dtoa_buf[40];
