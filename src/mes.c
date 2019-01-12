@@ -467,6 +467,8 @@ struct scm *g_news = 0;
 #define NSTRING(x) g_news[x].cdr
 #define NVECTOR(x) g_news[x].cdr
 
+#endif // !__M2_PLANET__
+
 #define CSTRING(x) CBYTES (STRING (x))
 
 #define MAKE_BYTES0(x) make_bytes (x, strlen (x))
