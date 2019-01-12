@@ -23,7 +23,7 @@
 
 #include <libmes-mini.h>
 
-#if POSIX
+#if WITH_GLIBC
 int mes_open (char const *file_name, int flags, ...);
 #define open mes_open
 #endif
