@@ -372,7 +372,7 @@ struct scm *g_news = 0;
 // CONSTANT cell_test 118
 #define cell_test 118
 
-#include "src/builtins.h"
+#include "builtins.h"
 
 #define TYPE(x) g_cells[x].type
 #define CAR(x) g_cells[x].car
@@ -2269,16 +2269,16 @@ load_env () ///((internal))
   return r2;
 }
 
-#include "src/hash.c"
-#include "src/module.c"
-#include "src/posix.c"
-#include "src/math.c"
-#include "src/lib.c"
-#include "src/vector.c"
-#include "src/strings.c"
-#include "src/struct.c"
-#include "src/gc.c"
-#include "src/reader.c"
+#include "hash.c"
+#include "module.c"
+#include "posix.c"
+#include "math.c"
+#include "lib.c"
+#include "vector.c"
+#include "strings.c"
+#include "struct.c"
+#include "gc.c"
+#include "reader.c"
 
 int
 main (int argc, char *argv[])
