@@ -31,12 +31,11 @@
 *** Bootstrapping                                             :B_block:BMCOL:
     :PROPERTIES:
     :BEAMER_COL: 0.6
-    :BEAMER_ENV: block
     :END:
   * Where do compilers come from?
   * Who compiled the compiler?
   * Chicken and Egg
-*** .                                                         :B_block:BMCOL:
+*** WTF                                                       :B_block:BMCOL:
 #+LATEX:\includegraphics[width=0.4\textwidth]{mes.png}
     :PROPERTIES:
     :BEAMER_COL: 0.3
@@ -44,20 +43,19 @@
     :xBEAMER_ENV: block
     :END:
 
-
 *** mes: A tiny Scheme interpreter in Hex [or simple C?]
-  :PROPERTIES:
-  :BEAMER_ACT: <2->
-  :END:
+    :PROPERTIES:
+    :BEAMER_ACT: <2->
+    :END:
 
 *** mescc: A C compiler in Scheme, executed by Mes
+  :PROPERTIES:
+  :BEAMER_ACT: <3->
+  :END:
   * Mes + CC =
 #+xATTR_LATEX: :=\linewidth
 #+xLATEX:\includegraphics[width=0.25\textwidth]{fsb-logo.png}
 #+LATEX:\rightskip=-3cm\includegraphics[width=0.2\textwidth]{fsb-logo-guile-guix-mes.png}
-  :PROPERTIES:
-  :BEAMER_ACT: <3->
-  :END:
 
 * Mes, what NOT?
   :PROPERTIES:

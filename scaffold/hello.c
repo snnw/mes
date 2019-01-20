@@ -20,9 +20,8 @@
 
 #include <stdio.h>
 
-int
-main (int argc, char *argv[])
+void
+main ()
 {
-  eputs ("Hello, Mescc!\n");
-  return 42;
+  puts ("Hello, Mes!");
 }
