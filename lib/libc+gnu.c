@@ -132,3 +132,15 @@
 #include <stub/getgrnam.c>
 #include <stub/mktime.c>
 #include <stub/setgrent.c>
+
+// gcc-4.6.4
+#include <math/ceil.c>
+#include <math/floor.c>
+#include <stub/atan2.c>
+#include <stub/cos.c>
+#include <stub/exp.c>
+#include <stub/log.c>
+#include <stub/modf.c>
+#include <stub/pow.c>
+#include <stub/sin.c>
+#include <stub/sqrt.c>
