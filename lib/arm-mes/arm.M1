@@ -1,0 +1,160 @@
+### GNU Mes --- Maxwell Equations of Software
+### Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+### Copyright © 2019 Danny Milosavljevic <dannym@scratchpost.org>
+###
+### This file is part of GNU Mes.
+###
+### Mes is free software# you can redistribute it and/or modify it
+### under the terms of the GNU General Public License as published by
+### the Free Software Foundation# either version 3 of the License, or (at
+### your option) any later version.
+###
+### GNU Mes is distributed in the hope that it will be useful, but
+### WITHOUT ANY WARRANTY# without even the implied warranty of
+### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+### GNU General Public License for more details.
+###
+### You should have received a copy of the GNU General Public License
+### along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+
+# FIXME: https://w3challs.com/syscalls/?arch=arm_strong
+
+# reduced instruction set: r0, r1 (some r2 for shift, r3 for mul, div)
+# FIXME: count instructions
+
+#DEFINE add____$i32,(%r0) xx
+#DEFINE add____$i32,(%r1) xx
+#DEFINE add____$i32,0x32(%r0) xx
+#DEFINE add____$i32,0x32(%ebp) xx
+DEFINE add____$i8,%r0 e28000
+DEFINE add____$i8,%r1 e28110
+DEFINE add____$i8,%r13 e28dd0
+#DEFINE add____$i8,(%r0) xx
+#DEFINE add____$i8,(%r1) xx
+#DEFINE add____$i8,0x32 xx
+#DEFINE add____$i8,0x32(%r0) xx
+#DEFINE add____$i8,0x32(%ebp) xx
+#DEFINE add____$i8,0x8(%r0) xx
+#DEFINE add____$i8,0x8(%ebp) xx
+DEFINE add____%r0,%r0 e0800000
+#DEFINE add____%ebp,%r0 xx
+DEFINE add____%r1,%r0 e0800001
+DEFINE add____%r1,%r1 e0811001
+#DEFINE and____$i32,%r0 xx
+#DEFINE and____$i32,%r1 xx
+DEFINE and____%r1,%r0 e0000001
+#DEFINE call32 xx
+#DEFINE call___*%r0 xx
+#DEFINE call___*%r1 xx
+#DEFINE cltd xx
+#DEFINE cmp____$0x32,%r0 xx
+#DEFINE cmp____$i32,%r0 xx
+DEFINE cmp____$i8,%r0 e35000
+DEFINE cmp____$i8,%r1 e35100
+#DEFINE div___%r1 xx
+#DEFINE hlt xx
+#DEFINE idiv___%r1 xx
+#DEFINE int xx
+#DEFINE int____$0x80 xx
+DEFINE ja8  8a0000
+DEFINE jae8 3a0000
+DEFINE jb8  2a0000
+DEFINE jbe8 9a0000
+DEFINE je8 0a0000
+DEFINE je8 0a0000
+DEFINE jg8 ca0000
+DEFINE jge8 aa0000
+DEFINE jl8 ba0000
+DEFINE jle8 da0000
+#DEFINE jmp32 xx
+#DEFINE jmp____*%r1 xx
+DEFINE jne8 1a0000
+#DEFINE lea____0x32(%ebp),%r0 xx
+#DEFINE lea____0x8(%ebp),%r0 xx
+
+# e3a00064        mov     r0, #100
+# e3a01064        mov     r1, #100
+# e3a02064        mov     r2, #100
+
+# OK:
+DEFINE mov____$i8,%r0 e3a000
+DEFINE mov____%r0,%r1 e1a01000
+DEFINE mov____%r0,%r2 e1a02000
+DEFINE mov____%r0,(%r1) e5810000
+#DEFINE mov____%ebp,%r0 xx
+#DEFINE mov____%ebp,%r1 xx
+DEFINE mov____%r1,%r0 e1a00001
+DEFINE mov____%r1,%r2 e1a02001
+#DEFINE mov____%r1,0x32 xx
+#DEFINE mov____%r1,0x32(%ebp) xx
+#DEFINE mov____%r1,0x8(%ebp) xx
+DEFINE mov____%r2,(%r1) e5812000
+DEFINE mov____%r3,%r0 e1a00003
+DEFINE mov____%r3,%r1 e1a01003
+#DEFINE mov____%r13,%ebp xx
+DEFINE mov____(%r0),%r0 e5900000
+DEFINE mov____(%r0),%r2 e5902000
+DEFINE mov____(%r1),%r1 e5911000
+#DEFINE mul____%r1 xx
+#DEFINE mul_____%r1 xx
+DEFINE nop e1a00000
+DEFINE not____%r0 e1e00000
+DEFINE not____%r1 e1e01001
+DEFINE or_____%r1,%r0 e1800001
+DEFINE pop____%r0 e49d0004
+DEFINE pop____%r1 e49d1004
+DEFINE pop____%r3 e49d3004
+#DEFINE push___$i32 xx
+DEFINE push___%r0 e52d0004 # str r0, [sp, #-4]!
+#DEFINE push___%ebp xx
+DEFINE push___%r1 e52d1004 # str r1, [sp, #-4]!
+DEFINE push___%r3 e52d3004 # str r3, [sp, #-4]!
+#DEFINE push___(%r0) xx
+#DEFINE push___0x32(%ebp) xx
+#DEFINE push___0x8(%ebp) xx
+DEFINE ret 4770 #e1a0f00e
+#DEFINE shl____$i8,%r0 xx # complicated encoding
+#DEFINE shl____$i8,%r1 xx # complicated encoding
+#DEFINE sub____$8,%r13 xx
+#DEFINE sub____$i32,%r13 xx
+DEFINE sub____%r1,%r0 e0400001
+#DEFINE test___%al,%al xx
+#DEFINE test___%r0,%r0 xx
+#DEFINE test___%r1,%r1 xx
+#DEFINE xchg___%r0,%r1 xx
+#DEFINE xchg___%r0,(%r13) xx
+#DEFINE xchg___%r1,(%r13) xx
+DEFINE xor____$i32,%r0 e22000
+DEFINE xor____%r0,%r0 e0200000
+DEFINE xor____%r1,%r0 e0200001
+DEFINE xor____%r1,%r1 e0211001
+DEFINE xor____%r3,%r3 e0233003
+
+# deprecated, remove after 0.18
+#DEFINE sub____%r13,$i32 81ec
+#DEFINE sub____%r13,$i8 83ec
+
+DEFINE SYS_exit   900001
+DEFINE SYS_fork   900002
+DEFINE SYS_read   900003
+DEFINE SYS_rmdir  900028
+DEFINE SYS_write  900004
+DEFINE SYS_open   900005
+DEFINE SYS_close  900006
+# DEFINE SYS_waitpid does_not_exist
+DEFINE SYS_wait4  900072
+# waitid: 900118
+#__waitpid (__pid_t pid, int *stat_loc, int options)
+#  return SYSCALL_CANCEL (wait4, pid, stat_loc, options, NULL); # the NULL is more!
+
+# Linux note: sys_waitpid() remains for compatibility. waitpid() should be implemented by calling sys_wait4() from libc.a.
+DEFINE SYS_unlink 90000a
+DEFINE SYS_execve 90000b
+DEFINE SYS_chmod  90000f
+DEFINE SYS_lseek  900013
+DEFINE SYS_access 900021
+DEFINE SYS_brk    90002d
+DEFINE SYS_ioctl  900036
+DEFINE SYS_stat   90006a
+DEFINE SYS_fsync  900076
+DEFINE SYS_getcwd 9000b7
