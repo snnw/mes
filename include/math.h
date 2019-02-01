@@ -24,9 +24,20 @@
 #undef __MES_MATH_H
 #include_next <math.h>
 #else  // ! WITH_GLIBC
-double ldexp (double x, int exp);
-#endif  // ! WITH_GLIBC
 
+double atan2 (double y, double x);
+double ceil (double x);
+double cos (double x);
+double exp (double x);
 double fabs (double number);
+double floor (double x);
+double ldexp (double value, int exponent);
+double log (double x);
+double modf (double value, double *integer_part);
+double pow (double base, double power);
+double sin (double x);
+double sqrt (double x);
+
+#endif  // ! WITH_GLIBC
 
 #endif // __MES_MATH_H
