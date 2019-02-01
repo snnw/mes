@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -87,7 +87,8 @@
 #include <stub/sys_siglist.c>
 #include <stub/umask.c>
 #include <stub/utime.c>
-#include <stub/fscanf.c>
+#include <stdio/fscanf.c>     // for gcc-4.6.4; could be stubbed
+#include <stdio/vfscanf.c>    // dependency of fscanf
 #include <ctype/isascii.c>
 #include <stdlib/bsearch.c>
 #include <stub/gmtime.c>
