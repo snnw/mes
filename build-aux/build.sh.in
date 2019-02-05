@@ -38,7 +38,7 @@ unset CFLAGS CPPFLAGS LDFLAGS gcc_p tcc_p with_glibc_p
 MES=guile
 mesc_p=1
 mes_p=1
-mes_arch=x86-mes
+mes_arch=$arch-mes
 program_prefix=$mes_arch-
 CC="./pre-inst-env mescc"
 

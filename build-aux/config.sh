@@ -103,6 +103,12 @@ LDFLAGS=${LDFLAGS-"
 -L lib
 "}
 
+if [ -f "$MES_SEED/arm-mes/mes.S" ]; then
+    LDFLAGS="$LDFLAGS
+-L $MES_SEED
+"
+fi
+
 if [ -f "$MES_SEED/x86-mes/mes.S" ]; then
     LDFLAGS="$LDFLAGS
 -L $MES_SEED

@@ -30,6 +30,9 @@ if [ "$(basename $SHELL)" = bash ]; then
 fi
 
 mkdir -p $DESTDIR@bindir@
+if [ -f src/arm-mes-mes ]; then
+    cp src/arm-mes-mes $DESTDIR@bindir@/mes
+fi
 if [ -f src/x86-mes-mes ]; then
     cp src/x86-mes-mes $DESTDIR@bindir@/mes
 fi
@@ -85,6 +88,9 @@ else
 fi
 tar -cf- -C ${srcdest}mes module | tar -xf- -C $DESTDIR$mes_prefix
 
+if [ -f src/mes.arm-mes-S ]; then
+    cp src/mes.arm-mes-S $DESTDIR$mes_prefix/lib/arm-mes/mes.S
+fi
 if [ -f src/mes.x86-mes-S ]; then
     cp src/mes.x86-mes-S $DESTDIR$mes_prefix/lib/x86-mes/mes.S
 fi

@@ -10,61 +10,61 @@ MES_ARENA=${MES_ARENA-100000000}
 MES_MAX_ARENA=${MES_MAX_ARENA-100000000}
 MES_STACK=${MES_STACK-500000}
 
-hex2 --LittleEndian --Architecture 1 --BaseAddress 0x1000000 -f lib/x86-mes/elf32-0header.hex2 -f lib/x86-mes/elf32-body-exit-42.hex2 -f lib/x86-mes/elf-0footer.hex2 --exec_enable -o lib/x86-mes/0exit-42
-hex2 --LittleEndian --Architecture 1 --BaseAddress 0x1000000 -f lib/x86-mes/elf32-header.hex2 -f lib/x86-mes/elf32-body-exit-42.hex2 -f lib/x86-mes/elf32-footer-single-main.hex2 --exec_enable -o lib/x86-mes/exit-42
-M1 --LittleEndian --Architecture 1 -f lib/x86-mes/x86.M1 -f @MES_SEED@/x86-mes/crt1.S -o lib/x86-mes/crt1.o
-M1 --LittleEndian --Architecture 1 -f lib/x86-mes/x86.M1 -f @MES_SEED@/x86-mes/libc.S -o lib/x86-mes/libc.o
-M1 --LittleEndian --Architecture 1 -f lib/x86-mes/x86.M1 -f @MES_SEED@/x86-mes/mes.S -o src/mes.o
-blood-elf -f lib/x86-mes/x86.M1 -f @MES_SEED@/x86-mes/mes.S -f @MES_SEED@/x86-mes/libc.S -o src/mes.S.blood-elf
+hex2 --LittleEndian --Architecture 1 --BaseAddress 0x1000000 -f lib/@mes_arch@/elf32-0header.hex2 -f lib/@mes_arch@/elf32-body-exit-42.hex2 -f lib/@mes_arch@/elf-0footer.hex2 --exec_enable -o lib/@mes_arch@/0exit-42
+hex2 --LittleEndian --Architecture 1 --BaseAddress 0x1000000 -f lib/@mes_arch@/elf32-header.hex2 -f lib/@mes_arch@/elf32-body-exit-42.hex2 -f lib/@mes_arch@/elf32-footer-single-main.hex2 --exec_enable -o lib/@mes_arch@/exit-42
+M1 --LittleEndian --Architecture 1 -f lib/@mes_arch@/@arch@.M1 -f @MES_SEED@/@mes_arch@/crt1.S -o lib/@mes_arch@/crt1.o
+M1 --LittleEndian --Architecture 1 -f lib/@mes_arch@/@arch@.M1 -f @MES_SEED@/@mes_arch@/libc.S -o lib/@mes_arch@/libc.o
+M1 --LittleEndian --Architecture 1 -f lib/@mes_arch@/@arch@.M1 -f @MES_SEED@/@mes_arch@/mes.S -o src/mes.o
+blood-elf -f lib/@mes_arch@/@arch@.M1 -f @MES_SEED@/@mes_arch@/mes.S -f @MES_SEED@/@mes_arch@/libc.S -o src/mes.S.blood-elf
 M1 --LittleEndian --Architecture 1 -f src/mes.S.blood-elf -o src/mes.o.blood-elf
-hex2 --LittleEndian --Architecture 1 --BaseAddress 0x1000000 -f lib/x86-mes/elf32-header.hex2 -f lib/x86-mes/crt1.o -f lib/x86-mes/libc.o -f src/mes.o -f src/mes.o.blood-elf --exec_enable -o src/mes
-M1 --LittleEndian --Architecture 1 -f lib/x86-mes/x86.M1 -f @MES_SEED@/x86-mes/libc+tcc.S -o lib/x86-mes/libc+tcc.o
-M1 --LittleEndian --Architecture 1 -f lib/x86-mes/x86.M1 -f @MES_SEED@/x86-mes/libc+gnu.S -o lib/x86-mes/libc+gnu.o
+hex2 --LittleEndian --Architecture 1 --BaseAddress 0x1000000 -f lib/@mes_arch@/elf32-header.hex2 -f lib/@mes_arch@/crt1.o -f lib/@mes_arch@/libc.o -f src/mes.o -f src/mes.o.blood-elf --exec_enable -o src/mes
+M1 --LittleEndian --Architecture 1 -f lib/@mes_arch@/@arch@.M1 -f @MES_SEED@/@mes_arch@/libc+tcc.S -o lib/@mes_arch@/libc+tcc.o
+M1 --LittleEndian --Architecture 1 -f lib/@mes_arch@/@arch@.M1 -f @MES_SEED@/@mes_arch@/libc+gnu.S -o lib/@mes_arch@/libc+gnu.o
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/linux/x86-mes/crt1.o lib/linux/x86-mes/crt1.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/linux/@mes_arch@/crt1.o lib/linux/@mes_arch@/crt1.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/libc-mini.x86-mes-o lib/libc-mini.c
-mv lib/libc-mini.x86-mes-S lib/x86-mes/libc-mini.S
-mv lib/libc-mini.x86-mes-o lib/x86-mes/libc-mini.o
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/libc-mini.@mes_arch@-o lib/libc-mini.c
+mv lib/libc-mini.@mes_arch@-S lib/@mes_arch@/libc-mini.S
+mv lib/libc-mini.@mes_arch@-o lib/@mes_arch@/libc-mini.o
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/libc.x86-mes-o lib/libc.c
-mv lib/libc.x86-mes-S lib/x86-mes/libc.S
-mv lib/libc.x86-mes-o lib/x86-mes/libc.o
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/libc.@mes_arch@-o lib/libc.c
+mv lib/libc.@mes_arch@-S lib/@mes_arch@/libc.S
+mv lib/libc.@mes_arch@-o lib/@mes_arch@/libc.o
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/libc+tcc.x86-mes-o lib/libc+tcc.c
-mv lib/libc+tcc.x86-mes-S lib/x86-mes/libc+tcc.S
-mv lib/libc+tcc.x86-mes-o lib/x86-mes/libc+tcc.o
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/libc+tcc.@mes_arch@-o lib/libc+tcc.c
+mv lib/libc+tcc.@mes_arch@-S lib/@mes_arch@/libc+tcc.S
+mv lib/libc+tcc.@mes_arch@-o lib/@mes_arch@/libc+tcc.o
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/libc+gnu.x86-mes-o lib/libc+gnu.c
-mv lib/libc+gnu.x86-mes-S lib/x86-mes/libc+gnu.S
-mv lib/libc+gnu.x86-mes-o lib/x86-mes/libc+gnu.o
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/libc+gnu.@mes_arch@-o lib/libc+gnu.c
+mv lib/libc+gnu.@mes_arch@-S lib/@mes_arch@/libc+gnu.S
+mv lib/libc+gnu.@mes_arch@-o lib/@mes_arch@/libc+gnu.o
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/main.x86-mes-o scaffold/main.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/main.@mes_arch@-o scaffold/main.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/x86-mes-main scaffold/main.x86-mes-o
+@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/@mes_arch@-main scaffold/main.@mes_arch@-o
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/hello.x86-mes-o scaffold/hello.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/hello.@mes_arch@-o scaffold/hello.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/x86-mes-hello scaffold/hello.x86-mes-o -l c-mini
+@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/@mes_arch@-hello scaffold/hello.@mes_arch@-o -l c-mini
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/argv.x86-mes-o scaffold/argv.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/argv.@mes_arch@-o scaffold/argv.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/x86-mes-argv scaffold/argv.x86-mes-o -l c-mini
+@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/@mes_arch@-argv scaffold/argv.@mes_arch@-o -l c-mini
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/tests/stdlib/50-malloc.x86-mes-o lib/tests/stdlib/50-malloc.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/tests/stdlib/50-malloc.@mes_arch@-o lib/tests/stdlib/50-malloc.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o lib/tests/posix/50-getenv.x86-mes-o lib/tests/posix/50-getenv.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o lib/tests/posix/50-getenv.@mes_arch@-o lib/tests/posix/50-getenv.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/micro-mes.x86-mes-o scaffold/micro-mes.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/micro-mes.@mes_arch@-o scaffold/micro-mes.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/x86-mes-micro-mes scaffold/micro-mes.x86-mes-o -l c
+@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/@mes_arch@-micro-mes scaffold/micro-mes.@mes_arch@-o -l c
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/tiny-mes.x86-mes-o scaffold/tiny-mes.c
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/tiny-mes.@mes_arch@-o scaffold/tiny-mes.c
 
-@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o scaffold/x86-mes-tiny-mes scaffold/tiny-mes.x86-mes-o -l c
+@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o scaffold/@mes_arch@-tiny-mes scaffold/tiny-mes.@mes_arch@-o -l c
 
-@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o src/mes.x86-mes-o src/mes.c
-cp src/mes.x86-mes-S src/mes.S
+@GUILE@ -e main -L module scripts/mescc.scm -c -D 'VERSION="@VERSION@"' -D 'MODULEDIR="@moduledir@"' -D 'PREFIX="@prefix@"' -I . -I lib -I include -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o src/mes.@mes_arch@-o src/mes.c
+cp src/mes.@mes_arch@-S src/mes.S
 
-@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/x86-mes -L lib/linux -L lib/x86-mes -L lib -L @MES_SEED@ -o src/x86-mes-mes src/mes.x86-mes-o -l c
-cp src/x86-mes-mes src/mes
+@GUILE@ -e main -L module scripts/mescc.scm -v -g -L lib/linux/@mes_arch@ -L lib/linux -L lib/@mes_arch@ -L lib -L @MES_SEED@ -o src/@mes_arch@-mes src/mes.@mes_arch@-o -l c
+cp src/@mes_arch@-mes src/mes
