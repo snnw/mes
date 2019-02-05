@@ -4,7 +4,7 @@ MES_ARENA=100000000 exec ${SCHEME-guile} -L . --no-auto-compile -e '(configure)'
 !#
 
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; configure: This file is part of GNU Mes.
 ;;;
@@ -362,8 +362,7 @@ Some influential environment variables:
 (define (main args)
   (let* ((options (parse-opts args))
          (build-type (option-ref options 'build %host-type))
-
-         (host-type (option-ref options 'host %host-type))(prefix "/usr/local")
+         (host-type (option-ref options 'host build-type))
 
          (prefix "/usr/local")
          (prefix (option-ref options 'prefix prefix))
@@ -484,10 +483,13 @@ Some influential environment variables:
                            deps)
                      deps))
            (mes? (or mes? (not (file-name "if cc can create executables" deps))))
-           (build-type (or (and cc (gulp-pipe* cc "-dumpmachine")) build-type))
-           (arch (car (string-split build-type #\-)))
-           (arch (if (member arch '("i386" "i486" "i586" "i686")) "x86"
-                     arch))
+           (host-type (or (option-ref options 'host (option-ref options 'build #f))
+                       (and cc (gulp-pipe* cc "-dumpmachine"))
+                       host-type))
+           (arch (car (string-split host-type #\-)))
+           (arch (cond ((member arch '("i386" "i486" "i586" "i686")) "x86")
+                       ((member arch '("arm" "armv4" "armv7l")) "arm")
+                       (else arch)))
            (mes-arch arch)
            (mes-arch (if mes? (string-append mes-arch "-mes") mes-arch))
            (mes-arch (if gcc? (string-append mes-arch "-gcc") mes-arch))
@@ -508,7 +510,7 @@ Some influential environment variables:
                                  line pairs))
                   (loop (read-line in 'concat))))))))
 
-      (when (and (not (member arch '("x86" "x86_64"))) (not with-courage?))
+      (when (and (not (member arch '("arm" "x86" "x86_64"))) (not with-courage?))
         (stderr "platform not supported: ~a, try --with-courage\n" arch)
         (exit 1))
       (when (pair? missing)

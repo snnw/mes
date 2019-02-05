@@ -1,5 +1,5 @@
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; This file is part of GNU Mes.
 ;;;
@@ -19,6 +19,7 @@
 (define-module (mescc)
   #:use-module (srfi srfi-1)
   #:use-module (ice-9 getopt-long)
+  #:use-module (mes guile)
   #:use-module (mes misc)
   #:use-module (mescc mescc)
   #:export (mescc:main))
@@ -35,6 +36,7 @@
  (guile
   (define-macro (mes-use-module . rest) #t)))
 
+(define %host-arch (or (getenv "%arch") %arch))
 (define %prefix (getenv "%prefix"))
 (define %version (getenv "%version"))
 
@@ -54,6 +56,7 @@
 (define (parse-opts args)
   (let* ((option-spec
           '((align)
+            (arch (value #t))
             (assemble (single-char #\c))
             (base-address (value #t))
             (compile (single-char #\S))
@@ -74,12 +77,13 @@
             (write (single-char #\w) (value #t))
             (language (single-char #\x) (value #t))))
          (options (getopt-long args option-spec))
+         (arch (option-ref options 'arch %host-arch))
          (help? (option-ref options 'help #f))
          (files (option-ref options '() '()))
          (usage? (and (not help?) (null? files)))
          (version? (option-ref options 'version #f)))
     (cond ((option-ref options 'dumpmachine #f)
-           (display "x86-mes")
+           (display arch)
            (exit 0))
           (version? (format #t "mescc (GNU Mes) ~a\n" %version) (exit 0))
           (else
@@ -87,6 +91,7 @@
                 (format (or (and usage? (current-error-port)) (current-output-port)) "\
 Usage: mescc [OPTION]... FILE...
   --align             align globals
+  --arch=ARCH         compile for ARCH [~a]
   -dumpmachine        display the compiler's target processor
   --base-address=ADRRESS
                       use BaseAddress ADDRESS [0x1000000]
@@ -115,7 +120,7 @@ Environment variables:
 Report bugs to: bug-mes@gnu.org
 GNU Mes home page: <http://gnu.org/software/mes/>
 General help using GNU software: <http://gnu.org/gethelp/>
-")
+" %host-arch)
                 (exit (or (and usage? 2) 0)))
            options))))
 
@@ -128,6 +133,8 @@ General help using GNU software: <http://gnu.org/gethelp/>
          (args (append-map unclump-single args))
          (options (parse-opts args))
          (options (acons 'prefix %prefix options))
+         (arch (option-ref options 'arch %host-arch))
+         (options (if arch (acons 'arch arch options) options))
          (preprocess? (option-ref options 'preprocess #f))
          (compile? (option-ref options 'compile #f))
          (assemble? (option-ref options 'assemble #f))

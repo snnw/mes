@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -41,6 +41,29 @@ if [ "$p" != "$cmdline" ]; then
 
 else
     prefix=${prefix-/usr/local}
+fi
+
+# parse --build=BUILD
+p=${cmdline/ --build=/ -build=}
+if [ "$p" != "$cmdline" ]; then
+    p=${p##* -build=}
+    p=${p% *}
+    p=${p% -*}
+    build=${p-$build}
+else
+    build=$build
+fi
+
+# parse --host=HOST
+p=${cmdline/ --host=/ -host=}
+if [ "$p" != "$cmdline" ]; then
+    p=${p##* -host=}
+    p=${p% *}
+    p=${p% -*}
+    host=${p-$build}
+
+else
+    host=${host-$build}
 fi
 
 # parse --program-prefix=
@@ -159,18 +182,24 @@ chmod +x scripts/mescc
 subst ${srcdest}scripts/mescc.scm.in scripts/mescc.scm
 chmod +x scripts/mescc.scm
 
-host=${host-$($CC -dumpmachine 2>/dev/null || echo x86)}
-if [ -z "$host" ]; then
+host=${host-$($CC -dumpmachine 2>/dev/null)}
+if [ -z "$host$host_type" ]; then
     arch=${arch-$(get_machine || uname -m)}
 else
     arch=${host%%-*}
 fi
+
 if [ "$arch" = i386\
              -o "$arch" = i486\
              -o "$arch" = i586\
              -o "$arch" = i686\
    ]; then
     arch=x86
+fi
+if [ "$arch" = armv4\
+             -o "$arch" = armv7l\
+   ]; then
+    arch=arm
 fi
 
 #
