@@ -180,7 +180,7 @@
   `(("jne " (#:offset3 ,label))))
 
 (define (armv4:jump-byte-z info label)
-  `(("test___%al,%al")
+  `(("test___%r0,%r0") ; TODO: 1 Byte ?
     ("je  " (#:offset3 ,label))))
 
 ;; signed
