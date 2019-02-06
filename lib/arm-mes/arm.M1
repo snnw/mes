@@ -154,12 +154,12 @@ DEFINE xor____%r3,%r3 e0333003 # eors    r3, r3, r3
 
 # Note: These are the native ARM instructions.
 # Note: Loads INTO register r0 (ARM original operand order)
-DEFINE ldrsb_%r0,(%r0) e1d000d0  # ldrsb   r0, [r0]
-DEFINE ldrsb_%r1,(%r1) e1d110d0  # ldrsb   r1, [r1]
-DEFINE ldrsb_%r2,(%r2) e1d220d0  # ldrsb   r2, [r2]
-DEFINE ldrsb_%r3,(%r3) e1d330d0  # ldrsb   r3, [r3]
-DEFINE ldrsb_%r4,(%r4) e1d440d0  # ldrsb   r4, [r4]
-DEFINE ldrsb_%r5,(%r5) e1d550d0  # ldrsb   r5, [r5]
+DEFINE ldrsb__%r0,(%r0) e1d000d0  # ldrsb   r0, [r0]
+DEFINE ldrsb__%r1,(%r1) e1d110d0  # ldrsb   r1, [r1]
+DEFINE ldrsb__%r2,(%r2) e1d220d0  # ldrsb   r2, [r2]
+DEFINE ldrsb__%r3,(%r3) e1d330d0  # ldrsb   r3, [r3]
+DEFINE ldrsb__%r4,(%r4) e1d440d0  # ldrsb   r4, [r4]
+DEFINE ldrsb__%r5,(%r5) e1d550d0  # ldrsb   r5, [r5]
 DEFINE strb__%r0,(%r0) e5c00000  # strb    r0, [r0]
 DEFINE strb__%r1,(%r1) e5c11000  # strb    r1, [r1]
 DEFINE strb__%r2,(%r2) e5c22000  # strb    r2, [r2]
