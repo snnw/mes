@@ -37,27 +37,29 @@
 (define (e->l o)
   (string-append (string-drop-right (string-drop o 1) 1) "l"))
 
-
 (define (armv4:function-preamble . rest)
+  ;; FIXME: This is not customary to do on ARM.
   '(("push___%ebp")
     ("mov____%esp,%ebp")))
 
 (define (armv4:function-locals . rest)
-  `(("sub____$i32,%esp" (#:immediate ,(+ (* 4 1025) (* 20 4)))))) ; 4*1024 buf, 20 local vars
+  `(("sub____$i8,%esp" (#:immediate ,(+ (* 4 1025) (* 20 4)))))) ; 4*1024 buf, 20 local vars
 
 (define (armv4:r->local info n)
   (or n (error "invalid value: armv4:r->local: " n))
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
-    `(,(if (< (abs n) #x80) `(,(string-append "mov____%" r ",0x8(%ebp)") (#:immediate1 ,n))
+    `(,(if (< (abs n) #x1000) `(,(string-append "mov____%" r ",0x8(%ebp)") (#:immediate1 ,n))
            `(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:value->r info v)
   (let ((r (get-r info)))
-    `((,(string-append "mov____$i32,%" r) (#:immediate ,v)))))
+    `((,(string-append "mov____$i8,%" r) (#:immediate ,v)))))
+
 
 (define (armv4:ret . rest)
-  '(("leave")
+  '(("mov____%ebp,%esp")
+    ("pop____%ebp")
     ("ret")))
 
 (define (armv4:r-zero? info)
@@ -67,7 +69,7 @@
 (define (armv4:local->r info n)
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
-    `(,(if (< (abs n) #x80) `(,(string-append "mov____0x8(%ebp),%" r) (#:immediate1 ,n))
+    `(,(if (< (abs n) #x1000) `(,(string-append "mov____0x12(%ebp),%" r) (#:immediate1 ,n))
            `(,(string-append "mov____0x32(%ebp),%" r) (#:immediate ,n))))))
 
 (define (armv4:r0+r1 info)
@@ -86,46 +88,58 @@
 (define (armv4:label->arg info label i)
   `(("push___$i32" (#:address ,label))))
 
+;; Register value negation.  FIXME: This was exactly the same as zf->r
 (define (armv4:r-negate info)
   (let* ((r (get-r info))
          (l (e->l r)))
     `((,(string-append "sete___%" l))
       (,(string-append "movzbl_%" l ",%" r)))))
 
+;; Register--register value subtraction
 (define (armv4:r0-r1 info)
   (let ((r0 (get-r0 info))
         (r1 (get-r1 info)))
     `((,(string-append "sub____%" r1 ",%" r0)))))
 
+;; Zero flag to register.
 (define (armv4:zf->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "sete___%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (let* ((r (get-r info)))
+   `(((string-append "mov___$i8,%" r) (#:immediate1 #x00))
+     ((string-append "moveq_$i8,%" r) (#:immediate1 #x01)))))
 
 (define (armv4:xor-zf info)
-  '(("lahf")
-    ("xor____$i8,%ah" (#:immediate1 #x40))
-    ("sahf")))
+  '(("mov___$i8,%r0" (#:immediate1 #x00))
+    ("moveq_$i8,%r0" (#:immediate1 #x01))
+    ("test__%r0,%r0")))
 
 (define (armv4:r->local+n info id n)
   (let ((n (+ (- 0 (* 4 id)) n))
         (r (get-r info)))
-    `(,(if (< (abs n) #x80) `(,(string-append "mov____%" r ",0x8(%ebp)") (#:immediate1 ,n))
+    `(,(if (< (abs n) #x1000) `(,(string-append "mov____%" r ",0x12(%ebp)") (#:immediate1 ,n))
            `(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
+;; FIXME: Implement M1 part.
 (define (armv4:r-mem-add info v)
   (let ((r (get-r info)))
-    `(,(if (< (abs v) #x80) `(,(string-append "add____$i8,(%" r ")") (#:immediate1 ,v))
+    `(,(if (< (abs v) #x1000) `(,(string-append "add____$i8,(%" r ")") (#:immediate1 ,v))
            `(,(string-append "add____$i32,(%" r ")") (#:immediate ,v))))))
 
 (define (armv4:r-byte-mem-add info v)
   (let ((r (get-r info)))
-    `((,(string-append "addb___$i8,(%" r ")") (#:immediate1 ,v)))))
+    `((,(string-append "push___%r0"))
+      (,(string-append "ldbrs__%r0,(%" r ")"))
+      (,(string-append "addb___$i8,%r0") (#:immediate1 ,v))
+      (,(string-append "stb____%r0,(%" r ")"))
+      (,(string-append "pop____%r0")))))
 
 (define (armv4:r-word-mem-add info v)
   (let ((r (get-r info)))
-    `((,(string-append "addw___$i8,(%" r ")") (#:immediate2 ,v)))))
+    `((,(string-append "push___%r0"))
+      (,(string-append "ldrh___%r0,(%" r ")"))
+      ;; FIXME: That's not complete.
+      (,(string-append "add____$i8,%r0") (#:immediate1 ,v))
+      (,(string-append "strh___%r0,(%" r ")"))
+      (,(string-append "pop____%r0")))))
 
 (define (armv4:local-ptr->r info n)
   (let ((r (get-r info)))
@@ -145,22 +159,26 @@
 
 (define (armv4:byte-mem->r info)
   (let ((r (get-r info)))
-    `((,(string-append "movzbl_(%" r "),%" r)))))
+    `((,(string-append "ldrsb_%" r ",(%" r ")"))
+      (,(string-append "and____$0xFF,%" r)))))
 
 (define (armv4:byte-r info)
   (let* ((r (get-r info))
          (l (e->l r)))
-    `((,(string-append "movzbl_%" l ",%" r)))))
+    `((,(string-append "mov____" l ",%" r))
+      (,(string-append "and____$i8,%" r) (#:immediate1 0xFF)))))
 
 (define (armv4:byte-signed-r info)
   (let* ((r (get-r info))
          (l (e->l r)))
-    `((,(string-append "movsbl_%" l ",%" r)))))
+    ;; Similar to armv4:byte-mem->r, but without the mem indirection.
+    `((,(string-append "mov____" l ",%" r))
+      (,(string-append "and____$i8,%" r) (#:immediate1 0xFF)))))  ; FIXME: Sign-extend.
 
 (define (armv4:word-r info)
   (let* ((r (get-r info))
          (x (e->x r)))
-    `((,(string-append "movzwl_%" x ",%" r)))))
+    `((,(string-append "ldrh_%" x ",%" r))))) ; FIXME: without memory access.
 
 (define (armv4:word-signed-r info)
   (let* ((r (get-r info))
@@ -168,43 +186,43 @@
     `((,(string-append "movswl_%" x ",%" r)))))
 
 (define (armv4:jump info label)
-  `(("jmp32 " (#:offset ,label))))
+  `(("jmp8 " (#:offset ,label))))
 
 (define (armv4:jump-z info label)
-  `(("je32  " (#:offset ,label))))
+  `(("je8  " (#:offset ,label))))
 
 (define (armv4:jump-nz info label)
-  `(("jne32 " (#:offset ,label))))
+  `(("jne8 " (#:offset ,label))))
 
 (define (armv4:jump-byte-z info label)
   `(("test___%al,%al")
-    ("je32  " (#:offset ,label))))
+    ("je8  " (#:offset ,label))))
 
 ;; signed
 (define (armv4:jump-g info label)
-  `(("jg32  " (#:offset ,label))))
+  `(("jg8  " (#:offset ,label))))
 
 (define (armv4:jump-ge info label)
-  `(("jge32 " (#:offset ,label))))
+  `(("jge8 " (#:offset ,label))))
 
 (define (armv4:jump-l info label)
-  `(("jl32  " (#:offset ,label))))
+  `(("jl8  " (#:offset ,label))))
 
 (define (armv4:jump-le info label)
-  `(("jle32 " (#:offset ,label))))
+  `(("jle8 " (#:offset ,label))))
 
 ;; unsigned
 (define (armv4:jump-a info label)
-  `(("ja32  " (#:offset ,label))))
+  `(("ja8  " (#:offset ,label))))
 
 (define (armv4:jump-ae info label)
-  `(("jae32 " (#:offset ,label))))
+  `(("jae8 " (#:offset ,label))))
 
 (define (armv4:jump-b info label)
-  `(("jb32  " (#:offset ,label))))
+  `(("jb8  " (#:offset ,label))))
 
 (define (armv4:jump-be info label)
-  `(("jbe32 " (#:offset ,label))))
+  `(("jbe8 " (#:offset ,label))))
 
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
@@ -242,55 +260,42 @@
         (r1 (get-r1 info)))
     `((,(string-append "xchg___%" r0 ",%" r1)))))
 
+(define (armv4:flag->r branchspec info)
+  "Find out whether a flag or set of flag has a given set of values and set the value of the register R to 1 if it is so, and to 0 otherwise.
+  Possible values for branchspec are one of (\"cs\", \"cc\", \"ge\", \"gt\", \"hi\", \"lt\", \"le\")"
+  (let* ((r (get-r info))
+         (l (e->l r)))
+    `((,(string-append "mov____$i8,%" l) (#:immediate1 #x00))
+      (,(string-append "mov" branchspec "__$i8,%" l) (#:immediate1 #x01)))))
+
 ;; signed
 (define (armv4:g?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "setg___%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "gt" info))
 
 (define (armv4:ge?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "setge__%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "ge" info))
 
 (define (armv4:l?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "setl___%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "lt" info))
 
 (define (armv4:le?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "setle__%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "le" info))
 
 ;; unsigned
 (define (armv4:a?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "seta___%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "hi" info))
 
 (define (armv4:ae?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "setae__%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "cs" info))
 
 (define (armv4:b?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "setb___%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+  (armv4:flag->r "cc" info))
 
 (define (armv4:be?->r info)
   (let* ((r (get-r info))
          (l (e->l r)))
-    `((,(string-append "setbe__%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
+    `((,(string-append "mov____$i8,%" l) (#:immediate #x01))
+      (,(string-append "movhi__$i8,%" l) (#:immediate #x00)))))
 
 (define (armv4:test-r info)
   (let ((r (get-r info)))
@@ -320,35 +325,34 @@
         (r0 (get-r0 info))
         (r1 (get-r1 info)))
     (if (not (member "edx" allocated))
-        `(,@(if (equal? r0 "eax") '()
-                `(("push___%eax")
-                  (,(string-append "mov____%" r0 ",%eax"))))
+        `(,@(if (equal? r0 "r0") '()
+                `(("push___%r0")
+                  (,(string-append "mov____%" r0 ",%r0"))))
           (,(string-append "mul____%" r1))
-          ,@(if (equal? r0 "eax") '()
-                `((,(string-append "mov____%eax,%" r0))
-                  ("pop____%eax"))))
-        `(("push___%eax")
-          ("push___%ebx")
+          ,@(if (equal? r0 "r0") '()
+                `((,(string-append "mov____%r0,%" r0))
+                  ("pop____%r0"))))
+        `(("push___%r0")
+          ("push___%r1")
           ("push___%edx")
-          (,(string-append "mov____%" r1 ",%ebx"))
-          (,(string-append "mov____%" r0 ",%eax"))
+          (,(string-append "mov____%" r1 ",%r1"))
+          (,(string-append "mov____%" r0 ",%r0"))
           (,(string-append "mul____%" r1))
           ("pop____%edx")
-          ("pop____%ebx")
-          (,(string-append "mov____%eax,%" r0))
-          ("pop____%eax")))))
+          ("pop____%r1")
+          (,(string-append "mov____%r0,%" r0))
+          ("pop____%r0")))))
 
 (define (armv4:r0<<r1 info)
   (let ((r0 (get-r0 info))
         (r1 (get-r1 info)))
-    `((,(string-append "mov____%" r1 ",%ecx"))
-      (,(string-append "shl____%cl,%" r0)))))
+    `((,(string-append "lsl____%" r0 ",%" r0 ",%" r1)))))
 
+;; FIXME: lsr??! Signed or unsigned r0?
 (define (armv4:r0>>r1 info)
   (let ((r0 (get-r0 info))
         (r1 (get-r1 info)))
-    `((,(string-append "mov____%" r1 ",%ecx"))
-      (,(string-append "shr____%cl,%" r0)))))
+    `((,(string-append "lsr____%" r0 ",%" r0 ",%" r1)))))
 
 (define (armv4:r0-and-r1 info)
   (let ((r0 (get-r0 info))
@@ -361,25 +365,25 @@
         (r0 (get-r0 info))
         (r1 (get-r1 info)))
     (if (not (member "edx" allocated))
-        `(,@(if (equal? r0 "eax") '()
-                `(("push___%eax")
-                  (,(string-append "mov____%" r0 ",%eax"))))
+        `(,@(if (equal? r0 "r0") '()
+                `(("push___%r0")
+                  (,(string-append "mov____%" r0 ",%r0"))))
           ,(if signed? '("cltd") '("xor____%edx,%edx"))
           ,(if signed? `(,(string-append "idiv___%" r1)) `(,(string-append "div___%" r1)))
-          ,@(if (equal? r0 "eax") '()
-                `((,(string-append "mov____%eax,%" r0))
-                  ("pop____%eax"))))
-        `(("push___%eax")
-          ("push___%ebx")
+          ,@(if (equal? r0 "r0") '()
+                `((,(string-append "mov____%r0,%" r0))
+                  ("pop____%r0"))))
+        `(("push___%r0")
+          ("push___%r1")
           ("push___%edx")
-          (,(string-append "mov____%" r1 ",%ebx"))
-          (,(string-append "mov____%" r0 ",%eax"))
+          (,(string-append "mov____%" r1 ",%r1"))
+          (,(string-append "mov____%" r0 ",%r0"))
           ,(if signed? '("cltd") '("xor____%edx,%edx"))
-          ,(if signed? `(,(string-append "idiv___%ebx")) `(,(string-append "div___%ebx")))
+          ,(if signed? `(,(string-append "idiv___%r1")) `(,(string-append "div___%r1")))
           ("pop____%edx")
-          ("pop____%ebx")
-          (,(string-append "mov____%eax,%" r0))
-          ("pop____%eax")))))
+          ("pop____%r1")
+          (,(string-append "mov____%r0,%" r0))
+          ("pop____%r0")))))
 
 (define (armv4:r0%r1 info signed?)
   (let ((signed? #f)              ; nobody knows, -- all advice are belong to us?
@@ -387,23 +391,23 @@
         (r0 (get-r0 info))
         (r1 (get-r1 info)))
     (if (not (member "edx" allocated))
-        `(,@(if (equal? r0 "eax") '()
-                `(("push___%eax")
-                  (,(string-append "mov____%" r0 ",%eax"))))
+        `(,@(if (equal? r0 "r0") '()
+                `(("push___%r0")
+                  (,(string-append "mov____%" r0 ",%r0"))))
           ,(if signed? '("cltd") '("xor____%edx,%edx"))
           ,(if signed? `(,(string-append "idiv___%" r1)) `(,(string-append "div___%" r1)))
           (,(string-append "mov____%edx,%" r0)))
-        `(("push___%eax")
-          ("push___%ebx")
+        `(("push___%r0")
+          ("push___%r1")
           ("push___%edx")
-          (,(string-append "mov____%" r1 ",%ebx"))
-          (,(string-append "mov____%" r0 ",%eax"))
+          (,(string-append "mov____%" r1 ",%r1"))
+          (,(string-append "mov____%" r0 ",%r0"))
           ,(if signed? '("cltd") '("xor____%edx,%edx"))
-          ,(if signed? `(,(string-append "idiv___%ebx")) `(,(string-append "div___%ebx")))
+          ,(if signed? `(,(string-append "idiv___%r1")) `(,(string-append "div___%r1")))
           ("pop____%edx")
-          ("pop____%ebx")
+          ("pop____%r1")
           (,(string-append "mov____%edx,%" r0))
-          ("pop____%eax")))))
+          ("pop____%r0")))))
 
 (define (armv4:r+value info v)
   (let ((r (get-r info)))
@@ -440,8 +444,8 @@
 
 (define (armv4:return->r info)
   (let ((r (get-r info)))
-    (if (equal? r "eax") '()
-        `((,(string-append "mov____%eax,%" r))))))
+    (if (equal? r "r0") '()
+        `((,(string-append "mov____%r0,%" r))))))
 
 (define (armv4:r0-or-r1 info)
   (let ((r0 (get-r0 info))
