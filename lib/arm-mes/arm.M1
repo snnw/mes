@@ -251,3 +251,7 @@ DEFINE add____$i8,%esp e29dd0
 #DEFINE add____$i8,0x32(%ebp) xx
 #DEFINE add____$i8,0x8(%ebp) xx
 #DEFINE add____%ebp,%r0 xx
+
+# e24ddeff        sub     sp, sp, #4080
+# e24dd064        sub     sp, sp, #100
+DEFINE allocate_stack_4180 e24ddeffe24dd064

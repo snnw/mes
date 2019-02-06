@@ -43,7 +43,7 @@
     ("mov____%esp,%ebp")))
 
 (define (armv4:function-locals . rest)
-  `(("sub____$i8,%esp" (#:immediate ,(+ (* 4 1025) (* 20 4)))))) ; 4*1024 buf, 20 local vars
+  `(("allocate_stack_4180"))) ; 4*1024 buf, 20 local vars
 
 (define (armv4:r->local info n)
   (or n (error "invalid value: armv4:r->local: " n))
