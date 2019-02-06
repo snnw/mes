@@ -22,36 +22,43 @@
 
 int main (int argc, char *argv[], char *envp[]);
 
-int
+void /* must not return */
 _start ()
 {
+/*
+
+sp+1    argv
+sp   -> argc
+
+environ = &argv[argc + 1]
+
+*/
+
+
+  /* stdin = 0 */
+
   asm ("mov____$i8,%r0 !0");
   asm ("mov____%r0,0x32 &__stdin");
+
+  /* stdout = 1 */
 
   asm ("mov____$i8,%r0 !1");
   asm ("mov____%r0,0x32 &__stdout");
 
+  /* stderr = 2 */
+
   asm ("mov____$i8,%r0 !2");
   asm ("mov____%r0,0x32 &__stderr");
 
-  asm ("mov____%r11,%r0");
-  asm ("add____$i8,%r0 !4");
+  /* Add "environ" to main's arguments */
 
-  asm ("movzbl_(%r0),%r0");
-  asm ("add____$i8,%r0 !3");
+  asm ("ldr___%r0,(%sp,#$i8) !0"); /* "argc" */
+  asm ("ldr___%r1,(%sp,#$i8) !4"); /* "argv" */
+  asm ("add___%r2,%r0,%r1,lsl#4"); /* "environ": argv + argc */
+  asm ("add___%r2,$i8 !4"); /* "environ": argv + argc + 1 */
 
-  asm ("shl____$i8,%r0 !0x02");
-  asm ("add____%r11,%r0");
-  asm ("mov____%r0,0x32 &environ");
-  asm ("push___%r0");
-
-  asm ("mov____%r11,%r0");
-  asm ("add____$i8,%r0 !8");
-  asm ("push___%r0");
-
-  asm ("mov____%r11,%r0");
-  asm ("add____$i8,%r0 !4");
-  asm ("movzbl_(%r0),%r0");
+  asm ("push___%r2");
+  asm ("push___%r1");
   asm ("push___%r0");
 
   main ();
