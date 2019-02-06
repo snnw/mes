@@ -159,7 +159,7 @@
 (define (armv4:byte-mem->r info)
   (let ((r (get-r info)))
     `((,(string-append "ldrsb_%" r ",(%" r ")"))
-      (,(string-append "and____$0xFF,%" r)))))
+      (,(string-append "and____$i8,%" r) (#:immediate1 0xFF)))))
 
 (define (armv4:byte-r info)
   (let* ((r (get-r info))
