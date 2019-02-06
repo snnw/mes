@@ -24,6 +24,8 @@
 #include <linux/x86-mes/mini.c>
 #elif __MESC__ && __x86_64__
 #include <linux/x86_64-mes/mini.c>
+#if __MESC__ && __arm__
+#include <linux/arm-mes/mini.c>
 #elif __i386__
 #include <linux/x86-mes-gcc/mini.c>
 #elif __x86_64__
