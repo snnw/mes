@@ -21,28 +21,25 @@
 
 # reduced instruction set: r0, r1 (some r2 for shift, r3 for mul, div)
 # FIXME: count instructions
+# FIXME: Note: ADD can't actually subtract numerals.
 
 #DEFINE add____$i32,(%r0) xx
 #DEFINE add____$i32,(%r1) xx
 #DEFINE add____$i32,0x32(%r0) xx
-#DEFINE add____$i32,0x32(%ebp) xx
-DEFINE add____$i8,%r0 e28000
-DEFINE add____$i8,%r1 e28110
-DEFINE add____$i8,%r13 e28dd0
+DEFINE add____$i8,%r0 e29000 # adds    r0, r0, #xx
+DEFINE add____$i8,%r1 e29110 # adds    r1, r1, #xx
+DEFINE add____$i8,%r13 e29dd0 # adds    r13, r13, #xx
 #DEFINE add____$i8,(%r0) xx
 #DEFINE add____$i8,(%r1) xx
 #DEFINE add____$i8,0x32 xx
 #DEFINE add____$i8,0x32(%r0) xx
-#DEFINE add____$i8,0x32(%ebp) xx
 #DEFINE add____$i8,0x8(%r0) xx
-#DEFINE add____$i8,0x8(%ebp) xx
-DEFINE add____%r0,%r0 e0800000
-#DEFINE add____%ebp,%r0 xx
-DEFINE add____%r1,%r0 e0800001
-DEFINE add____%r1,%r1 e0811001
-#DEFINE and____$i32,%r0 xx
-#DEFINE and____$i32,%r1 xx
-DEFINE and____%r1,%r0 e0000001
+DEFINE add____%r0,%r0 e0900000 # adds    r0, r0, r0
+DEFINE add____%r1,%r0 e0900001 # adds    r0, r0, r1
+DEFINE add____%r1,%r1 e0911001 # adds    r1, r1, r1
+DEFINE and____%r1,%r0 e0100001 # ands    r0, r0, r1
+DEFINE and____$i8,%r0 e20000
+DEFINE and____$i8,%r1 e20110
 #DEFINE call32 xx
 #DEFINE call___*%r0 xx
 #DEFINE call___*%r1 xx
@@ -52,10 +49,10 @@ DEFINE and____%r1,%r0 e0000001
 DEFINE cmp____$i8,%r0 e35000
 DEFINE cmp____$i8,%r1 e35100
 #DEFINE div___%r1 xx
-#DEFINE hlt xx
+DEFINE hlt e1000070
 #DEFINE idiv___%r1 xx
 #DEFINE int xx
-#DEFINE int____$0x80 xx
+DEFINE swi____$0 ef000000
 DEFINE ja8  8a0000
 DEFINE jae8 3a0000
 DEFINE jb8  2a0000
@@ -81,11 +78,10 @@ DEFINE mov____$i8,%r0 e3a000
 DEFINE mov____%r0,%r1 e1a01000
 DEFINE mov____%r0,%r2 e1a02000
 DEFINE mov____%r0,(%r1) e5810000
-#DEFINE mov____%ebp,%r0 xx
-#DEFINE mov____%ebp,%r1 xx
 DEFINE mov____%r1,%r0 e1a00001
 DEFINE mov____%r1,%r2 e1a02001
 #DEFINE mov____%r1,0x32 xx
+#DEFINE mov____%r0,0x32
 #DEFINE mov____%r1,0x32(%ebp) xx
 #DEFINE mov____%r1,0x8(%ebp) xx
 DEFINE mov____%r2,(%r1) e5812000
@@ -100,7 +96,7 @@ DEFINE mov____(%r1),%r1 e5911000
 DEFINE nop e1a00000
 DEFINE not____%r0 e1e00000
 DEFINE not____%r1 e1e01001
-DEFINE or_____%r1,%r0 e1800001
+DEFINE or_____%r1,%r0 e1900001 # orrs    r0, r0, r1
 DEFINE pop____%r0 e49d0004
 DEFINE pop____%r1 e49d1004
 DEFINE pop____%r3 e49d3004
@@ -117,18 +113,52 @@ DEFINE ret 4770 #e1a0f00e
 #DEFINE shl____$i8,%r1 xx # complicated encoding
 #DEFINE sub____$8,%r13 xx
 #DEFINE sub____$i32,%r13 xx
-DEFINE sub____%r1,%r0 e0400001
+DEFINE sub____%r1,%r0 e0500001 # subs    r0, r0, r1
 #DEFINE test___%al,%al xx
-#DEFINE test___%r0,%r0 xx
-#DEFINE test___%r1,%r1 xx
+DEFINE test___%r0,%r0 e1100000
+DEFINE test___%r1,%r1 e1110001
 #DEFINE xchg___%r0,%r1 xx
 #DEFINE xchg___%r0,(%r13) xx
 #DEFINE xchg___%r1,(%r13) xx
-DEFINE xor____$i32,%r0 e22000
-DEFINE xor____%r0,%r0 e0200000
-DEFINE xor____%r1,%r0 e0200001
-DEFINE xor____%r1,%r1 e0211001
-DEFINE xor____%r3,%r3 e0233003
+DEFINE xor____$i8,%r0 e23000 # eors    r0, r0, #xx
+DEFINE xor____%r0,%r0 e0300000 # eors    r0, r0, r0
+DEFINE xor____%r1,%r0 e0300001 # eors    r0, r0, r1
+DEFINE xor____%r1,%r1 e0311001 # eors    r1, r1, r1
+DEFINE xor____%r3,%r3 e0333003 # eors    r3, r3, r3
+
+# Note: These are the native ARM instructions.
+# Note: Loads INTO register r0 (ARM original operand order)
+DEFINE ldrsb_%r0,(%r0) e1d000d0  # ldrsb   r0, [r0]
+DEFINE ldrsb_%r1,(%r1) e1d110d0  # ldrsb   r1, [r1]
+DEFINE ldrsb_%r2,(%r2) e1d220d0  # ldrsb   r2, [r2]
+DEFINE ldrsb_%r3,(%r3) e1d330d0  # ldrsb   r3, [r3]
+DEFINE ldrsb_%r4,(%r4) e1d440d0  # ldrsb   r4, [r4]
+DEFINE ldrsb_%r5,(%r5) e1d550d0  # ldrsb   r5, [r5]
+DEFINE strb__%r0,(%r0) e5c00000  # strb    r0, [r0]
+DEFINE strb__%r1,(%r1) e5c11000  # strb    r1, [r1]
+DEFINE strb__%r2,(%r2) e5c22000  # strb    r2, [r2]
+DEFINE strb__%r3,(%r3) e5c33000  # strb    r3, [r3]
+DEFINE strb__%r4,(%r4) e5c44000  # strb    r4, [r4]
+DEFINE strh__%r0_(%r0) e1c000b0  # strh    r0, [r0]
+DEFINE strh__%r1_(%r1) e1c110b0  # strh    r1, [r1]
+DEFINE strh__%r2_(%r2) e1c220b0  # strh    r2, [r2]
+DEFINE strh__%r3_(%r3) e1c330b0  # strh    r3, [r3]
+DEFINE strh__%r4_(%r4) e1c440b0  # strh    r4, [r4]
+DEFINE movle_%r0_$i8   d3a000    # movle  r0, #xx
+DEFINE movlt_%r0_$i8   b3a000    # movlt  r0, #xx
+DEFINE movge_%r0_$i8   a3a000    # movge  r0, #xx
+DEFINE movgt_%r0_$i8   c3a000    # movgt  r0, #xx
+DEFINE movcs_%r0_$i8   23a000    # movcs  r0, #xx
+DEFINE movcc_%r0_$i8   33a000    # movcc   r0, #xx
+DEFINE movhi_%r0_$i8   83a000    # movhi   r0, #xx
+DEFINE moveq_%r0_$i8   03a000    # moveq   r0, #xx
+#DEFINE movseq%r0_$i8   03b000    # movseq  r0, #xx
+#DEFINE movs__%r0_$i8   e3b000    # movs    r0, #xx
+#DEFINE teq___%r0_%r0   e1300000  # teq     r0, r0
+#DEFINE teq___%r1,$i8   e3310042  # teq     r1, #xx
+DEFINE asr___%r0,%r0,%r1 e1a00150  # asr %r0, %r0, %r1
+DEFINE lsl___%r0,%r0,%r1 e1a00110  # lsl %r0, %r0, %r1
+DEFINE lsr___%r0,%r0,%r1 e1a00130  # lsr %r0, %r0, %r1
 
 # deprecated, remove after 0.18
 #DEFINE sub____%r13,$i32 81ec
@@ -158,3 +188,33 @@ DEFINE SYS_ioctl  900036
 DEFINE SYS_stat   90006a
 DEFINE SYS_fsync  900076
 DEFINE SYS_getcwd 9000b7
+
+# These are x86 ABI remnants:
+
+DEFINE mov____%ebp,%r0 e1a0000b
+DEFINE mov____%ebp,%r1 e1a0100b
+DEFINE push___%ebp e52d0004 # str r0, [sp, #-4]!
+DEFINE pop____%ebp e49db004 # ldr fp, [sp], #4
+DEFINE mov____%esp,%ebp e1a0b00d # mov     fp, sp
+DEFINE sub____$i8,%esp e24dd0 # sub     sp, sp, #xx
+# Note: i8 offset at the end
+DEFINE mov____%r0,0x12(%ebp) e58b00
+DEFINE mov____%r1,0x12(%ebp) e58b10
+DEFINE mov____%r2,0x12(%ebp) e58b20
+DEFINE mov____%r3,0x12(%ebp) e58b30
+DEFINE mov____%r4,0x12(%ebp) e58b40
+DEFINE mov____%r5,0x12(%ebp) e58b40
+# Note: i8 offset at the end
+DEFINE mov____0x12(%ebp),%r0 e59b00
+DEFINE mov____0x12(%ebp),%r1 e59b10
+DEFINE mov____0x12(%ebp),%r2 e59b20
+DEFINE mov____0x12(%ebp),%r3 e59b30
+DEFINE mov____0x12(%ebp),%r4 e59b40
+DEFINE mov____0x12(%ebp),%r5 e59b50
+
+# The flags are also updated, but that's probably useless.
+DEFINE add____$i8,%esp e29dd0
+#DEFINE add____$i32,0x32(%ebp) xx
+#DEFINE add____$i8,0x32(%ebp) xx
+#DEFINE add____$i8,0x8(%ebp) xx
+#DEFINE add____%ebp,%r0 xx
