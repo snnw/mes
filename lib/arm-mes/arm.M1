@@ -91,8 +91,21 @@ DEFINE mov____%r11,%r0 e1a0000b
 # e59f1004        ldr     r1, [pc, #4]    ; 10 <L1>
 # e5810000        str     r0, [r1]
 # e49d1004        pop     {r1}            ; (ldr r1, [sp], #4)
-# L1:
-DEFINE mov____%r0,0x32 e52d1004e59f1004e5810000e49d1004
+# ea000000        b L2
+# L1: ???
+# L2:
+DEFINE mov____%r0,0x32 e52d1004e59f1004e5810000e49d1004ea000000
+
+# e92d0005        push    {r0, r2}
+# e5910000        ldr     r0, [r1]
+# e59f200c        ldr     r2, [pc, #12]   ; 1c <X2>
+# e0800002        add     r0, r0, r2
+# e5810000        str     r0, [r1]
+# e8bd0005        pop     {r0, r2}
+# ea000000        b       20 <Y2>
+# X2: ???
+# Y2:
+DEFINE add____$i32,(%r1) e92d0005e5910000e59f200ce0800002e5810000e8bd0005ea000000
 
 #DEFINE mov____%r1,0x32(%ebp) xx
 #DEFINE mov____%r1,0x8(%ebp) xx

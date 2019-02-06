@@ -119,7 +119,8 @@
 ;; FIXME: Implement M1 part.
 (define (armv4:r-mem-add info v)
   (let ((r (get-r info)))
-    `(,(if (< (abs v) #x1000) `(,(string-append "add____$i8,(%" r ")") (#:immediate1 ,v))
+    `(,(if (< (abs v) #x1000)
+           `(,(string-append "add____$i32,(%" r ")") (#:immediate ,v))
            `(,(string-append "add____$i32,(%" r ")") (#:immediate ,v))))))
 
 (define (armv4:r-byte-mem-add info v)
