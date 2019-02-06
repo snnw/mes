@@ -49,7 +49,8 @@
   (or n (error "invalid value: armv4:r->local: " n))
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
-    `(,(if (< (abs n) #x1000) `(,(string-append "mov____%" r ",0x8(%ebp)") (#:immediate1 ,n))
+    `(,(if (< (abs n) #x1000)
+           `(,(string-append "mov____%" r ",0x8(%ebp)") (#:immediate1 ,n))
            `(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:value->r info v)
@@ -78,7 +79,7 @@
     `((,(string-append "add____%" r1 ",%" r0)))))
 
 (define (armv4:call-label info label n)
-  `((call32 (#:offset ,label))
+  `((bl (#:offset2 ,label))
     ("add____$i8,%esp" (#:immediate1 ,(* n 4)))))
 
 (define (armv4:r->arg info i)
@@ -87,13 +88,6 @@
 
 (define (armv4:label->arg info label i)
   `(("push___$i32" (#:address ,label))))
-
-;; Register value negation.  FIXME: This was exactly the same as zf->r
-(define (armv4:r-negate info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "sete___%" l))
-      (,(string-append "movzbl_%" l ",%" r)))))
 
 ;; Register--register value subtraction
 (define (armv4:r0-r1 info)
@@ -106,6 +100,10 @@
   (let* ((r (get-r info)))
    `(((string-append "mov___$i8,%" r) (#:immediate1 #x00))
      ((string-append "moveq_$i8,%" r) (#:immediate1 #x01)))))
+
+;; C NOT Register value.
+(define (armv4:r-negate info)
+  (armv4:zf->r info))
 
 (define (armv4:xor-zf info)
   '(("mov___$i8,%r0" (#:immediate1 #x00))
@@ -186,43 +184,43 @@
     `((,(string-append "movswl_%" x ",%" r)))))
 
 (define (armv4:jump info label)
-  `(("jmp8 " (#:offset ,label))))
+  `(("jmp16 " (#:offset1 ,label))))
 
 (define (armv4:jump-z info label)
-  `(("je8  " (#:offset ,label))))
+  `(("je  " (#:offset1 ,label))))
 
 (define (armv4:jump-nz info label)
-  `(("jne8 " (#:offset ,label))))
+  `(("jne " (#:offset1 ,label))))
 
 (define (armv4:jump-byte-z info label)
   `(("test___%al,%al")
-    ("je8  " (#:offset ,label))))
+    ("je  " (#:offset1 ,label))))
 
 ;; signed
 (define (armv4:jump-g info label)
-  `(("jg8  " (#:offset ,label))))
+  `(("jg  " (#:offset1 ,label))))
 
 (define (armv4:jump-ge info label)
-  `(("jge8 " (#:offset ,label))))
+  `(("jge " (#:offset1 ,label))))
 
 (define (armv4:jump-l info label)
-  `(("jl8  " (#:offset ,label))))
+  `(("jl  " (#:offset1 ,label))))
 
 (define (armv4:jump-le info label)
-  `(("jle8 " (#:offset ,label))))
+  `(("jle " (#:offset1 ,label))))
 
 ;; unsigned
 (define (armv4:jump-a info label)
-  `(("ja8  " (#:offset ,label))))
+  `(("ja  " (#:offset1 ,label))))
 
 (define (armv4:jump-ae info label)
-  `(("jae8 " (#:offset ,label))))
+  `(("jae " (#:offset1 ,label))))
 
 (define (armv4:jump-b info label)
-  `(("jb8  " (#:offset ,label))))
+  `(("jb  " (#:offset1 ,label))))
 
 (define (armv4:jump-be info label)
-  `(("jbe8 " (#:offset ,label))))
+  `(("jbe " (#:offset1 ,label))))
 
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))

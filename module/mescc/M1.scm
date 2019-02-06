@@ -63,6 +63,12 @@
 (define (hex2:offset1 o)
   (string-append "!" o))
 
+(define (hex2:offset2 o)
+  (string-append "@" o))
+
+(define (hex2:offset3 o)
+  (string-append "~" o))
+
 (define hex? #t)
 
 (define (hex2:immediate o)
@@ -161,6 +167,8 @@
 
           ((#:offset ,offset) (hex2:offset offset))
           ((#:offset1 ,offset1) (hex2:offset1 offset1))
+          ((#:offset2 ,offset2) (hex2:offset2 offset2))
+          ((#:offset3 ,offset3) (hex2:offset3 offset3))
           ((#:immediate ,immediate) (hex2:immediate immediate))
           ((#:immediate1 ,immediate1) (hex2:immediate1 immediate1))
           ((#:immediate2 ,immediate2) (hex2:immediate2 immediate2))

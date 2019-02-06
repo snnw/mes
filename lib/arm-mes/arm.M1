@@ -53,19 +53,19 @@ DEFINE hlt e1000070
 #DEFINE idiv___%r1 xx
 #DEFINE int xx
 DEFINE swi____$0 ef000000
-DEFINE ja8  8a0000
-DEFINE jae8 3a0000
-DEFINE jb8  2a0000
-DEFINE jbe8 9a0000
-DEFINE je8 0a0000
-DEFINE je8 0a0000
-DEFINE jg8 ca0000
-DEFINE jge8 aa0000
-DEFINE jl8 ba0000
-DEFINE jle8 da0000
+DEFINE ja 8a
+DEFINE jae 3a
+DEFINE jb 2a
+DEFINE jbe 9a
+DEFINE je 0a
+DEFINE je 0a
+DEFINE jg ca
+DEFINE jge aa
+DEFINE jl_____$i24 ba
+DEFINE jle____$i24 da
 #DEFINE jmp32 xx
 #DEFINE jmp____*%r1 xx
-DEFINE jne8 1a0000
+DEFINE jne____$i24 1a00
 #DEFINE lea____0x32(%ebp),%r0 xx
 #DEFINE lea____0x8(%ebp),%r0 xx
 
@@ -73,15 +73,28 @@ DEFINE jne8 1a0000
 # e3a01064        mov     r1, #100
 # e3a02064        mov     r2, #100
 
+#    0:   e3047215        movw    r7, #16917      ; 0x4215
+
 # OK:
 DEFINE mov____$i8,%r0 e3a000
+DEFINE mov____$i8,%r7 e3a070
 DEFINE mov____%r0,%r1 e1a01000
 DEFINE mov____%r0,%r2 e1a02000
 DEFINE mov____%r0,(%r1) e5810000
 DEFINE mov____%r1,%r0 e1a00001
 DEFINE mov____%r1,%r2 e1a02001
 #DEFINE mov____%r1,0x32 xx
-#DEFINE mov____%r0,0x32
+
+# fp -> r0
+DEFINE mov____%r11,%r0 e1a0000b
+
+# e52d1004        push    {r1}            ; (str r1, [sp, #-4]!)
+# e59f1004        ldr     r1, [pc, #4]    ; 10 <L1>
+# e5810000        str     r0, [r1]
+# e49d1004        pop     {r1}            ; (ldr r1, [sp], #4)
+# L1:
+DEFINE mov____%r0,0x32 e52d1004e59f1004e5810000e49d1004
+
 #DEFINE mov____%r1,0x32(%ebp) xx
 #DEFINE mov____%r1,0x8(%ebp) xx
 DEFINE mov____%r2,(%r1) e5812000
@@ -104,6 +117,7 @@ DEFINE pop____%r3 e49d3004
 DEFINE push___%r0 e52d0004 # str r0, [sp, #-4]!
 #DEFINE push___%ebp xx
 DEFINE push___%r1 e52d1004 # str r1, [sp, #-4]!
+DEFINE push___%r2 e52d2004 # str r2, [sp, #-4]!
 DEFINE push___%r3 e52d3004 # str r3, [sp, #-4]!
 #DEFINE push___(%r0) xx
 #DEFINE push___0x32(%ebp) xx
@@ -159,6 +173,11 @@ DEFINE moveq_%r0_$i8   03a000    # moveq   r0, #xx
 DEFINE asr___%r0,%r0,%r1 e1a00150  # asr %r0, %r0, %r1
 DEFINE lsl___%r0,%r0,%r1 e1a00110  # lsl %r0, %r0, %r1
 DEFINE lsr___%r0,%r0,%r1 e1a00130  # lsr %r0, %r0, %r1
+DEFINE ldr___%r0,(%sp,#$i8) e59d00  # ldr r0, [r13+xx]
+DEFINE ldr___%r1,(%sp,#$i8) e59d10  # ldr r1, [r13+xx]
+DEFINE add___%r2,%r0,%r1,lsl#4 e0802201
+DEFINE add___%r2,$i8 e28220
+DEFINE bl ba
 
 # deprecated, remove after 0.18
 #DEFINE sub____%r13,$i32 81ec
@@ -196,6 +215,7 @@ DEFINE mov____%ebp,%r1 e1a0100b
 DEFINE push___%ebp e52d0004 # str r0, [sp, #-4]!
 DEFINE pop____%ebp e49db004 # ldr fp, [sp], #4
 DEFINE mov____%esp,%ebp e1a0b00d # mov     fp, sp
+DEFINE mov____%ebp,%esp e1a0d00b # mov sp, fp
 DEFINE sub____$i8,%esp e24dd0 # sub     sp, sp, #xx
 # Note: i8 offset at the end
 DEFINE mov____%r0,0x12(%ebp) e58b00
