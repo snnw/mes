@@ -301,7 +301,7 @@
 
 (define (arch-get-Architecture options)
   (let ((arch (arch-get options)))
-    (cond ((equal? arch "arm") "1") ;; FIXME: Need M1/hex2 know about armv4?
+    (cond ((equal? arch "arm") "40")
           ((equal? arch "x86") "1")
           ((equal? arch "x86_64") "2"))))
 
