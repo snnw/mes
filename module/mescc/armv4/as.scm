@@ -159,20 +159,20 @@
 (define (armv4:byte-mem->r info)
   (let ((r (get-r info)))
     `((,(string-append "ldrsb_%" r ",(%" r ")"))
-      (,(string-append "and____$i8,%" r) (#:immediate1 0xFF)))))
+      (,(string-append "and____$i8,%" r) (#:immediate1 #xFF)))))
 
 (define (armv4:byte-r info)
   (let* ((r (get-r info))
          (l (e->l r)))
     `((,(string-append "mov____" l ",%" r))
-      (,(string-append "and____$i8,%" r) (#:immediate1 0xFF)))))
+      (,(string-append "and____$i8,%" r) (#:immediate1 #xFF)))))
 
 (define (armv4:byte-signed-r info)
   (let* ((r (get-r info))
          (l (e->l r)))
     ;; Similar to armv4:byte-mem->r, but without the mem indirection.
     `((,(string-append "mov____" l ",%" r))
-      (,(string-append "and____$i8,%" r) (#:immediate1 0xFF)))))  ; FIXME: Sign-extend.
+      (,(string-append "and____$i8,%" r) (#:immediate1 #xFF)))))  ; FIXME: Sign-extend.
 
 (define (armv4:word-r info)
   (let* ((r (get-r info))
