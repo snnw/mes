@@ -55,8 +55,7 @@
 
 (define (armv4:value->r info v)
   (let ((r (get-r info)))
-    `((,(string-append "mov____$i8,%" r) (#:immediate ,v)))))
-
+    `((,(string-append "mov____$i8,%" r) (#:immediate1 ,v)))))
 
 (define (armv4:ret . rest)
   '(("mov____%ebp,%esp")
