@@ -223,7 +223,7 @@ vsnprintf (char *str, size_t size, char const* format, va_list ap)
                   while (precision > length)
                     {
                       if (count < size)
-                        *str++ = '0';
+                        *str++ = ' ';
                       precision--;
                       width--;
                       count++;

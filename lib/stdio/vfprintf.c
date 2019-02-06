@@ -206,7 +206,7 @@ vfprintf (FILE* f, char const* format, va_list ap)
                     }
                   while (precision > length)
                     {
-                      fputc ('0', f);
+                      fputc (' ', f);
                       precision--;
                       width--;
                       count++;
