@@ -61,11 +61,10 @@ DEFINE je 0a
 DEFINE je 0a
 DEFINE jg ca
 DEFINE jge aa
-DEFINE jl_____$i24 ba
-DEFINE jle____$i24 da
-#DEFINE jmp32 xx
+DEFINE jl ba
+DEFINE jle da
 #DEFINE jmp____*%r1 xx
-DEFINE jne____$i24 1a00
+DEFINE jne 1a00
 #DEFINE lea____0x32(%ebp),%r0 xx
 #DEFINE lea____0x8(%ebp),%r0 xx
 
@@ -178,6 +177,7 @@ DEFINE ldr___%r1,(%sp,#$i8) e59d10  # ldr r1, [r13+xx]
 DEFINE add___%r2,%r0,%r1,lsl#4 e0802201
 DEFINE add___%r2,$i8 e28220
 DEFINE bl ba
+DEFINE b ea
 
 # deprecated, remove after 0.18
 #DEFINE sub____%r13,$i32 81ec

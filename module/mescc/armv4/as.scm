@@ -184,43 +184,43 @@
     `((,(string-append "movswl_%" x ",%" r)))))
 
 (define (armv4:jump info label)
-  `(("jmp16 " (#:offset1 ,label))))
+  `(("b " (#:offset3 ,label))))
 
 (define (armv4:jump-z info label)
-  `(("je  " (#:offset1 ,label))))
+  `(("je  " (#:offset3 ,label))))
 
 (define (armv4:jump-nz info label)
-  `(("jne " (#:offset1 ,label))))
+  `(("jne " (#:offset3 ,label))))
 
 (define (armv4:jump-byte-z info label)
   `(("test___%al,%al")
-    ("je  " (#:offset1 ,label))))
+    ("je  " (#:offset3 ,label))))
 
 ;; signed
 (define (armv4:jump-g info label)
-  `(("jg  " (#:offset1 ,label))))
+  `(("jg  " (#:offset3 ,label))))
 
 (define (armv4:jump-ge info label)
-  `(("jge " (#:offset1 ,label))))
+  `(("jge " (#:offset3 ,label))))
 
 (define (armv4:jump-l info label)
-  `(("jl  " (#:offset1 ,label))))
+  `(("jl  " (#:offset3 ,label))))
 
 (define (armv4:jump-le info label)
-  `(("jle " (#:offset1 ,label))))
+  `(("jle " (#:offset3 ,label))))
 
 ;; unsigned
 (define (armv4:jump-a info label)
-  `(("ja  " (#:offset1 ,label))))
+  `(("ja  " (#:offset3 ,label))))
 
 (define (armv4:jump-ae info label)
-  `(("jae " (#:offset1 ,label))))
+  `(("jae " (#:offset3 ,label))))
 
 (define (armv4:jump-b info label)
-  `(("jb  " (#:offset1 ,label))))
+  `(("jb  " (#:offset3 ,label))))
 
 (define (armv4:jump-be info label)
-  `(("jbe " (#:offset1 ,label))))
+  `(("jbe " (#:offset3 ,label))))
 
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
