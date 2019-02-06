@@ -191,6 +191,10 @@ DEFINE add___%r2,%r0,%r1,lsl#4 e0802201
 DEFINE add___%r2,$i8 e28220
 DEFINE bl ba
 DEFINE b ea
+DEFINE sxtb__%r0,%r0 e6af0070
+DEFINE sxth__%r0,%r0 e6bf0070
+DEFINE uxtb__%r0,%r0 e6ef0070
+DEFINE uxth__%r0,%r0 e6ff0070
 
 # deprecated, remove after 0.18
 #DEFINE sub____%r13,$i32 81ec

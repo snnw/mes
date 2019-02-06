@@ -31,12 +31,6 @@
             armv4:instructions
             ))
 
-(define (e->x o)
-  (string-drop o 1))
-
-(define (e->l o)
-  (string-append (string-drop-right (string-drop o 1) 1) "l"))
-
 (define (armv4:function-preamble . rest)
   ;; FIXME: This is not customary to do on ARM.
   '(("push___%ebp")
@@ -161,27 +155,20 @@
       (,(string-append "and____$i8,%" r) (#:immediate1 #xFF)))))
 
 (define (armv4:byte-r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "mov____%" l ",%" r))
-      (,(string-append "and____$i8,%" r) (#:immediate1 #xFF)))))
+  (let* ((r (get-r info)))
+    `((,(string-append "uxtb__%" r ",%" r)))))
 
 (define (armv4:byte-signed-r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    ;; Similar to armv4:byte-mem->r, but without the mem indirection.
-    `((,(string-append "mov____%" l ",%" r))
-      (,(string-append "and____$i8,%" r) (#:immediate1 #xFF)))))  ; FIXME: Sign-extend.
+  (let* ((r (get-r info)))
+    `((,(string-append "sxtb__%" r ",%" r)))))
 
 (define (armv4:word-r info)
-  (let* ((r (get-r info))
-         (x (e->x r)))
-    `((,(string-append "ldrh_%" x ",%" r))))) ; FIXME: without memory access.
+  (let* ((r (get-r info)))
+    `((,(string-append "uxth__%" r ",%" r)))))
 
 (define (armv4:word-signed-r info)
-  (let* ((r (get-r info))
-         (x (e->x r)))
-    `((,(string-append "movswl_%" x ",%" r)))))
+  (let* ((r (get-r info)))
+    `((,(string-append "sxth__%" r ",%" r)))))
 
 (define (armv4:jump info label)
   `(("b " (#:offset3 ,label))))
@@ -224,9 +211,8 @@
 
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
-         (r1 (get-r1 info))
-         (l0 (e->l r0)))
-    `((,(string-append "mov____%" l0 ",(%" r1 ")")))))
+         (r1 (get-r1 info)))
+    `((,(string-append "strb__%" r0 ",(%" r1 ")")))))
 
 (define (armv4:label-mem->r info label)
   (let ((r (get-r info)))
@@ -261,10 +247,9 @@
 (define (armv4:flag->r branchspec info)
   "Find out whether a flag or set of flag has a given set of values and set the value of the register R to 1 if it is so, and to 0 otherwise.
   Possible values for branchspec are one of (\"cs\", \"cc\", \"ge\", \"gt\", \"hi\", \"lt\", \"le\")"
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "mov____$i8,%" l) (#:immediate1 #x00))
-      (,(string-append "mov" branchspec "__$i8,%" l) (#:immediate1 #x01)))))
+  (let* ((r (get-r info)))
+    `((,(string-append "mov____$i8,%" r) (#:immediate1 #x00))
+      (,(string-append "mov" branchspec "__$i8,%" r) (#:immediate1 #x01)))))
 
 ;; signed
 (define (armv4:g?->r info)
@@ -290,10 +275,9 @@
   (armv4:flag->r "cc" info))
 
 (define (armv4:be?->r info)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "mov____$i8,%" l) (#:immediate #x01))
-      (,(string-append "movhi__$i8,%" l) (#:immediate #x00)))))
+  (let* ((r (get-r info)))
+    `((,(string-append "mov____$i8,%" r) (#:immediate #x01))
+      (,(string-append "movhi__$i8,%" r) (#:immediate #x00)))))
 
 (define (armv4:test-r info)
   (let ((r (get-r info)))
@@ -304,14 +288,12 @@
     `((,(string-append "mov____%" r ",0x32") (#:address ,label)))))
 
 (define (armv4:r->byte-label info label)
-  (let* ((r (get-r info))
-         (l (e->l r)))
-    `((,(string-append "movb___%" l ",0x32") (#:address ,label)))))
+  (let* ((r (get-r info))) ; r: byte
+    `((,(string-append "movb___%" r ",0x32") (#:address ,label)))))
 
 (define (armv4:r->word-label info label)
-  (let* ((r (get-r info))
-        (x (e->x r)))
-    `((,(string-append "movw___%" x ",0x32") (#:address ,label)))))
+  (let* ((r (get-r info))) ; r: halfword
+    `((,(string-append "movw___%" r ",0x32") (#:address ,label)))))
 
 (define (armv4:call-r info n)
   (let ((r (get-r info)))
@@ -419,15 +401,13 @@
 
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
-         (r1 (get-r1 info))
-         (l0 (e->l r0)))
-    `((,(string-append "mov____%" l0 ",(%" r1 ")")))))
+         (r1 (get-r1 info)))
+    `((,(string-append "stb____%" r0 ",(%" r1 ")")))))
 
 (define (armv4:word-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
-         (r1 (get-r1 info))
-         (x0 (e->x r0)))
-    `((,(string-append "mov____%" x0 ",(%" r1 ")")))))
+         (r1 (get-r1 info)))
+    `((,(string-append "sthw___%" r0 ",(%" r1 ")")))))
 
 (define (armv4:r-cmp-value info v)
   (let ((r (get-r info)))
@@ -479,19 +459,17 @@
   (let* ((registers (.registers info))
          (r0 (get-r0 info))
          (r1 (get-r1 info))
-         (r2 (car registers))
-         (l2 (e->l r2)))
-    `((,(string-append "mov____(%" r0 "),%" l2))
-      (,(string-append "mov____%" l2 ",(%" r1 ")")))))
+         (r2 (car registers)))
+    `((,(string-append "ldrsb_%" r2 ",(%" r0 ")"))
+      (,(string-append "strb__%" r2 ",(%" r1 ")")))))
 
 (define (armv4:word-r0-mem->r1-mem info)
   (let* ((registers (.registers info))
          (r0 (get-r0 info))
          (r1 (get-r1 info))
-         (r2 (car registers))
-         (x2 (e->x r2)))
-    `((,(string-append "mov____(%" r0 "),%" x2))
-      (,(string-append "mov____%" x2 ",(%" r1 ")")))))
+         (r2 (car registers)))
+    `((,(string-append "mov____(%" r0 "),%" r2))
+      (,(string-append "strh__%" r2 ",(%" r1 ")")))))
 
 (define (armv4:r0+value info v)
   (let ((r0 (get-r0 info)))
@@ -504,17 +482,17 @@
 
 (define (armv4:byte-r->local+n info id n)
   (let* ((n (+ (- 0 (* 4 id)) n))
-         (r (get-r info))
-         (l (e->l r) ))
-    `(,(if (< (abs n) #x80) `(,(string-append "mov____%" l ",0x8(%ebp)") (#:immediate1 ,n))
-           `(,(string-append "mov____%" l ",0x32(%ebp)") (#:immediate ,n))))))
+         (r (get-r info)))
+    `(,(if (< (abs n) #x80)
+           `(,(string-append "strb__%" r ",0x8(%ebp)") (#:immediate1 ,n))
+           `(,(string-append "strb__%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:word-r->local+n info id n)
   (let* ((n (+ (- 0 (* 4 id)) n))
-         (r (get-r info))
-         (x (e->x r)))
-    `(,(if (< (abs n) #x80) `(,(string-append "mov____%" x ",0x8(%ebp)") (#:immediate1 ,n))
-           `(,(string-append "mov____%" x ",0x32(%ebp)") (#:immediate ,n))))))
+         (r (get-r info)))
+    `(,(if (< (abs n) #x80)
+           `(,(string-append "strh__%" r ",0x8(%ebp)") (#:immediate1 ,n))
+           `(,(string-append "strh__%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:r-and info v)
   (let ((r (get-r info)))
