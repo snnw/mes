@@ -17,6 +17,8 @@
 ### You should have received a copy of the GNU General Public License
 ### along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
 
+# Note: r9 is used as scratch register and is assumed to not contain anything important!
+
 # FIXME: https://w3challs.com/syscalls/?arch=arm_strong
 
 # reduced instruction set: r0, r1 (some r2 for shift, r3 for mul, div)
@@ -134,7 +136,16 @@ DEFINE or_____%r1,%r0 e1900001 # orrs    r0, r0, r1
 DEFINE pop____%r0 e49d0004
 DEFINE pop____%r1 e49d1004
 DEFINE pop____%r3 e49d3004
-#DEFINE push___$i32 xx
+
+# e59f9004        ldr     r9, [pc, #4]    ; c <L1x>
+# e52d9004        push    {r9}            ; (str r9, [sp, #-4]!)
+# ea000000        b       10 <L1y>
+# L1x: data
+# L1y:
+
+00000010 <L1y>:
+DEFINE push___$i32 e59f9004e52d9004ea000000
+
 DEFINE push___%r0 e52d0004 # str r0, [sp, #-4]!
 #DEFINE push___%ebp xx
 DEFINE push___%r1 e52d1004 # str r1, [sp, #-4]!
