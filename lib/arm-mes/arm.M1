@@ -107,6 +107,15 @@ DEFINE mov____%r0,0x32 e52d1004e59f1004e5810000e49d1004ea000000
 # Y2:
 DEFINE add____$i32,(%r1) e92d0005e5910000e59f200ce0800002e5810000e8bd0005ea000000
 
+# e52d0004        push    {r0}            ; (str r0, [sp, #-4]!)
+# e59f0008        ldr     r0, [pc, #8]    ; 14 <addr1>
+# e5901000        ldr     r1, [r0]
+# e49d0004        pop     {r0}            ; (ldr r0, [sp], #4)
+# ea000000        b       18 <addr2>
+# addr1: ???
+# addr2:
+DEFINE mov____0x32,%r1 e52d0004e59f0008e5901000e49d0004ea000000
+
 #DEFINE mov____%r1,0x32(%ebp) xx
 #DEFINE mov____%r1,0x8(%ebp) xx
 DEFINE mov____%r2,(%r1) e5812000
