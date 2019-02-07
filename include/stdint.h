@@ -131,6 +131,8 @@ typedef long ptrdiff_t;
 #define SIZE_MAX UINT64_MAX
 #endif
 
+#define SSIZE_MAX LONG_MAX
+
 #endif // ! WITH_GLIBC
 
 #endif // __MES_STDINT_H
