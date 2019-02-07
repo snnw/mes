@@ -63,7 +63,8 @@
 (define (armv4:local->r info n)
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
-    `(,(if (< (abs n) #x1000) `(,(string-append "mov____0x12(%ebp),%" r) (#:immediate1 ,n))
+    `(,(if (< (abs n) #x1000)
+           `(,(string-append "mov____0x12(%ebp),%" r) (#:immediate1 ,n))
            `(,(string-append "mov____0x32(%ebp),%" r) (#:immediate ,n))))))
 
 (define (armv4:r0+r1 info)
@@ -106,7 +107,8 @@
 (define (armv4:r->local+n info id n)
   (let ((n (+ (- 0 (* 4 id)) n))
         (r (get-r info)))
-    `(,(if (< (abs n) #x1000) `(,(string-append "mov____%" r ",0x12(%ebp)") (#:immediate1 ,n))
+    `(,(if (< (abs n) #x1000)
+           `(,(string-append "mov____%" r ",0x12(%ebp)") (#:immediate1 ,n))
            `(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 ;; FIXME: Implement M1 part.
