@@ -23,7 +23,6 @@
 
 # reduced instruction set: r0, r1 (some r2 for shift, r3 for mul, div)
 # FIXME: count instructions
-# FIXME: Note: ADD can't actually subtract numerals.
 
 #DEFINE add____$i32,(%r0) xx
 #DEFINE add____$i32,(%r1) xx
