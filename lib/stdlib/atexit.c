@@ -24,4 +24,5 @@ int
 atexit (void (*function) (void))
 {
   __call_at_exit = function;
+  return 0;
 }
