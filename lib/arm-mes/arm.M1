@@ -77,6 +77,7 @@ DEFINE jne 1a00
 
 # OK:
 DEFINE mov____$i8,%r0 e3a000
+DEFINE mov____$i8,%r1 e3a010 # mov     r1, #66
 DEFINE mov____$i8,%r7 e3a070
 DEFINE mov____%r0,%r1 e1a01000
 DEFINE mov____%r0,%r2 e1a02000
@@ -169,6 +170,9 @@ DEFINE xor____%r0,%r0 e0300000 # eors    r0, r0, r0
 DEFINE xor____%r1,%r0 e0300001 # eors    r0, r0, r1
 DEFINE xor____%r1,%r1 e0311001 # eors    r1, r1, r1
 DEFINE xor____%r3,%r3 e0333003 # eors    r3, r3, r3
+DEFINE mov____0x8(%ebp),%r0 e59b0008 # ldr     r0, [fp, #8]
+DEFINE mov____0x8(%ebp),%r1 e59b1008 # ldr     r1, [fp, #8]
+DEFINE mov____0x8(%ebp),%r2 e59b2008 # ldr     r2, [fp, #8]
 
 # Note: These are the native ARM instructions.
 # Note: Loads INTO register r0 (ARM original operand order)
