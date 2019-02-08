@@ -137,6 +137,7 @@
 #include <math/ceil.c>
 #include <math/floor.c>
 #include <math/labs.c>
+#include <string/strtok.c>
 #include <stub/atan2.c>
 #include <stub/asctime.c>
 #include <stub/cos.c>
