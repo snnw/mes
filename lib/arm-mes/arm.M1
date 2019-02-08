@@ -256,6 +256,7 @@ DEFINE pop____%ebp e49db004 # ldr fp, [sp], #4
 DEFINE mov____%esp,%ebp e1a0b00d # mov     fp, sp
 DEFINE mov____%ebp,%esp e1a0d00b # mov sp, fp
 DEFINE sub____$i8,%esp e24dd0 # sub     sp, sp, #xx
+
 # Note: i8 offset at the end
 DEFINE mov____%r0,0x12(%ebp) e58b00
 DEFINE mov____%r1,0x12(%ebp) e58b10
@@ -270,6 +271,16 @@ DEFINE mov____0x12(%ebp),%r2 e59b20
 DEFINE mov____0x12(%ebp),%r3 e59b30
 DEFINE mov____0x12(%ebp),%r4 e59b40
 DEFINE mov____0x12(%ebp),%r5 e59b50
+
+# e59f9008        ldr     r9, [pc, #8]    ; 10 <LX1>
+# e089900b        add     r9, r9, fp
+# e5890000        str     r0, [r9]
+# ea000000        b       14 <LX2>
+# 00000010 <LX1>: data
+# 00000014 <LX2>:
+DEFINE mov____%r0,0x32(%ebp) e59f9008e089900be5890000ea000000
+DEFINE mov____%r1,0x32(%ebp) e59f9008e089900be5891000ea000000
+DEFINE mov____%r2,0x32(%ebp) e59f9008e089900be5892000ea000000
 
 # e1a09000        mov     r9, r0
 # e1a00001        mov     r0, r1
