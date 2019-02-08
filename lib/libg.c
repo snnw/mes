@@ -65,7 +65,7 @@
 #include <stub/pclose.c>
 #include <stub/popen.c>
 #include <string/rindex.c>
-#include <stub/rewind.c>
+#include <stdio/rewind.c>     // for gcc-4.6.4; could be stubbed
 #include <stub/setbuf.c>
 #include <stub/system.c>
 #include <string/strerror.c>
