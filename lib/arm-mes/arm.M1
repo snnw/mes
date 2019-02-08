@@ -143,7 +143,6 @@ DEFINE pop____%r3 e49d3004
 # L1x: data
 # L1y:
 
-00000010 <L1y>:
 DEFINE push___$i32 e59f9004e52d9004ea000000
 
 DEFINE push___%r0 e52d0004 # str r0, [sp, #-4]!
