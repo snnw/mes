@@ -52,10 +52,10 @@ environ = &argv[argc + 1]
 
   /* Add "environ" to main's arguments */
 
-  asm ("ldr___%r0,(%sp,#$i8) !0"); /* "argc" */
-  asm ("ldr___%r1,(%sp,#$i8) !4"); /* "argv" */
-  asm ("add___%r2,%r0,%r1,lsl#4"); /* "environ": argv + argc */
-  asm ("add___%r2,$i8 !4"); /* "environ": argv + argc + 1 */
+  asm ("ldr____%r0,(%sp,#$i8) !0"); /* "argc" */
+  asm ("ldr____%r1,(%sp,#$i8) !4"); /* "argv" */
+  asm ("add____%r2,%r0,%r1,lsl#4"); /* "environ": argv + argc */
+  asm ("add____%r2,$i8 !4"); /* "environ": argv + argc + 1 */
 
   asm ("push___%r2");
   asm ("push___%r1");

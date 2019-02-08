@@ -182,35 +182,35 @@ DEFINE ldrsb__%r2,(%r2) e1d220d0  # ldrsb   r2, [r2]
 DEFINE ldrsb__%r3,(%r3) e1d330d0  # ldrsb   r3, [r3]
 DEFINE ldrsb__%r4,(%r4) e1d440d0  # ldrsb   r4, [r4]
 DEFINE ldrsb__%r5,(%r5) e1d550d0  # ldrsb   r5, [r5]
-DEFINE strb__%r0,(%r0) e5c00000  # strb    r0, [r0]
-DEFINE strb__%r1,(%r1) e5c11000  # strb    r1, [r1]
-DEFINE strb__%r2,(%r2) e5c22000  # strb    r2, [r2]
-DEFINE strb__%r3,(%r3) e5c33000  # strb    r3, [r3]
-DEFINE strb__%r4,(%r4) e5c44000  # strb    r4, [r4]
-DEFINE strh__%r0_(%r0) e1c000b0  # strh    r0, [r0]
-DEFINE strh__%r1_(%r1) e1c110b0  # strh    r1, [r1]
-DEFINE strh__%r2_(%r2) e1c220b0  # strh    r2, [r2]
-DEFINE strh__%r3_(%r3) e1c330b0  # strh    r3, [r3]
-DEFINE strh__%r4_(%r4) e1c440b0  # strh    r4, [r4]
-DEFINE movle_%r0_$i8   d3a000    # movle  r0, #xx
-DEFINE movlt_%r0_$i8   b3a000    # movlt  r0, #xx
-DEFINE movge_%r0_$i8   a3a000    # movge  r0, #xx
-DEFINE movgt_%r0_$i8   c3a000    # movgt  r0, #xx
-DEFINE movcs_%r0_$i8   23a000    # movcs  r0, #xx
-DEFINE movcc_%r0_$i8   33a000    # movcc   r0, #xx
-DEFINE movhi_%r0_$i8   83a000    # movhi   r0, #xx
-DEFINE moveq_%r0_$i8   03a000    # moveq   r0, #xx
-#DEFINE movseq%r0_$i8   03b000    # movseq  r0, #xx
-#DEFINE movs__%r0_$i8   e3b000    # movs    r0, #xx
-#DEFINE teq___%r0_%r0   e1300000  # teq     r0, r0
-#DEFINE teq___%r1,$i8   e3310042  # teq     r1, #xx
-DEFINE asr___%r0,%r0,%r1 e1a00150  # asr %r0, %r0, %r1
-DEFINE lsl___%r0,%r0,%r1 e1a00110  # lsl %r0, %r0, %r1
-DEFINE lsr___%r0,%r0,%r1 e1a00130  # lsr %r0, %r0, %r1
-DEFINE ldr___%r0,(%sp,#$i8) e59d00  # ldr r0, [r13+xx]
-DEFINE ldr___%r1,(%sp,#$i8) e59d10  # ldr r1, [r13+xx]
-DEFINE add___%r2,%r0,%r1,lsl#4 e0802201
-DEFINE add___%r2,$i8 e28220
+DEFINE strb___%r0,(%r0) e5c00000  # strb    r0, [r0]
+DEFINE strb___%r1,(%r1) e5c11000  # strb    r1, [r1]
+DEFINE strb___%r2,(%r2) e5c22000  # strb    r2, [r2]
+DEFINE strb___%r3,(%r3) e5c33000  # strb    r3, [r3]
+DEFINE strb___%r4,(%r4) e5c44000  # strb    r4, [r4]
+DEFINE strh___%r0,(%r0) e1c000b0  # strh    r0, [r0]
+DEFINE strh___%r1,(%r1) e1c110b0  # strh    r1, [r1]
+DEFINE strh___%r2,(%r2) e1c220b0  # strh    r2, [r2]
+DEFINE strh___%r3,(%r3) e1c330b0  # strh    r3, [r3]
+DEFINE strh___%r4,(%r4) e1c440b0  # strh    r4, [r4]
+DEFINE movle__%r0,$i8   d3a000    # movle  r0, #xx
+DEFINE movlt__%r0,$i8   b3a000    # movlt  r0, #xx
+DEFINE movge__%r0,$i8   a3a000    # movge  r0, #xx
+DEFINE movgt__%r0,$i8   c3a000    # movgt  r0, #xx
+DEFINE movcs__%r0,$i8   23a000    # movcs  r0, #xx
+DEFINE movcc__%r0,$i8   33a000    # movcc   r0, #xx
+DEFINE movhi__%r0,$i8   83a000    # movhi   r0, #xx
+DEFINE moveq__%r0,$i8   03a000    # moveq   r0, #xx
+#DEFINE movseq_%r0,$i8   03b000    # movseq  r0, #xx
+#DEFINE movs___%r0,$i8   e3b000    # movs    r0, #xx
+#DEFINE teq____%r0,%r0   e1300000  # teq     r0, r0
+#DEFINE teq____%r1,$i8   e3310042  # teq     r1, #xx
+DEFINE asr____%r0,%r0,%r1 e1a00150  # asr %r0, %r0, %r1
+DEFINE lsl____%r0,%r0,%r1 e1a00110  # lsl %r0, %r0, %r1
+DEFINE lsr____%r0,%r0,%r1 e1a00130  # lsr %r0, %r0, %r1
+DEFINE ldr____%r0,(%sp,#$i8) e59d00  # ldr r0, [r13+xx]
+DEFINE ldr____%r1,(%sp,#$i8) e59d10  # ldr r1, [r13+xx]
+DEFINE add____%r2,%r0,%r1,lsl#4 e0802201
+DEFINE add____%r2,$i8 e28220
 DEFINE bl ba
 DEFINE b ea
 DEFINE sxtb__%r0,%r0 e6af0070
