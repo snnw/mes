@@ -43,9 +43,7 @@
   (or n (error "invalid value: armv4:r->local: " n))
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
-    `(,(if (< (abs n) #x1000)
-           `(,(string-append "mov____%" r ",0x8(%ebp)") (#:immediate1 ,n))
-           `(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n))))))
+    `(,`(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n)))))
 
 (define (armv4:value->r info v)
   (let ((r (get-r info)))
