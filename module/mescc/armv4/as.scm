@@ -251,7 +251,7 @@
   Possible values for branchspec are one of (\"cs\", \"cc\", \"ge\", \"gt\", \"hi\", \"lt\", \"le\")"
   (let* ((r (get-r info)))
     `((,(string-append "mov____$i8,%" r) (#:immediate1 #x00))
-      (,(string-append "mov" branchspec "__$i8,%" r) (#:immediate1 #x01)))))
+      (,(string-append "mov" branchspec "__%" r ",$i8") (#:immediate1 #x01)))))
 
 ;; signed
 (define (armv4:g?->r info)
