@@ -136,7 +136,9 @@
 // gcc-4.6.4
 #include <math/ceil.c>
 #include <math/floor.c>
+#include <math/labs.c>
 #include <stub/atan2.c>
+#include <stub/asctime.c>
 #include <stub/cos.c>
 #include <stub/exp.c>
 #include <stub/log.c>
