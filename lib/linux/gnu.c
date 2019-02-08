@@ -20,6 +20,7 @@
 
 #include <sys/resource.h>
 #include <time.h>
+#include <sys/mman.h>
 
 int
 link (char const *old_name, char const *new_name)
@@ -215,4 +216,17 @@ int
 mknod (char const *file_name, mode_t mode, dev_t dev)
 {
   return _sys_call3 (SYS_mknod, (long)file_name, (long)mode, (long)dev);
+}
+
+// gcc-4.6.4
+void *
+mmap (void* addr, size_t len, int prot, int flags, int fd, off_t offset)
+{
+  return _sys_call6 (SYS_mmap, (long)addr, (long)len, (int)prot, (int)flags, (int)fd, (long)offset);
+}
+
+int
+munmap (void *addr, size_t length)
+{
+  return _sys_call2 (SYS_munmap, (long)addr, (long)length);
 }
