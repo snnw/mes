@@ -282,6 +282,13 @@ DEFINE mov____%r0,0x32(%ebp) e59f9008e089900be5890000ea000000
 DEFINE mov____%r1,0x32(%ebp) e59f9008e089900be5891000ea000000
 DEFINE mov____%r2,0x32(%ebp) e59f9008e089900be5892000ea000000
 
+# e59f9004        ldr     r9, [pc, #4]    ; c <LX1>
+# e5990000        ldr     r0, [r9]
+# ea000000        b       10 <LX2>
+DEFINE mov____0x32,%r0 e59f9004e5990000ea000000
+DEFINE mov____0x32,%r1 e59f9004e5991000ea000000
+DEFINE mov____0x32,%r2 e59f9004e5992000ea000000
+
 # e1a09000        mov     r9, r0
 # e1a00001        mov     r0, r1
 # e1a01009        mov     r1, r9
