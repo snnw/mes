@@ -29,11 +29,7 @@
 
 #else // ! WITH_GLIBC
 
-#ifndef __MES_SIZE_T
-#define __MES_SIZE_T
-#undef size_t
-typedef unsigned long size_t;
-#endif
+#include <sys/types.h>
 
 #if _ALLOCA_UNSIGNED
 void * alloca (unsigned size);
