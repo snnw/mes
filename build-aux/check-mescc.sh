@@ -202,6 +202,7 @@ lib/tests/stdio/90-fopen-append
 lib/tests/stdio/90-fread-fwrite
 lib/tests/stdio/90-fseek
 lib/tests/stdio/90-sprintf
+lib/tests/stdio/90-sscanf
 lib/tests/stdlib/90-strtol
 lib/tests/string/90-snprintf
 lib/tests/string/90-strpbrk
