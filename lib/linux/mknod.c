@@ -21,5 +21,5 @@
 int
 mknod (char const *file_name, mode_t mode, dev_t dev)
 {
-  return _sys_call3 (SYS_mknod, (long)file_name, (long)mode, (long)dev);
+  return _sys_call3 (SYS_mknod, (long) file_name, (long) mode, (long) dev);
 }

@@ -35,7 +35,7 @@
 #define LC_COLLATE 3
 #define LC_ALL     6
 #endif
-char * setlocale (int category, char const *locale);
+char *setlocale (int category, char const *locale);
 
 #endif // ! WITH_GLIBC
 

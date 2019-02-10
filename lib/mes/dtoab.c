@@ -25,10 +25,10 @@ char *
 dtoab (double d, int base, int signed_p)
 {
   static char dtoa_buf[40];
-  long i = (long)d;
+  long i = (long) d;
   char *p = ntoab (i, base, signed_p);
   strcpy (dtoa_buf, p);
-  long f = (d - (double)i) * (double)100000000000;
+  long f = (d - (double) i) * (double) 100000000000;
   if (f)
     {
       if (f < 0)

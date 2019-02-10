@@ -37,46 +37,46 @@ typedef int mode_t;
 #if __i386__
 struct stat
 {
-  unsigned long  st_dev;
-  unsigned long  st_ino;
+  unsigned long st_dev;
+  unsigned long st_ino;
   unsigned short st_mode;
   unsigned short st_nlink;
   unsigned short st_uid;
   unsigned short st_gid;
-  unsigned long  st_rdev;
-  long           st_size;
-  unsigned long  st_blksize;
-  unsigned long  st_blocks;
-  time_t         st_atime;
-  unsigned long  st_atime_usec;
-  time_t         st_mtime;
-  unsigned long  st_mtime_usec;
-  time_t         st_ctime;
-  unsigned long  st_ctime_usec;
-  unsigned long  __foo0;
-  unsigned long  __foo1;
+  unsigned long st_rdev;
+  long st_size;
+  unsigned long st_blksize;
+  unsigned long st_blocks;
+  time_t st_atime;
+  unsigned long st_atime_usec;
+  time_t st_mtime;
+  unsigned long st_mtime_usec;
+  time_t st_ctime;
+  unsigned long st_ctime_usec;
+  unsigned long __foo0;
+  unsigned long __foo1;
 };
 #elif __x86_64__
 struct stat
 {
-  unsigned long  st_dev;
-  unsigned long  st_ino;
-  unsigned int   st_mode;
-  unsigned int   st_nlink;
-  unsigned int   st_uid;
-  unsigned int   st_gid;
-  unsigned long  st_rdev;
-  long           st_size;
-  unsigned long  st_blksize;
-  unsigned long  st_blocks;
-  time_t         st_atime;
-  unsigned long  st_atime_usec;
-  time_t         st_mtime;
-  unsigned long  st_mtime_usec;
-  time_t         st_ctime;
-  unsigned long  st_ctime_usec;
-  unsigned long  __foo0;
-  unsigned long  __foo1;
+  unsigned long st_dev;
+  unsigned long st_ino;
+  unsigned int st_mode;
+  unsigned int st_nlink;
+  unsigned int st_uid;
+  unsigned int st_gid;
+  unsigned long st_rdev;
+  long st_size;
+  unsigned long st_blksize;
+  unsigned long st_blocks;
+  time_t st_atime;
+  unsigned long st_atime_usec;
+  time_t st_mtime;
+  unsigned long st_mtime_usec;
+  time_t st_ctime;
+  unsigned long st_ctime_usec;
+  unsigned long __foo0;
+  unsigned long __foo1;
 };
 #endif
 
