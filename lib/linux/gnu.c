@@ -18,215 +18,31 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <sys/resource.h>
-#include <time.h>
-#include <sys/mman.h>
-
-int
-link (char const *old_name, char const *new_name)
-{
-  return _sys_call2 (SYS_link, (long)old_name, (long)new_name);
-}
-
-pid_t
-getpid ()
-{
-  return _sys_call (SYS_getpid);
-}
-
-uid_t
-getuid ()
-{
-  return _sys_call (SYS_getuid);
-}
-
-int
-kill (pid_t pid, int signum)
-{
-  return _sys_call2 (SYS_kill, (long)pid, (long)signum);
-}
-
-int
-rename (char const *old_name, char const *new_name)
-{
-  return _sys_call2 (SYS_rename, (long)old_name, (long)new_name);
-}
-
-int
-mkdir (char const *file_name, mode_t mode)
-{
-  return _sys_call2 (SYS_mkdir, (long)file_name, (long)mode);
-}
-
-gid_t
-getgid ()
-{
-  return _sys_call (SYS_getgid);
-}
-
-#if __x86_64__
-void
-_restorer (void)
-{
-  _sys_call (SYS_rt_sigreturn);
-}
-#endif
-
-# define __sigmask(sig) \
-  (((unsigned long int) 1) << (((sig) - 1) % (8 * sizeof (unsigned long int))))
-
-sighandler_t
-signal (int signum, sighandler_t action)
-{
-#if __i386__
-  return _sys_call2 (SYS_signal, signum, action);
-#else
-  static struct sigaction setup_action = {-1};
-  static struct sigaction old = {0};
-
-  setup_action.sa_handler = action;
-  setup_action.sa_restorer = _restorer;
-  setup_action.sa_mask = __sigmask (signum);
-  old.sa_handler = SIG_DFL;
-  setup_action.sa_flags = SA_RESTORER | SA_RESTART;
-  int r = _sys_call4 (SYS_rt_sigaction, signum, &setup_action, &old, sizeof (sigset_t));
-  if (r)
-    return 0;
-  return old.sa_handler;
-#endif
-}
-
-int
-fcntl (int filedes, int command, ...)
-{
-  va_list ap;
-  va_start (ap, command);
-  int data = va_arg (ap, int);
-  int r = _sys_call3 (SYS_fcntl, (int)filedes, (int)command, (int)data);
-  va_end (ap);
-  return r;
-}
-
-int
-pipe (int filedes[2])
-{
-  return _sys_call1 (SYS_pipe, (long)filedes);
-}
-
-int
-getrusage (int processes, struct rusage *rusage)
-{
-  return _sys_call2 (SYS_getrusage, (int)processes, (long)rusage);
-}
-
-int
-lstat (char const *file_name, struct stat *statbuf)
-{
-  return _sys_call2 (SYS_lstat, (long)file_name, (long)statbuf);
-}
-
-int
-nanosleep (const struct timespec *requested_time,
-           struct timespec *remaining)
-{
-  return _sys_call2 (SYS_nanosleep, (long)requested_time, (long)remaining);
-}
-
-int
-setitimer (int which, struct itimerval const *new,
-          struct itimerval *old)
-{
-  return _sys_call3 (SYS_setitimer, (long)which, (long)new, (long)old);
-}
-
-int
-fstat (int filedes, struct stat *statbuf)
-{
-  return _sys_call2 (SYS_fstat, (int)filedes, (long)statbuf);
-}
-
-int
-getdents (int filedes, char *buffer, size_t nbytes)
-{
-  return _sys_call3 (SYS_getdents, (int)filedes, (long)buffer, (long)nbytes);
-}
-
-int
-chdir (char const *file_name)
-{
-  return _sys_call1 (SYS_chdir, (long)file_name);
-}
-
-// bash
-uid_t
-geteuid ()
-{
-  return _sys_call (SYS_geteuid);
-}
-
-gid_t
-getegid ()
-{
-  return _sys_call (SYS_getegid);
-}
-
-pid_t
-getppid ()
-{
-  return _sys_call (SYS_getppid);
-}
-
-int
-setuid (uid_t newuid)
-{
-  return _sys_call1 (SYS_setuid, (long)newuid);
-}
-
-int
-setgid (gid_t newgid)
-{
-  return _sys_call1 (SYS_setgid, (long)newgid);
-}
-
-// make+POSIX
-int
-sigprocmask (int how, sigset_t const *set, sigset_t *oldset)
-{
-#if __i386__
-  return _sys_call3 (SYS_sigprocmask, (long)how, (long)set, (long)oldset);
-#else
-  return _sys_call3 (SYS_rt_sigprocmask, (long)how, (long)set, (long)oldset);
-#endif
-}
-
-// tar
-int
-symlink (char const *old_name, char const *new_name)
-{
-  return _sys_call2 (SYS_symlink, (long)old_name, (long)new_name);
-}
-
-ssize_t
-readlink (char const *file_name, char *buffer, size_t size)
-{
-  return _sys_call3 (SYS_readlink, (long)file_name, (long)buffer, (long)size);
-}
-
-int
-mknod (char const *file_name, mode_t mode, dev_t dev)
-{
-  return _sys_call3 (SYS_mknod, (long)file_name, (long)mode, (long)dev);
-}
-
-// gcc-4.6.4
-void *
-mmap (void* addr, size_t len, int prot, int flags, int fd, off_t offset)
-{
-  return _sys_call6 (SYS_mmap, (long)addr, (long)len, (int)prot, (int)flags, (int)fd, (long)offset);
-}
-
-int
-munmap (void *addr, size_t length)
-{
-  return _sys_call2 (SYS_munmap, (long)addr, (long)length);
-}
+#include <linux/chdir.c>
+#include <linux/fcntl.c>
+#include <linux/fstat.c>
+#include <linux/getdents.c>
+#include <linux/getegid.c>
+#include <linux/geteuid.c>
+#include <linux/getgid.c>
+#include <linux/getpid.c>
+#include <linux/getppid.c>
+#include <linux/getrusage.c>
+#include <linux/getuid.c>
+#include <linux/kill.c>
+#include <linux/link.c>
+#include <linux/lstat.c>
+#include <linux/mkdir.c>
+#include <linux/mknod.c>
+#include <linux/mmap.c>
+#include <linux/munmap.c>
+#include <linux/nanosleep.c>
+#include <linux/pipe.c>
+#include <linux/readlink.c>
+#include <linux/rename.c>
+#include <linux/setgid.c>
+#include <linux/settimer.c>
+#include <linux/setuid.c>
+#include <linux/signal.c>
+#include <linux/sigprogmask.c>
+#include <linux/symlink.c>
