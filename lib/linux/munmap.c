@@ -21,5 +21,5 @@
 int
 munmap (void *addr, size_t length)
 {
-  return _sys_call2 (SYS_munmap, (long)addr, (long)length);
+  return _sys_call2 (SYS_munmap, (long) addr, (long) length);
 }

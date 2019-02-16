@@ -21,5 +21,5 @@
 ssize_t
 readlink (char const *file_name, char *buffer, size_t size)
 {
-  return _sys_call3 (SYS_readlink, (long)file_name, (long)buffer, (long)size);
+  return _sys_call3 (SYS_readlink, (long) file_name, (long) buffer, (long) size);
 }

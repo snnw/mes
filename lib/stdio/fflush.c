@@ -21,9 +21,9 @@
 #include <stdio.h>
 
 int
-fflush (FILE *stream)
+fflush (FILE * stream)
 {
-  int filedes = (int)stream;
+  int filedes = (int) stream;
   if (filedes < 3)
     return 0;
   return fsync (filedes);
