@@ -94,8 +94,8 @@
 ;; Zero flag to register.
 (define (armv4:zf->r info)
   (let* ((r (get-r info)))
-   `(((#:immediate1 #x00) ,(string-append "mov___$i8,%" r))
-     ((#:immediate1 #x01) ,(string-append "moveq_$i8,%" r)))))
+   `(((#:immediate1 #x00) ,(string-append "mov____$i8,%" r))
+     ((#:immediate1 #x01) ,(string-append "moveq__%" r ",$i8")))))
 
 ;; C NOT Register value.
 (define (armv4:r-negate info)
