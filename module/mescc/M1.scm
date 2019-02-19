@@ -67,7 +67,8 @@
   (string-append "@" o))
 
 (define (hex2:offset3 o)
-  (string-append "~" o))
+  "Note: Uses architecture-specific printer (for branch instructions)"
+  (string-append "^~" o))
 
 (define hex? #t)
 
@@ -197,6 +198,9 @@
                  (display "\t\t\t\t\t# ")
                  (display (text->M1 (cadr o))))
                 ((or (string? (car o)) (symbol? (car o)))
+                 (display "\t" )
+                 (display-join (map text->M1 o) " "))
+                ((or (string? (car (reverse o))) (symbol? (car (reverse o))))
                  (display "\t" )
                  (display-join (map text->M1 o) " "))
                 (else (error "line->M1 invalid line:" o)))
