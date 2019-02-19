@@ -160,9 +160,6 @@ DEFINE xor____%r0,%r0 000030e0 # eors    r0, r0, r0
 DEFINE xor____%r1,%r0 010030e0 # eors    r0, r0, r1
 DEFINE xor____%r1,%r1 011031e0 # eors    r1, r1, r1
 DEFINE xor____%r3,%r3 033033e0 # eors    r3, r3, r3
-DEFINE mov____0x8(%ebp),%r0 08009be5 # ldr     r0, [fp, #8]
-DEFINE mov____0x8(%ebp),%r1 08109be5 # ldr     r1, [fp, #8]
-DEFINE mov____0x8(%ebp),%r2 08209be5 # ldr     r2, [fp, #8]
 
 # Note: These are the native ARM instructions.
 # Note: Loads INTO register r0 (ARM original operand order)
