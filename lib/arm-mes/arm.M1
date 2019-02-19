@@ -119,8 +119,7 @@ DEFINE mov____%r3,%r1 0e10a0e1
 DEFINE mov____(%r0),%r0 000090e5
 DEFINE mov____(%r0),%r2 002090e5
 DEFINE mov____(%r1),%r1 001091e5
-#DEFINE mul____%r1 xx
-#DEFINE mul_____%r1 xx
+
 DEFINE nop 0000a0e1
 DEFINE not____%r0 0000e0e1
 DEFINE not____%r1 0110e0e1
@@ -240,6 +239,7 @@ DEFINE SYS_getcwd b70090
 
 # These are x86 ABI remnants:
 
+DEFINE mul____%r1 910089e0 # umull   r0, r9, r1, r0
 DEFINE mov____%ebp,%r0 0b00a0e1
 DEFINE mov____%ebp,%r1 0b10a0e1
 DEFINE push___%ebp 04b02de5 # str fp, [sp, #-4]!
