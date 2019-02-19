@@ -42,8 +42,8 @@ DEFINE and____%r1,%r0 010010e0 # ands    r0, r0, r1
 DEFINE and____$i8,%r0 0000e2
 DEFINE and____$i8,%r1 1001e2
 #DEFINE call32 xx
-#DEFINE call___*%r0 xx
-#DEFINE call___*%r1 xx
+DEFINE call___*%r0 00f0a0e1
+DEFINE call___*%r1 01f0a0e1
 #DEFINE cltd xx
 #DEFINE cmp____$0x32,%r0 xx
 #DEFINE cmp____$i32,%r0 xx
