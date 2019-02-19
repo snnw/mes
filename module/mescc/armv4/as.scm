@@ -125,7 +125,7 @@
     `((,(string-append "push___%r0"))
       (,(string-append "ldbrs__%r0,(%" r ")"))
       ((#:immediate1 ,v) ,(string-append "addb___$i8,%r0"))
-      (,(string-append "stb____%r0,(%" r ")"))
+      (,(string-append "strb___%r0,(%" r ")"))
       (,(string-append "pop____%r0")))))
 
 (define (armv4:r-word-mem-add info v)
@@ -406,12 +406,12 @@
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
          (r1 (get-r1 info)))
-    `((,(string-append "stb____%" r0 ",(%" r1 ")")))))
+    `((,(string-append "strb___%" r0 ",(%" r1 ")")))))
 
 (define (armv4:word-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
          (r1 (get-r1 info)))
-    `((,(string-append "sthw___%" r0 ",(%" r1 ")")))))
+    `((,(string-append "strh___%" r0 ",(%" r1 ")")))))
 
 (define (armv4:r-cmp-value info v)
   (let ((r (get-r info)))
