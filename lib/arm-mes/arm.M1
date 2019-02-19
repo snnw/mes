@@ -59,7 +59,6 @@ DEFINE jae 3a
 DEFINE jb 2a
 DEFINE jbe 9a
 DEFINE je 0a
-DEFINE je 0a
 DEFINE jg ca
 DEFINE jge aa
 DEFINE jl ba
