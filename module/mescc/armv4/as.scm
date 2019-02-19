@@ -32,8 +32,9 @@
             ))
 
 (define (armv4:function-preamble . rest)
-  "Note: Pretends to be on x86"
-  '(("push___%ebp")
+  "Note: Pretends to be on x86 a lot"
+  '(("push___%lr")
+    ("push___%ebp")
     ("mov____%esp,%ebp")))
 
 (define (armv4:function-locals . rest)
@@ -50,9 +51,12 @@
     `(((#:immediate1 ,v) ,(string-append "mov____$i8,%" r)))))
 
 (define (armv4:ret . rest)
+  "Note: Pretends to be on x86 a lot"
   '(("mov____%ebp,%esp")
     ("pop____%ebp")
-    ("ret")))
+    ("mov____%lr,%r9")
+    ("pop____%lr")
+    ("mov____%r9,%pc")))
 
 (define (armv4:r-zero? info)
   (let ((r (get-r info)))

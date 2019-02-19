@@ -84,6 +84,8 @@ DEFINE mov____%r0,(%r1) 000081e5
 DEFINE mov____%r1,%r0 0100a0e1
 DEFINE mov____%r1,%r2 0120a0e1
 #DEFINE mov____%r1,0x32 xx
+DEFINE mov____%lr,%r9 0e90a0e1
+DEFINE mov____%r9,%pc 09f0a0e1
 
 # fp -> r0
 DEFINE mov____%r11,%r0 0b00a0e1
@@ -126,6 +128,7 @@ DEFINE or_____%r1,%r0 010090e1 # orrs    r0, r0, r1
 DEFINE pop____%r0 04009de4
 DEFINE pop____%r1 04109de4
 DEFINE pop____%r3 04309de4
+DEFINE pop____%lr 04e09de4
 
 # e59f9004        ldr     r9, [pc, #4]    ; c <L1x>
 # e52d9004        push    {r9}            ; (str r9, [sp, #-4]!)
@@ -136,14 +139,14 @@ DEFINE pop____%r3 04309de4
 DEFINE push___$i32 04909fe504902de5000000ea
 
 DEFINE push___%r0 04002de5 # str r0, [sp, #-4]!
-#DEFINE push___%ebp xx
 DEFINE push___%r1 04102de5 # str r1, [sp, #-4]!
 DEFINE push___%r2 04202de5 # str r2, [sp, #-4]!
 DEFINE push___%r3 04302de5 # str r3, [sp, #-4]!
+DEFINE push___%lr 04e02de5 # str lr, [sp, #-4]!
+
 #DEFINE push___(%r0) xx
 #DEFINE push___0x32(%ebp) xx
 #DEFINE push___0x8(%ebp) xx
-DEFINE ret 4770 #e1a0f00e
 #DEFINE shl____$i8,%r0 xx # complicated encoding
 #DEFINE shl____$i8,%r1 xx # complicated encoding
 #DEFINE sub____$8,%r13 xx
@@ -238,7 +241,7 @@ DEFINE SYS_getcwd b70090
 
 DEFINE mov____%ebp,%r0 0b00a0e1
 DEFINE mov____%ebp,%r1 0b10a0e1
-DEFINE push___%ebp 04002de5 # str r0, [sp, #-4]!
+DEFINE push___%ebp 04b02de5 # str fp, [sp, #-4]!
 DEFINE pop____%ebp 04b09de4 # ldr fp, [sp], #4
 DEFINE mov____%esp,%ebp 0db0a0e1 # mov     fp, sp
 DEFINE mov____%ebp,%esp 0bd0a0e1 # mov sp, fp
