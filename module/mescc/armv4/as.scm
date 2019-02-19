@@ -71,7 +71,7 @@
     `((,(string-append "add____%" r1 ",%" r0)))))
 
 (define (armv4:call-label info label n)
-  `((bl (#:offset2 ,label))
+  `(((#:offset3 ,label) bl)
     ("add____$i8,%esp" (#:immediate1 ,(* n 4)))))
 
 (define (armv4:r->arg info i)
