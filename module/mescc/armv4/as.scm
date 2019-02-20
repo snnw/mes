@@ -65,9 +65,9 @@
 (define (armv4:local->r info n)
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
-    `(,(if (< (abs n) #x80)
-           `((#:immediate1 ,n) ,(string-append "mov____0x8(%ebp),%" r))
-           `(,(string-append "mov____0x32(%ebp),%" r) (#:immediate ,n))))))
+    (if (< (abs n) #x80)
+        `(((#:immediate1 ,n) ,(string-append "mov____0x8(%ebp),%" r)))
+        `((,(string-append "mov____0x32(%ebp),%" r) (#:immediate ,n))))))
 
 (define (armv4:r0+r1 info)
   (let ((r0 (get-r0 info))
@@ -141,8 +141,9 @@
   (let ((r (get-r info)))
     (let ((n (- 0 (* 4 n))))
       `((,(string-append "mov____%ebp,%" r))
-        ,(if (< (abs n) #x80) `((#:immediate1 ,n) ,(string-append "add____$i8,%" r))
-             `(,(string-append "add____$i32,%" r)  (#:immediate ,n)))))))
+        ,(if (< (abs n) #x80)
+            `((#:immediate1 ,n) ,(string-append "add____$i8,%" r))
+            `(,(string-append "add____$i32,%" r) (#:immediate ,n)))))))
 
 (define (armv4:label->r info label)
   (let ((r (get-r info)))
@@ -395,8 +396,9 @@
 
 (define (armv4:r+value info v)
   (let ((r (get-r info)))
-    `(,(if (< (abs v) #x80) `((#:immediate1 ,v) ,(string-append "add____$i8,%" r))
-           `(,(string-append "add____$i32,%" r) (#:immediate ,v))))))
+    (if (< (abs v) #x80)
+       `(((#:immediate1 ,v) ,(string-append "add____$i8,%" r)))
+       `((,(string-append "add____$i32,%" r) (#:immediate ,v))))))
 
 (define (armv4:r0->r1-mem info)
   (let ((r0 (get-r0 info))
@@ -415,8 +417,9 @@
 
 (define (armv4:r-cmp-value info v)
   (let ((r (get-r info)))
-    `(,(if (< (abs v) #x80) `((#:immediate1 ,v) ,(string-append "cmp____$i8,%" r))
-           `(,(string-append "cmp____$i32,%" r) (#:immediate ,v))))))
+    (if (< (abs v) #x80)
+       `(((#:immediate1 ,v) ,(string-append "cmp____$i8,%" r)))
+       `((,(string-append "cmp____$i32,%" r) (#:immediate ,v))))))
 
 (define (armv4:push-register info r)
   `((,(string-append "push___%" r))))
@@ -477,8 +480,9 @@
 
 (define (armv4:r0+value info v)
   (let ((r0 (get-r0 info)))
-    `(,(if (< (abs v) #x80) `((#:immediate1 ,v) ,(string-append "add____$i8,%" r0))
-           `(,(string-append "add____$i32,%" r0) (#:immediate ,v))))))
+    (if (< (abs v) #x80)
+       `(((#:immediate1 ,v) ,(string-append "add____$i8,%" r0)))
+       `((,(string-append "add____$i32,%" r0) (#:immediate ,v))))))
 
 (define (armv4:value->r0 info v)
   (let ((r0 (get-r0 info)))
