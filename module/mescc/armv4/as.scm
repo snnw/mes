@@ -46,6 +46,11 @@
         (n (- 0 (* 4 n))))
     `(,`(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n)))))
 
+(define (immediate->r0 v)
+  (if (< (abs v) #x80)
+     `(((#:immediate1 ,v) "mov____$i8,%r0"))
+     `(("mov____$i32,%r0" (#:immediate ,v)))))
+
 (define (armv4:value->r info v)
   (let ((r (get-r info)))
     `(((#:immediate1 ,v) ,(string-append "mov____$i8,%" r)))))
@@ -233,13 +238,14 @@
 
 (define (armv4:local-add info n v)
   (let ((n (- 0 (* 4 n))))
-    `(,(if (and (< (abs n) #x80)
-                (< (abs v) #x80)) `("add____$i32,0x32(%ebp)" (#:immediate ,n) (#:immediate ,v))
-                `("add____$i32,0x32(%ebp)" (#:immediate ,n) (#:immediate ,v))))))
+    (append (immediate->r0 v)
+           `(("mov____0x32(%ebp),%r1" (#:immediate ,n))
+             ("add____%r0,%r1")
+             ("mov____%r1,0x32(%ebp)" (#:immediate ,n))))))
 
 (define (armv4:label-mem-add info label v)
-  `(,(if (< (abs v) #x80) `("add____$i8,0x32" (#:address ,label) (#:immediate1 ,v))
-         `("add____$i32,0x32" (#:address ,label) (#:immediate ,v)))))
+  (append (immediate->r0 v)
+         `(("add____%r0,0x32" (#:address ,label)))))
 
 (define (armv4:nop info)
   '(("nop")))
