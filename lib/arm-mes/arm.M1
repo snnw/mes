@@ -36,6 +36,7 @@ DEFINE add____$i8,%r13 d09de2 # adds    r13, r13, #xx
 #DEFINE add____$i8,0x32(%r0) xx
 #DEFINE add____$i8,0x8(%r0) xx
 DEFINE add____%r0,%r0 000090e0 # adds    r0, r0, r0
+DEFINE add____%r0,%r1 001091e0 # adds    r1, r1, r0
 DEFINE add____%r1,%r0 010090e0 # adds    r0, r0, r1
 DEFINE add____%r1,%r1 011091e0 # adds    r1, r1, r1
 DEFINE and____%r1,%r0 010010e0 # ands    r0, r0, r1
