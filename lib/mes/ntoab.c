@@ -26,20 +26,23 @@ ntoab (long x, int base, int signed_p)
   static char itoa_buf[20];
   char *p = itoa_buf + 11;
   *p-- = 0;
+  assert(base > 0);
 
   int sign_p = 0;
-  unsigned long u = x;
+  unsigned long u;
   if (signed_p && x < 0)
     {
       sign_p = 1;
       u = -x;
     }
+  else
+    u = x;
 
   do
     {
-      long i = u % base;
+      unsigned long i;
+      u = __mesabi_uldiv(u, (unsigned long) base, &i);
       *p-- = i > 9 ? 'a' + i - 10 : '0' + i;
-      u = u / base;
     }
   while (u);
 
