@@ -199,6 +199,15 @@ DEFINE movcs__%r0,$i8   00a023    # movcs  r0, #xx
 DEFINE movcc__%r0,$i8   00a033    # movcc   r0, #xx
 DEFINE movhi__%r0,$i8   00a083    # movhi   r0, #xx
 DEFINE moveq__%r0,$i8   00a003    # moveq   r0, #xx
+DEFINE movle__%r1,$i8   10a0d3    # movle   r1, #xx
+DEFINE movlt__%r1,$i8   10a0b3    # movlt   r1, #xx
+DEFINE movge__%r1,$i8   10a0a3    # movge   r1, #xx
+DEFINE movgt__%r1,$i8   10a0c3    # movgt   r1, #xx
+DEFINE movcs__%r1,$i8   10a023    # movcs   r1, #xx
+DEFINE movcc__%r1,$i8   10a033    # movcc   r1, #xx
+DEFINE movhi__%r1,$i8   10a083    # movhi   r1, #xx
+DEFINE moveq__%r1,$i8   10a003    # moveq   r1, #xx
+
 #DEFINE movseq_%r0,$i8   00b003    # movseq  r0, #xx
 #DEFINE movs___%r0,$i8   00b0e3    # movs    r0, #xx
 #DEFINE teq____%r0,%r0   000030e1  # teq     r0, r0
