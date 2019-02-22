@@ -65,7 +65,7 @@
 
 (define (armv4:r-zero? info)
   (let ((r (get-r info)))
-    `((,(string-append "test___%" r "," "%" r)))))
+    `(((#:immediate1 #x00) ,(string-append "cmp____$i8,%" r)))))
 
 (define (armv4:local->r info n)
   (let ((r (get-r info))
@@ -109,7 +109,7 @@
 (define (armv4:xor-zf info)
   '(((#:immediate1 #x00) "mov____$i8,%r0")
     ((#:immediate1 #x01) "moveq__%r0,$i8")
-    ("test__%r0,%r0")))
+    ((#:immediate1 #x00) "cmp____$i8,%r0")))
 
 (define (armv4:r->local+n info id n)
   (let ((n (+ (- 0 (* 4 id)) n))
