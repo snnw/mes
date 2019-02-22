@@ -59,9 +59,7 @@
   "Note: Pretends to be on x86 a lot"
   '(("mov____%ebp,%esp")
     ("pop____%ebp")
-    ("mov____%lr,%r9")
-    ("pop____%lr")
-    ("mov____%r9,%pc")))
+    ("ret")))
 
 (define (armv4:r-zero? info)
   (let ((r (get-r info)))
@@ -400,8 +398,7 @@
 
 (define (armv4:shl-r info n)
   (let ((r (get-r info)))
-    `(((#:immediate1 ,n) "mov____$i8,%r9")
-      ((#:immediate1 ,n) ,(string-append "lsl____%" r ",%" r ",%r9")))))
+    `(((#:immediate1 ,n) ,(string-append "lsl____%" r ",%" r ",$i8")))))
 
 (define (armv4:r+r info)
   (let ((r (get-r info)))

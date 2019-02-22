@@ -205,8 +205,8 @@ DEFINE moveq__%r0,$i8   00a003    # moveq   r0, #xx
 #DEFINE teq____%r1,$i8   420031e3  # teq     r1, #xx
 DEFINE asr____%r0,%r0,%r1 5001a0e1  # asr %r0, %r0, %r1
 DEFINE lsl____%r0,%r0,%r1 1001a0e1  # lsl %r0, %r0, %r1
-DEFINE lsl____%r0,%r0,%r9 1009a0e1 # lsl %r0, %r0, %r9
-DEFINE lsl____%r1,%r1,%r9 1119a0e1 # lsl %r1, %r1, %r9
+DEFINE lsl____%r0,%r0,$i8 90a0e31009a0e1 # mov     r9, #xx; lsl %r0, %r0, %r9
+DEFINE lsl____%r1,%r1,$i8 90a0e31119a0e1 # mov     r9, #xx; lsl %r1, %r1, %r9
 DEFINE lsr____%r0,%r0,%r1 3001a0e1  # lsr %r0, %r0, %r1
 DEFINE ldr____%r0,(%sp,#$i8) 009de5  # ldr r0, [r13+xx]
 DEFINE ldr____%r1,(%sp,#$i8) 109de5  # ldr r1, [r13+xx]
@@ -297,6 +297,11 @@ DEFINE mov____0x32,%r2 04909fe5002099e5000000ea
 # e1a00001        mov     r0, r1
 # e1a01009        mov     r1, r9
 DEFINE xchg___%r0,%r1 0090a0e10100a0e10910a0e1
+
+# e1a0900e        mov     r9, lr
+# e49de004        pop     {lr}            ; (ldr lr, [sp], #4)
+# e1a0f009        mov     pc, r9
+DEFINE ret 0e90a0e104e09de409f0a0e1
 
 # The flags are also updated, but that's probably useless.
 DEFINE add____$i8,%esp d09de2
