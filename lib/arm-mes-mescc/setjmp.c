@@ -27,7 +27,7 @@ longjmp (jmp_buf env, int val)
   ///asm ("!0x0c mov____0x8(%ebp),%eax"); // val
   asm ("!0x08 mov____0x8(%ebp),%ebp"); // env*
 
-  asm ("!0x4 mov____0x8(%ebp),%ebx");  // env.__pc
+  asm ("!0x4 mov____0x8(%ebp),%r1");  // env.__pc
   asm ("!0x8 mov____0x8(%ebp),%esp");  // env.__sp
   asm ("!0x0 mov____0x8(%ebp),%ebp");  // env.__bp
   asm ("jmp____*%r1");
