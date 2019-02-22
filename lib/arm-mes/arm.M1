@@ -248,7 +248,8 @@ DEFINE SYS_getcwd b70090
 
 # These are x86 ABI remnants:
 
-DEFINE mul____%r1 910089e0 # umull   r0, r9, r1, r0
+DEFINE mul____%r1,%r0 910089e0 # umull   r0, r9, r1, r0
+DEFINE mul____%r0,%r1 910089e0 # umull   r0, r9, r1, r0
 DEFINE mov____%ebp,%r0 0b00a0e1
 DEFINE mov____%ebp,%r1 0b10a0e1
 DEFINE push___%ebp 04b02de5 # str fp, [sp, #-4]!
