@@ -349,7 +349,6 @@
     ;; __mesabi_uldiv(a, b, remainderp)
     (append `(("push___%r0") ; slot for remainder
               ("mov____%esp,%r0")
-              ((#:immediate1 4) "add____$i8,%r0")
               ("push___%r0") ; pointer to remainder
               (,(string-append "push___%" r1))
               (,(string-append "push___%" r0)))
