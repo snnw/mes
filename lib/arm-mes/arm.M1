@@ -277,6 +277,7 @@ DEFINE mov____%r2,0x8(%ebp) 208be5
 DEFINE mov____%r3,0x8(%ebp) 308be5
 DEFINE mov____%r4,0x8(%ebp) 408be5
 DEFINE mov____%r5,0x8(%ebp) 508be5
+DEFINE mov____%r7,0x8(%ebp) 908be5
 # Note: i8 immediate
 DEFINE mov____0x8(%ebp),%r0 009be5
 DEFINE mov____0x8(%ebp),%r1 109be5
@@ -284,6 +285,7 @@ DEFINE mov____0x8(%ebp),%r2 209be5
 DEFINE mov____0x8(%ebp),%r3 309be5
 DEFINE mov____0x8(%ebp),%r4 409be5
 DEFINE mov____0x8(%ebp),%r5 509be5
+DEFINE mov____0x8(%ebp),%r7 909be5
 
 # e59f9008        ldr     r9, [pc, #8]    ; 10 <LX1>
 # e089900b        add     r9, r9, fp
