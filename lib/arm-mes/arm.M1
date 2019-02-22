@@ -318,3 +318,8 @@ DEFINE allocate_stack_4180 ffde4de264d04de2
 # e089900b        add     r9, r9, fp
 # e5991000        ldr     r1, [r9]
 DEFINE mov____0x32(%ebp),%r1 14909fe50b9089e0001099e5
+
+# e1a09000        mov     r9, r0
+# e59d0000        ldr     r0, [sp]
+# e58d9000        str     r9, [sp]
+DEFINE xchg___%r0,(%esp) 0090a0e100009de500908de5
