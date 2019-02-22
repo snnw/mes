@@ -401,7 +401,8 @@
 
 (define (armv4:shl-r info n)
   (let ((r (get-r info)))
-    `(((#:immediate1 ,n) ,(string-append "shl____$i8,%" r)))))
+    `(((#:immediate1 ,n) "mov____$i8,%r9")
+      ((#:immediate1 ,n) ,(string-append "lsl____%" r ",%" r ",%r9")))))
 
 (define (armv4:r+r info)
   (let ((r (get-r info)))
