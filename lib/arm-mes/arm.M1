@@ -287,6 +287,7 @@ DEFINE mov____0x8(%ebp),%r4 409be5
 DEFINE mov____0x8(%ebp),%r5 509be5
 DEFINE mov____0x8(%ebp),%r7 909be5
 DEFINE mov____0x8(%ebp),%ebp b09be5
+DEFINE mov____0x8(%ebp),%esp d09be5
 
 # e59f9008        ldr     r9, [pc, #8]    ; 10 <LX1>
 # e089900b        add     r9, r9, fp
