@@ -53,8 +53,8 @@
     ("unsigned long long int" . ,(make-type 'unsigned 8 #f))
 
     ("float" . ,(make-type 'float 4 #f))
-    ("double" . ,(make-type 'float 8 #f))
-    ("long double" . ,(make-type 'float 8 #f))
+    ("double" . ,(make-type 'float 4 #f)) ; FIXME
+    ("long double" . ,(make-type 'float 4 #f)) ; FIXME
 
     ("short int" . ,(make-type 'signed 2 #f))
     ("unsigned short int" . ,(make-type 'unsigned 2 #f))
