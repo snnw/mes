@@ -87,6 +87,7 @@ DEFINE mov____%r1,%r2 0120a0e1
 #DEFINE mov____%r1,0x32 xx
 DEFINE mov____%lr,%r9 0e90a0e1
 DEFINE mov____%r9,%pc 09f0a0e1
+DEFINE mov____%esp,%r0 0d00a0e1
 
 # fp -> r0
 DEFINE mov____%r11,%r0 0b00a0e1
