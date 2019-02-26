@@ -220,7 +220,7 @@
 (define (armv4:byte-r0->r1-mem info)
   (let* ((r0 (get-r0 info))
          (r1 (get-r1 info)))
-    `((,(string-append "strb__%" r0 ",(%" r1 ")")))))
+    `((,(string-append "strb___%" r0 ",(%" r1 ")")))))
 
 (define (armv4:label-mem->r info label)
   (let ((r (get-r info)))
@@ -228,7 +228,7 @@
 
 (define (armv4:word-mem->r info)
   (let ((r (get-r info)))
-    `((,(string-append "movzwl_(%" r "),%" r)))))
+    `((,(string-append "ldrh___%" r ",(%" r ")")))))
 
 (define (armv4:mem->r info)
   (let ((r (get-r info)))
@@ -427,7 +427,7 @@
          (r1 (get-r1 info))
          (r2 (car registers)))
     `((,(string-append "ldrsb_%" r2 ",(%" r0 ")"))
-      (,(string-append "strb__%" r2 ",(%" r1 ")")))))
+      (,(string-append "strb___%" r2 ",(%" r1 ")")))))
 
 (define (armv4:word-r0-mem->r1-mem info)
   (let* ((registers (.registers info))
@@ -451,15 +451,15 @@
   (let* ((n (+ (- 0 (* 4 id)) n))
          (r (get-r info)))
     `(,(if (< (abs n) #x80)
-           `((#:immediate1 ,n) ,(string-append "strb__%" r ",0x8(%ebp)"))
-           `(,(string-append "strb__%" r ",0x32(%ebp)") (#:immediate ,n))))))
+           `((#:immediate1 ,n) ,(string-append "strb___%" r ",0x8(%ebp)"))
+           `(,(string-append "strb___%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:word-r->local+n info id n)
   (let* ((n (+ (- 0 (* 4 id)) n))
          (r (get-r info)))
     `(,(if (< (abs n) #x80)
-           `((#:immediate1 ,n) ,(string-append "strh__%" r ",0x8(%ebp)"))
-           `(,(string-append "strh__%" r ",0x32(%ebp)") (#:immediate ,n))))))
+           `((#:immediate1 ,n) ,(string-append "strh___%" r ",0x8(%ebp)"))
+           `(,(string-append "strh___%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:r-and info v)
   (let ((r (get-r info)))
