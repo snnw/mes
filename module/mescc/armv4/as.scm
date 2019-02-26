@@ -126,8 +126,8 @@
 (define (armv4:r-byte-mem-add info v)
   (let ((r (get-r info)))
     `((,(string-append "push___%r0"))
-      (,(string-append "ldbrs__%r0,(%" r ")"))
-      ((#:immediate1 ,v) ,(string-append "addb___$i8,%r0"))
+      (,(string-append "ldrb___%r0,(%" r ")"))
+      ((#:immediate1 ,v) ,(string-append "add____$i8,%r0"))
       (,(string-append "strb___%r0,(%" r ")"))
       (,(string-append "pop____%r0")))))
 
