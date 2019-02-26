@@ -286,7 +286,7 @@
 (define (armv4:be?->r info)
   (let* ((r (get-r info)))
     `(((#:immediate1 #x01) ,(string-append "mov____$i8,%" r))
-      ((#:immediate1 #x00) ,(string-append "movhi__$i8,%" r)))))
+      ((#:immediate1 #x00) ,(string-append "movhi__%" r ",$i8")))))
 
 (define (armv4:test-r info)
   (let ((r (get-r info)))
