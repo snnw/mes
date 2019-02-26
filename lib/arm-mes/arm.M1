@@ -180,12 +180,17 @@ DEFINE ldrsb__%r2,(%r2) d020d2e1  # ldrsb   r2, [r2]
 DEFINE ldrsb__%r3,(%r3) d030d3e1  # ldrsb   r3, [r3]
 DEFINE ldrsb__%r4,(%r4) d040d4e1  # ldrsb   r4, [r4]
 DEFINE ldrsb__%r5,(%r5) d050d5e1  # ldrsb   r5, [r5]
+DEFINE ldrh___%r0,(%r0) b000d0e1  # ldrh    r0, [r0]
+DEFINE ldrh___%r1,(%r1) b010d1e1  # ldrh    r1, [r1]
+DEFINE ldrh___%r2,(%r2) b020d2e1  # ldrh    r2, [r2]
+DEFINE ldrh___%r3,(%r3) b030d3e1  # ldrh    r3, [r3]
 DEFINE strb___%r0,(%r0) 0000c0e5  # strb    r0, [r0]
 DEFINE strb___%r0,(%r1) 0000c1e5  # strb    r0, [r1]
 DEFINE strb___%r1,(%r1) 0010c1e5  # strb    r1, [r1]
 DEFINE strb___%r2,(%r2) 0020c2e5  # strb    r2, [r2]
 DEFINE strb___%r3,(%r3) 0030c3e5  # strb    r3, [r3]
 DEFINE strb___%r4,(%r4) 0040c4e5  # strb    r4, [r4]
+DEFINE strb___%r0,0x8(%ebp) 00cbe5 # strb    r0, [fp, #xx]
 DEFINE strh___%r0,(%r0) b000c0e1  # strh    r0, [r0]
 DEFINE strh___%r1,(%r1) b010c1e1  # strh    r1, [r1]
 DEFINE strh___%r2,(%r2) b020c2e1  # strh    r2, [r2]
@@ -348,6 +353,22 @@ DEFINE xchg___%r0,(%esp) 0090a0e100009de500908de5
 # VD:
 DEFINE add____$i32,(%r0) 04102de510109fe5009090e5091081e0009080e504109de4000000ea
 
-# e59bb042        ldr     fp, [fp, #66]   ; 0x42
+# mov %r9, #00
+# push {%r9}
+DEFINE push___0 0090a0e304902de5
 
+# e59f9004        ldr     r9, [pc, #4]    ; c <VALUE>
+# e0911009        adds    r1, r1, r9
+# ea000000        b       10
+# VALUE:
+DEFINE add____$i32,%r1 04909fe5091091e0000000ea
+DEFINE add____$i32,%r0 04909fe5090090e0000000ea
+DEFINE add____$i32,%r2 04909fe5092092e0000000ea
 
+# e59f9008        ldr     r9, [pc, #8]    ; 10 <WERT>
+# e089900b        add     r9, r9, fp
+# e5c90000        strb    r0, [r9]
+# ea000000        b       14 <WERTD>
+# WERT: nop
+# WERTD:
+DEFINE strb___%r0,0x32(%ebp) 08909fe50b9089e00000c9e5000000ea
