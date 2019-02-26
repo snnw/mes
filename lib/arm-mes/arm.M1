@@ -78,15 +78,12 @@ DEFINE jne 1a
 DEFINE mov____$i8,%r0 00a0e3
 DEFINE mov____$i8,%r1 10a0e3 # mov     r1, #66
 DEFINE mov____$i8,%r7 70a0e3
-DEFINE mov____$i8,%r9 90a0e3
 DEFINE mov____%r0,%r1 0010a0e1
 DEFINE mov____%r0,%r2 0020a0e1
 DEFINE mov____%r0,(%r1) 000081e5
 DEFINE mov____%r1,%r0 0100a0e1
 DEFINE mov____%r1,%r2 0120a0e1
 #DEFINE mov____%r1,0x32 xx
-DEFINE mov____%lr,%r9 0e90a0e1
-DEFINE mov____%r9,%pc 09f0a0e1
 DEFINE mov____%esp,%r0 0d00a0e1
 
 # fp -> r0
