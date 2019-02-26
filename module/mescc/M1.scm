@@ -207,7 +207,7 @@
           (newline))
         (when verbose?
           (display (string-append "    :" name "\n") (current-error-port)))
-        (display (string-append "\n\n:" name "\n"))
+        (display (string-append "\n\n<\n:" name "\n"))
         (for-each line->M1 (apply append text))))
     (define (write-global o)
       (define (labelize o)
