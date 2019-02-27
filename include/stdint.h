@@ -91,7 +91,7 @@ typedef unsigned uintmax_t;
 #define USHRT_MAX UINT16_MAX
 #define USHRT_MIN UINT16_MIN
 
-#if __i386__
+#if __i386__ || __arm__
 #define LONG_MIN INT_MIN
 #define LONG_MAX INT_MAX
 #define UINT_MAX UINT32_MAX
