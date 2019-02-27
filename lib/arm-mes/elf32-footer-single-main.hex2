@@ -47,7 +47,7 @@
 01 00                          # st-shndx: 1
 
 # _start
-&ELF_str__start>ELF_str        # st-name
+%ELF_str__start>ELF_str        # st-name
 &_start
 10 00 00 00                    # st-len   : &main - _start
 02                             # st-info = stt-func= 2
@@ -55,7 +55,7 @@
 01 00                          # st-shndx: 1
 
 # main
-&ELF_str__main>ELF_str         # st-name
+%ELF_str__main>ELF_str         # st-name
 &main
 10 00 00 00                    # st-len   : &ELF_data - main
 02                             # st-info = stt-func= 2
