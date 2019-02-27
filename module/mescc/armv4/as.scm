@@ -79,7 +79,7 @@
 
 (define (armv4:call-label info label n)
   `(((#:offset3 ,label) bl)
-    ("add____$i8,%esp" (#:immediate1 ,(* n 4)))))
+    ((#:immediate1 ,(* n 4)) "add____$i8,%esp")))
 
 (define (armv4:r->arg info i)
   (let ((r (get-r info)))
