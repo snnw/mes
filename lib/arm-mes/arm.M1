@@ -90,13 +90,13 @@ DEFINE mov____%esp,%r0 0d00a0e1
 DEFINE mov____%r11,%r0 0b00a0e1
 
 # e52d1004        push    {r1}            ; (str r1, [sp, #-4]!)
-# e59f1004        ldr     r1, [pc, #4]    ; 10 <L1>
+# e59f1008        ldr     r1, [pc, #8]    ; <L1>
 # e5810000        str     r0, [r1]
 # e49d1004        pop     {r1}            ; (ldr r1, [sp], #4)
 # ea000000        b L2
 # L1: ???
 # L2:
-DEFINE mov____%r0,0x32 04102de504109fe5000081e504109de4000000ea
+DEFINE mov____%r0,0x32 04102de508109fe5000081e504109de4000000ea
 
 # e92d0005        push    {r0, r2}
 # e5910000        ldr     r0, [r1]
