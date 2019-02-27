@@ -44,8 +44,8 @@
 01 00 00 00                    # e_version Indicating original elf
 
 &ELF_text                      # e_entry Address of the entry point
-&ELF_program_headers>ELF_base  # e_phoff Address of program header table
-&ELF_section_headers>ELF_base  # e_shoff Address of section header table
+%ELF_program_headers>ELF_base  # e_phoff Address of program header table
+%ELF_section_headers>ELF_base  # e_shoff Address of section header table
 
 00 00 00 00                    # e_flags
 
@@ -71,8 +71,8 @@
 00 00 00 00                    # ph_offset
 &ELF_base                      # ph_vaddr
 &ELF_base                      # ph_physaddr
-&ELF_end>ELF_base              # ph_filesz
-&ELF_end>ELF_base              # ph_memsz
+%ELF_end>ELF_base              # ph_filesz
+%ELF_end>ELF_base              # ph_memsz
 07 00 00 00                    # ph_flags: PF-X|PF-W|PF-R = 7
 01 00 00 00                    # ph_align
 
@@ -85,8 +85,8 @@
 00 00 00 00                    # ph_offset
 &ELF_base                      # ph_vaddr
 &ELF_base                      # ph_physaddr
-&ELF_end>ELF_base              # ph_filesz
-&ELF_end>ELF_base              # ph_memsz
+%ELF_end>ELF_base              # ph_filesz
+%ELF_end>ELF_base              # ph_memsz
 07 00 00 00                    # ph_flags: PF-X|PF-W|PF-R = 7
 01 00 00 00                    # ph_align
 
@@ -134,72 +134,72 @@
 
 ## FIXME: M0 for calculations?
 :ELF_section_header_text
-&ELF_shstr__text>ELF_shstr      # sh_name
+%ELF_shstr__text>ELF_shstr      # sh_name
 01 00 00 00                     # sh_type = SHT_PROGBITS = 1
 06 00 00 00                     # sh_flags = SHF-ALLOC|SHF-EXEC =2 | 4 = 6
 &ELF_text                       # sh_addr
-&ELF_text>ELF_base              # sh_offset
-&ELF_data>ELF_text              # sh_length
+%ELF_text>ELF_base              # sh_offset
+%ELF_data>ELF_text              # sh_length
 00 00 00 00                     # sh_link
 00 00 00 00                     # sh_info
 01 00 00 00                     # sh_1?
 00 00 00 00                     # sh_entsize
 
 :ELF_section_header_data
-&ELF_shstr__data>ELF_shstr     # sh_name
+%ELF_shstr__data>ELF_shstr     # sh_name
 01 00 00 00                    # sh_type = SHT_PROGBITS = 1
 03 00 00 00                    # sh_flags = SHF-WRITE|SHF-ALLOC = 1 | 2 = 3
 &ELF_data                      # sh_addr
-&ELF_data>ELF_base             # sh_offset
-&ELF_sym>ELF_data              # sh_length
+%ELF_data>ELF_base             # sh_offset
+%ELF_sym>ELF_data              # sh_length
 00 00 00 00                    # sh_link
 00 00 00 00                    # sh_info
 01 00 00 00                    # sh_1?
 00 00 00 00                    # sh_entsize
 
 :ELF_section_header_comment
-&ELF_shstr__comment>ELF_shstr  # sh_name
+%ELF_shstr__comment>ELF_shstr  # sh_name
 01 00 00 00                    # sh_type = SHT_PROGBITS = 1
 00 00 00 00                    # sh_flags
 &ELF_comment                   # sh_addr
-&ELF_comment>ELF_base          # sh_offset
-&ELF_shstr>ELF_comment         # sh_length
+%ELF_comment>ELF_base          # sh_offset
+%ELF_shstr>ELF_comment         # sh_length
 00 00 00 00                    # sh_link
 00 00 00 00                    # sh_info
 01 00 00 00                    # sh_1?
 00 00 00 00                    # sh_entsize
 
 :ELF_section_header_shstr
-&ELF_shstr__shstr>ELF_shstr    # sh_name
+%ELF_shstr__shstr>ELF_shstr    # sh_name
 03 00 00 00                    # sh_type: str-sht-strtab
 00 00 00 00                    # sh_flags
 &ELF_shstr                     # sh_addr
-&ELF_shstr>ELF_base            # sh_offset
-&ELF_section_headers>ELF_shstr # sh_length
+%ELF_shstr>ELF_base            # sh_offset
+%ELF_section_headers>ELF_shstr # sh_length
 00 00 00 00                    # sh_link
 00 00 00 00                    # sh_info
 01 00 00 00                    # sh_1?
 00 00 00 00                    # sh_entsize
 
 :ELF_section_header_sym
-&ELF_shstr__sym>ELF_shstr      # sh_name
+%ELF_shstr__sym>ELF_shstr      # sh_name
 02 00 00 00                    # sh_type: str-sht-symtab
 00 00 00 00                    # sh_flags
 &ELF_sym                       # sh_addr
-&ELF_sym>ELF_base              # sh_offset
-&ELF_end>ELF_sym               # sh_length
+%ELF_sym>ELF_base              # sh_offset
+%ELF_end>ELF_sym               # sh_length
 06 00 00 00                    # sh_link:6
 00 00 00 00                    # sh_info
 01 00 00 00                    # sh_1?
 10 00 00 00                    # sh_entsize
 
 :ELF_section_header_str
-&ELF_shstr__str>ELF_shstr      # sh_name
+%ELF_shstr__str>ELF_shstr      # sh_name
 03 00 00 00                    # sh_type: str-sht-strtab
 00 00 00 00                    # sh_flags
 &ELF_str                       # sh_addr
-&ELF_str>ELF_base              # sh_offset
-&ELF_sym>ELF_str               # sh_length
+%ELF_str>ELF_base              # sh_offset
+%ELF_sym>ELF_str               # sh_length
 00 00 00 00                    # sh_link
 00 00 00 00                    # sh_info
 01 00 00 00                    # sh_1?

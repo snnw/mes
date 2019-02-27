@@ -46,7 +46,7 @@
 01 00 00 00                    # e_version Indicating original elf
 
 &ELF_text                      # e_entry Address of the entry point
-&ELF_program_headers>ELF_base  # e_phoff Address of program header table
+%ELF_program_headers>ELF_base  # e_phoff Address of program header table
 00 00 00 00                    # e_shoff Address of section header table
 
 00 00 00 00                    # e_flags
@@ -73,8 +73,8 @@
 00 00 00 00                    # ph_offset
 &ELF_base                      # ph_vaddr
 &ELF_base                      # ph_physaddr
-&ELF_end>ELF_base              # ph_filesz
-&ELF_end>ELF_base              # ph_memsz
+%ELF_end>ELF_base              # ph_filesz
+%ELF_end>ELF_base              # ph_memsz
 07 00 00 00                    # ph_flags: PF-X|PF-W|PF-R = 7
 01 00 00 00                    # ph_align
 
