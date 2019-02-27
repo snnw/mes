@@ -21,14 +21,14 @@
 #ifndef __MES_STDINT_H
 #define __MES_STDINT_H 1
 
-#if WITH_GLIBC
+#if SYSTEM_LIBC
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 #undef __MES_STDINT_H
 #include_next <stdint.h>
 
-#else // ! WITH_GLIBC
+#else // ! SYSTEM_LIBC
 
 #undef unsigned
 #undef uint8_t
@@ -111,6 +111,6 @@ typedef unsigned uintmax_t;
 
 #define SSIZE_MAX LONG_MAX
 
-#endif // ! WITH_GLIBC
+#endif // ! SYSTEM_LIBC
 
 #endif // __MES_STDINT_H

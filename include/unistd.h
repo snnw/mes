@@ -20,14 +20,14 @@
 #ifndef __MES_UNISTD_H
 #define __MES_UNISTD_H 1
 
-#if WITH_GLIBC
+#if SYSTEM_LIBC
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 #undef __MES_UNISTD_H
 #include_next <unistd.h>
 
-#else // ! WITH_GLIBC
+#else // ! SYSTEM_LIBC
 
 #if defined (BOOTSTRAP_WITH_POSIX)
 #define _POSIX_VERSION 199009L
@@ -91,6 +91,6 @@ int symlink (char const *old_name, char const *new_name);
 int unlink (char const *file_name);
 ssize_t write (int filedes, void const *buffer, size_t size);
 
-#endif // ! WITH_GLIBC
+#endif // ! SYSTEM_LIBC
 
 #endif // __MES_UNISTD_H

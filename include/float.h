@@ -20,10 +20,10 @@
 #ifndef __MES_FLOAT_H
 #define __MES_FLOAT_H 1
 
-#if WITH_GLIBC
+#if SYSTEM_LIBC
 #undef __MES_FLOAT_H
 #include_next <float.h>
-#else // ! WITH_GLIBC
+#else // ! SYSTEM_LIBC
 
 #define MIN_EXP -1021
 #define DBL_MIN_EXP -1021
@@ -42,6 +42,6 @@
 #define LDBL_MAX INT_MAX
 #define LDBL_MIN INT_MIN
 
-#endif // ! WITH_GLIBC
+#endif // ! SYSTEM_LIBC
 
 #endif // __MES_FLOAT_H

@@ -20,10 +20,10 @@
 #ifndef __MES_SYS_MMAN_H
 #define __MES_SYS_MMAN_H 1
 
-#if WITH_GLIBC
+#if SYSTEM_LIBC
 #undef __MES_SYS_MMAN_H
 #include_next <sys/mman.h>
-#else // ! WITH_GLIBC
+#else // ! SYSTEM_LIBC
 
 #include <sys/types.h>
 
@@ -44,6 +44,6 @@ void *mmap (void *address, size_t length, int protect, int flags, int filedes, o
 int mprotect (void *addr, size_t len, int prot);
 int munmap (void *addr, size_t length);
 
-#endif // ! WITH_GLIBC
+#endif // ! SYSTEM_LIBC
 
 #endif // __MES_SYS_MMAN_H

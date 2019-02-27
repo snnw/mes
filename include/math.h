@@ -20,10 +20,10 @@
 #ifndef __MES_MATH_H
 #define __MES_MATH_H 1
 
-#if WITH_GLIBC
+#if SYSTEM_LIBC
 #undef __MES_MATH_H
 #include_next <math.h>
-#else // ! WITH_GLIBC
+#else // ! SYSTEM_LIBC
 
 double atan2 (double y, double x);
 double ceil (double x);
@@ -39,6 +39,6 @@ double pow (double base, double power);
 double sin (double x);
 double sqrt (double x);
 
-#endif // ! WITH_GLIBC
+#endif // ! SYSTEM_LIBC
 
 #endif // __MES_MATH_H
