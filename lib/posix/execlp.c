@@ -19,7 +19,8 @@
  */
 
 #include <mes/lib.h>
-#include <unistd.h>
+#include <errno.h>
+#include <stdarg.h>
 
 int
 execlp (char const *file_name, char const *arg, ...)

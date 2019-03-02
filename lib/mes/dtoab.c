@@ -20,6 +20,7 @@
 
 #include <mes/lib.h>
 #include <limits.h>
+#include <string.h>
 
 char *
 dtoab (double d, int base, int signed_p)

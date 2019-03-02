@@ -18,6 +18,10 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <linux/syscall.h>
+#include <syscall.h>
+#include <sys/stat.h>
+
 ssize_t
 readlink (char const *file_name, char *buffer, size_t size)
 {

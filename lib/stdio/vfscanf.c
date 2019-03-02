@@ -21,6 +21,8 @@
 #include <mes/lib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 int
 vfscanf (FILE * stream, char const *template, va_list ap)
@@ -88,10 +90,10 @@ vfscanf (FILE * stream, char const *template, va_list ap)
               *q = 0;
               q = buf;
               if (skip_p)
-                abtol (&q, 10);
+                abtol ((char const **) &q, 10);
               else
                 {
-                  *d = abtol (&q, 10);
+                  *d = abtol ((char const **) &q, 10);
                   count++;
                 }
               break;
@@ -171,7 +173,7 @@ vfscanf (FILE * stream, char const *template, va_list ap)
               set[i] = 0;
               while (r && (length == -1 || length--))
                 {
-                  int match = strchr (set, r);
+                  int match = (int) (long) strchr (set, r);
                   if (not_in_set_p)
                     match = !match;
                   if (!match)

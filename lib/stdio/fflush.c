@@ -19,11 +19,13 @@
  */
 
 #include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 int
 fflush (FILE * stream)
 {
-  int filedes = (int) stream;
+  int filedes = (long) stream;
   if (filedes < 3)
     return 0;
   return fsync (filedes);

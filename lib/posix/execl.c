@@ -19,20 +19,21 @@
  */
 
 #include <mes/lib.h>
+#include <stdarg.h>
 #include <unistd.h>
 
 int
 vexec (char const *file_name, va_list ap)
 {
-  char *arg = va_arg (ap, char const *);
+  char *arg = va_arg (ap, char *);
   char *argv[1000];             // POSIX minimum 4096
   int i = 0;
 
-  argv[i++] = file_name;
+  argv[i++] = (char *) file_name;
   while (arg)
     {
       argv[i++] = arg;
-      arg = va_arg (ap, char const *);
+      arg = va_arg (ap, char *);
       if (__mes_debug () > 2)
         {
           eputs ("arg[");

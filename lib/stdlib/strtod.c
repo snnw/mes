@@ -20,6 +20,7 @@
 
 #include <mes/lib.h>
 #include <stdlib.h>
+#include <string.h>
 
 double
 strtod (char const *string, char **tailptr)
@@ -32,9 +33,9 @@ strtod (char const *string, char **tailptr)
     }
   if (tailptr)
     {
-      *tailptr = string;
-      return abtod (tailptr, base);
+      *tailptr = (char *) string;
+      return abtod ((char const **) tailptr, base);
     }
-  char **p = &string;
-  return abtod (p, base);
+  char **p = (char **) &string;
+  return abtod ((char const **) p, base);
 }
