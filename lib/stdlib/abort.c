@@ -21,5 +21,11 @@
 void
 abort (void)
 {
+#if __arm__
+  asm ("wfi");
+#else
   asm ("hlt");
+#endif
+  // not reached
+  exit (77);
 }
