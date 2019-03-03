@@ -20,6 +20,10 @@
 
 set -ex
 
+# REMOVEME: courageous arm
+echo "Applying courage"
+set +e
+
 ################################################################################
 # SYSTEM_LIBC build
 
@@ -28,8 +32,10 @@ rm -rf out-system-libc
 mkdir out-system-libc
 
 ## Configure ##
-mes_cpu=x86_64
-mes_bits=64
+#mes_cpu=x86_64
+mes_cpu=arm
+mes_bits=32
+mes_bits=arm # FIXME
 cat > include/mes/config.h <<EOF
 #define SYSTEM_LIBC 1
 #define MES_VERSION "git"
@@ -102,7 +108,8 @@ set +e
 out-system-libc/hello
 r=$?
 if [ $r != 42 ]; then
-   exit 1
+    echo '**** oops ****'
+    #exit 1
 fi
 
 ################################################################################
@@ -120,7 +127,8 @@ mkdir out-mes
 ## Configure ##
 mes_kernel=linux
 CC=gcc
-mes_cpu=x86_64
+#mes_cpu=x86_64
+mes_cpu=arm
 #CC=i686-unknown-linux-gnu-gcc
 #mes_cpu=x86
 cat > include/mes/config.h <<EOF
