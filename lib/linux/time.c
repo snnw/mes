@@ -22,8 +22,45 @@
 #include <syscall.h>
 #include <time.h>
 
+#if SYS_time
+
 time_t
 time (time_t * result)
 {
   return _sys_call1 (SYS_time, (long) result);
 }
+
+#elif SYS_gettimeofday
+
+#include <sys/time.h>
+
+time_t
+time (time_t * result)
+{
+  struct timeval tv;
+  struct timezone tz;
+  gettimeofday (&tv, &tz);
+  if (result)
+    *result = tv.tv_sec;
+  return tv.tv_sec;
+}
+
+#else
+
+#warning there is no time
+
+#include <mes/lib.h>
+
+time_t
+time (time_t * result)
+{
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("time stub\n");
+  stub = 1;
+  if (result)
+    *result = 0;
+  return 0;
+}
+
+#endif
