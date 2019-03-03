@@ -76,3 +76,42 @@ ldiv_t ldiv(long a, long b)
     result.quot = -result.quot;
   return result;
 }
+
+#if __GNUC__ && !SYSTEM_LIBC
+// /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: hash.o: in function `hash_cstring':
+// hash.c:(.text+0x56): undefined reference to `__aeabi_idivmod'
+// /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: math.o: in function `divide':
+// math.c:(.text+0x516): undefined reference to `__aeabi_idiv'
+// /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: math.o: in function `modulo':
+// math.c:(.text+0x5d2): undefined reference to `__aeabi_idivmod'
+// /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: gcc-lib/libc.a(ntoab.o): in function `ntoab':
+// ntoab.c:(.text+0x54): undefined reference to `__aeabi_uidivmod'
+// /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: ntoab.c:(.text+0x62): undefined reference to `__aeabi_uidiv'
+long
+__aeabi_idivmod (long a, long b)
+{
+  long remainder;
+  __mesabi_uldiv (a, b, &remainder);
+  return remainder;
+}
+
+long
+__aeabi_idiv (long a, long b)
+{
+  return __mesabi_uldiv (a, b, 0);
+}
+
+unsigned long
+__aeabi_uidivmod (unsigned long a, unsigned long b)
+{
+  unsigned long remainder;
+  __mesabi_uldiv (a, b, &remainder);
+  return remainder;
+}
+
+unsigned long
+__aeabi_uidiv (unsigned long a, unsigned long b)
+{
+  return __mesabi_uldiv (a, b, 0);
+}
+#endif // __GNUC__ && !SYSTEM_LIBC
