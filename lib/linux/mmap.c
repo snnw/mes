@@ -22,8 +22,25 @@
 #include <syscall.h>
 #include <sys/mman.h>
 
+#if SYS_mmap
+
 void *
 mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   return (void *)_sys_call6 (SYS_mmap, (long) addr, (long) len, (int) prot, (int) flags, (int) fd, (long) offset);
 }
+
+#elif SYS_mmap2
+
+#include <assert.h>
+#include <mes/lib.h>
+
+void *
+mmap (void *addr, size_t len, int prot, int flags, int fd, off_t offset)
+{
+  eputs ("TODO: mmap/mmap2\n");
+  assert(0);
+  return (void *)_sys_call6 (SYS_mmap2, (long) addr, (long) len, (int) prot, (int) flags, (int) fd, (long) offset);
+}
+
+#endif

@@ -83,4 +83,9 @@
 #define SYS_readlink  0x55
 #define SYS_mknod     0x0e
 
+// gcc-4.6.4
+//#define SYS_mmap      0x09
+#define SYS_mmap2      0xc0
+#define SYS_munmap    0x5b
+
 #endif // __MES_LINUX_ARM_SYSCALL_H
