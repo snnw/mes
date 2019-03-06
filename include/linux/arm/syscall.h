@@ -38,6 +38,7 @@
 
 // libc+tcc
 #define SYS_close  0x06
+#define SYS_time   0x0d
 #define SYS_lseek  0x13
 #define SYS_unlink 0x0a
 #define SYS_rmdir  0x28
