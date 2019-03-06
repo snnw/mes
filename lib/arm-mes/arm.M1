@@ -254,30 +254,28 @@ DEFINE uxth__%r0,%r0 7000ffe6
 #DEFINE sub____%r13,$i32 ec81
 #DEFINE sub____%r13,$i8 ec83
 
-DEFINE SYS_exit   010090
-DEFINE SYS_fork   020090
-DEFINE SYS_read   030090
-DEFINE SYS_rmdir  280090
-DEFINE SYS_write  040090
-DEFINE SYS_open   050090
-DEFINE SYS_close  060090
+# See: https://github.com/torvalds/linux/blob/v4.19/arch/arm/tools/syscall.tbl
+DEFINE SYS_exit   01
+DEFINE SYS_fork   02
+DEFINE SYS_read   03
+DEFINE SYS_write  04
+DEFINE SYS_open   05
+DEFINE SYS_close  06
 # DEFINE SYS_waitpid does_not_exist
-DEFINE SYS_wait4  720090
-# waitid: 900118
-#__waitpid (__pid_t pid, int *stat_loc, int options)
-#  return SYSCALL_CANCEL (wait4, pid, stat_loc, options, NULL); # the NULL is more!
+DEFINE SYS_rmdir  28
+DEFINE SYS_wait4  72
+# waitid: 0x118
 
-# Linux note: sys_waitpid() remains for compatibility. waitpid() should be implemented by calling sys_wait4() from libc.a.
-DEFINE SYS_unlink 0a0090
-DEFINE SYS_execve 0b0090
-DEFINE SYS_chmod  0f0090
-DEFINE SYS_lseek  130090
-DEFINE SYS_access 210090
-DEFINE SYS_brk    2d0090
-DEFINE SYS_ioctl  360090
-DEFINE SYS_stat   6a0090
-DEFINE SYS_fsync  760090
-DEFINE SYS_getcwd b70090
+DEFINE SYS_unlink 0a
+DEFINE SYS_execve 0b
+DEFINE SYS_chmod  0f
+DEFINE SYS_lseek  13
+DEFINE SYS_access 21
+DEFINE SYS_brk    2d
+DEFINE SYS_ioctl  36
+DEFINE SYS_stat   6a
+DEFINE SYS_fsync  76
+DEFINE SYS_getcwd b7
 
 # These are x86 ABI remnants:
 
