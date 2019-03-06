@@ -133,6 +133,7 @@ DEFINE add____$i32,(%r1) 05002de9000091e50c209fe5020080e0000081e50500bde8000000e
 DEFINE mov____$i32,%r0 00009fe5000000ea
 DEFINE mov____$i32,%r1 00109fe5000000ea
 DEFINE mov____$i32,%r2 00209fe5000000ea
+DEFINE mov____$i32,%r7 00709fe5000000ea
 #DEFINE mov____%r1,0x32(%ebp) xx
 #DEFINE mov____%r1,0x8(%ebp) xx
 DEFINE mov____%r2,(%r1) 002081e5
