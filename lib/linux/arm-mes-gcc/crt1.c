@@ -25,59 +25,48 @@
 void
 _start ()
 {
-#if 0
   asm (
-       "mov    $0,%%eax\n\t"
-       "mov    %%eax,%0\n"
+       "mov    r0,#0\n\t"
+       "mov    %0,r0\n"
        : "=r" (__stdin)
        : //no inputs ""
        );
 
   asm (
-       "mov    $1,%%eax\n\t"
-       "mov    %%eax,%0\n"
+       "mov    r0,$1\n\t"
+       "mov    %0,r0\n"
        : "=r" (__stdout)
        : //no inputs ""
        );
 
   asm (
-       "mov    $2,%%eax\n\t"
-       "mov    %%eax,%0\n"
+       "mov    r0,$2\n\t"
+       "mov    %0,r0\n"
        : "=r" (__stderr)
        : //no inputs ""
        );
+
+  /* environ = argv + argc + 1 */
   asm (
-       "mov     %%ebp,%%eax\n\t"
-       "add     $4,%%eax\n\t"
-       "movzbl  (%%eax),%%eax\n\t"
-       "add     $3,%%eax\n\t"
-       "shl     $2,%%eax\n\t"
-       "add     %%ebp,%%eax\n\t"
-       "mov     %%eax,%0\n\t"
-       "push    %%eax\n\t"
+       "pop     {r7}\n\t" /* gcc has a strange preable pushing r7.  FIXME: Be nicer. */
+       "ldr     r0,[sp]\n\t" /* r0 = argc */
+       "add     r1,sp,#4\n\t" /* r1 = &argv[0] */
+       "add     r2,r1,#1\n\t" /* r2 = r1 + 1 */
+       "lsl     r2,#2\n\t" /* r2 = (r1 + 1) << 2 */
+       "push    {r2}\n\t" /* envp */
+       "push    {r1}\n\t" /* argv */
+       "push    {r0}\n\t" /* argc */
+       "mov     %0,r2\n\t"
        : "=r" (environ)
        : //no inputs ""
        );
   asm (
-       "mov     %ebp,%eax\n\t"
-       "add     $8,%eax\n\t"
-       "push    %eax\n\t"
-
-       "mov     %ebp,%eax\n\t"
-       "add     $4,%eax\n\t"
-       "movzbl  (%eax),%eax\n\t"
-       );
-#endif
-  asm (
-       "mov	r2, $0\n\t"
-       "push    {r2}\n\t"
-       "mov	r1, $0\n\t"
-       "push    {r1}\n\t"
-       "mov	r0, $1\n\t"
-       "push    {r0}\n\t"
+       "ldr     r0,[sp]\n\t" /* argc */
+       "ldr     r1,[sp, #4]\n\t" /* argv */
+       "ldr     r2,[sp, #8]\n\t" /* envp */
        "bl      main\n\t"
-       "mov	r7, $1\n\t"
-       "swi     $0\n\t"
+       "mov	r7, #1\n\t"
+       "swi     #0\n\t"
        "wfi     \n\t"
        );
 }
