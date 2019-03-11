@@ -153,4 +153,4 @@ __aeabi_uidiv (unsigned long a, unsigned long b)
 {
   return __mesabi_uldiv (a, b, 0);
 }
-#endif // __GNUC__ && !SYSTEM_LIBC
+#endif // __GNUC__ && !SYSTEM_LIBC && __arm__
