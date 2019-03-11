@@ -37,14 +37,14 @@ _start ()
        );
 
   asm (
-       "mov    r0,$1\n\t"
+       "mov    r0,#1\n\t"
        "mov    %0,r0\n"
        : "=r" (__stdout)
        : //no inputs ""
        );
 
   asm (
-       "mov    r0,$2\n\t"
+       "mov    r0,#2\n\t"
        "mov    %0,r0\n"
        : "=r" (__stderr)
        : //no inputs ""
