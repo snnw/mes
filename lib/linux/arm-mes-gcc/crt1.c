@@ -21,6 +21,10 @@
 #include <mes/lib-mini.h>
 //int main (int argc, char *argv[], char *envp[]);
 
+/* Note: GCC automatically emits a preable in order to set up the frame pointer:
+"push {fp}"
+"add fp, sp, 0"
+ */
 // *INDENT-OFF*
 void
 _start ()
@@ -48,9 +52,8 @@ _start ()
 
   /* environ = argv + argc + 1 */
   asm (
-       "pop     {r7}\n\t" /* gcc has a strange preable pushing r7.  FIXME: Be nicer. */
-       "ldr     r0,[sp]\n\t" /* r0 = argc */
-       "add     r1,sp,#4\n\t" /* r1 = &argv[0] */
+       "ldr     r0,[fp,#4]\n\t" /* r0 = argc */
+       "add     r1,fp,#8\n\t" /* r1 = &argv[0] */
        "add     r2,r1,#1\n\t" /* r2 = r1 + 1 */
        "lsl     r2,#2\n\t" /* r2 = (r1 + 1) << 2 */
        "push    {r2}\n\t" /* envp */
