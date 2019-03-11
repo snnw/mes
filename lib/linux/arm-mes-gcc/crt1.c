@@ -54,8 +54,9 @@ _start ()
   asm (
        "ldr     r0,[fp,#4]\n\t" /* r0 = argc */
        "add     r1,fp,#8\n\t" /* r1 = &argv[0] */
-       "add     r2,r1,#1\n\t" /* r2 = r1 + 1 */
-       "lsl     r2,#2\n\t" /* r2 = (r1 + 1) << 2 */
+       "add     r2,r0,#1\n\t" /* r2 = r0 + 1 */
+       "lsl     r2,#2\n\t" /* r2 = (r0 + 1) << 2 */
+       "add     r2,r2,r1\n\t" /* r2 = ((r0 + 1) << 2) + r1 */
        "push    {r2}\n\t" /* envp */
        "push    {r1}\n\t" /* argv */
        "push    {r0}\n\t" /* argc */
