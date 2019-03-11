@@ -122,15 +122,15 @@ ldiv_t ldiv(long a, long b)
 long
 __aeabi_idivmod (long a, long b)
 {
-  long remainder;
-  __mesabi_uldiv (a, b, &remainder);
-  return remainder;
+  ldiv_t result = ldiv(a, b);
+  return result.rem;
 }
 
 long
 __aeabi_idiv (long a, long b)
 {
-  return __mesabi_uldiv (a, b, 0);
+  ldiv_t result = ldiv(a, b);
+  return result.quot;
 }
 
 unsigned long
