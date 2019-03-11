@@ -142,6 +142,7 @@ _sys_call4 (long sys_call, long one, long two, long three, long four)
   return r;
 }
 
+#if 0
 long
 _sys_call6 (long sys_call, long one, long two, long three, long four, long five, long six)
 {
@@ -162,3 +163,4 @@ _sys_call6 (long sys_call, long one, long two, long three, long four, long five,
        );
   return r;
 }
+#endif
