@@ -33,7 +33,7 @@ _exit (int code)
        "swi    $0\n\t"
        : // no outputs "=" (r)
        : "r" (code)
-       : "r0"//, "r7"  // error: r7 cannot be used in asm here
+       : "r0", "r7"
        );
   // not reached
   _exit (0);

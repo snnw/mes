@@ -32,7 +32,7 @@ _sys_call (long sys_call)
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call)
-       : "r0" // , "r7" // error: r7 cannot be used in asm here
+       : "r0", "r7"
        );
   if (r < 0)
     {
@@ -55,7 +55,7 @@ _sys_call1 (long sys_call, long one)
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one)
-       : "r0"
+       : "r0", "r7"
        );
   if (r < 0)
     {
@@ -79,7 +79,7 @@ _sys_call2 (long sys_call, long one, long two)
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two)
-       : "r0", "r1"
+       : "r0", "r1", "r7"
        );
   if (r < 0)
     {
@@ -104,7 +104,7 @@ _sys_call3 (long sys_call, long one, long two, long three)
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two), "r" (three)
-       : "r0", "r1", "r2"
+       : "r0", "r1", "r2", "r7"
        );
   if (r < 0)
     {
@@ -130,7 +130,7 @@ _sys_call4 (long sys_call, long one, long two, long three, long four)
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two), "r" (three), "r" (four)
-       : "r0", "r1", "r2", "r3"
+       : "r0", "r1", "r2", "r3", "r7"
        );
   if (r < 0)
     {
@@ -158,7 +158,7 @@ _sys_call6 (long sys_call, long one, long two, long three, long four, long five,
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two), "r" (three), "r" (four), "r" (five), "r" (six)
-       : "r0", "r1", "r2", "r3", "r4", "r5"
+       : "r0", "r1", "r2", "r3", "r4", "r5" //, "r7" FIXME
        );
   return r;
 }
