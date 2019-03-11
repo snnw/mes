@@ -77,7 +77,7 @@ ldiv_t ldiv(long a, long b)
   return result;
 }
 
-#if __GNUC__ && !SYSTEM_LIBC
+#if __GNUC__ && !SYSTEM_LIBC && __arm__
 // /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: hash.o: in function `hash_cstring':
 // hash.c:(.text+0x56): undefined reference to `__aeabi_idivmod'
 // /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: math.o: in function `divide':
