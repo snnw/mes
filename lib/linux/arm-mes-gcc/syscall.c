@@ -29,7 +29,7 @@ _sys_call (long sys_call)
   asm (
        "mov    r7, %1\n\t"
        "swi    $0\n\t"
-       "mov    r0, %0\n\t"
+       "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call)
        : "r0" // , "r7" // error: r7 cannot be used in asm here
@@ -52,7 +52,7 @@ _sys_call1 (long sys_call, long one)
        "mov    r7, %1\n\t"
        "mov    r0, %2\n\t"
        "swi    $0\n\t"
-       "mov    r0, %0\n\t"
+       "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one)
        : "r0"
@@ -76,7 +76,7 @@ _sys_call2 (long sys_call, long one, long two)
        "mov    r0, %2\n\t"
        "mov    r1, %3\n\t"
        "swi    $0\n\t"
-       "mov    r0, %0\n\t"
+       "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two)
        : "r0", "r1"
@@ -101,7 +101,7 @@ _sys_call3 (long sys_call, long one, long two, long three)
        "mov    r1, %3\n\t"
        "mov    r2, %4\n\t"
        "swi    $0\n\t"
-       "mov    r0, %0\n\t"
+       "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two), "r" (three)
        : "r0", "r1", "r2"
@@ -127,7 +127,7 @@ _sys_call4 (long sys_call, long one, long two, long three, long four)
        "mov    r2, %4\n\t"
        "mov    r3, %5\n\t"
        "swi    $0\n\t"
-       "mov    r0, %0\n\t"
+       "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two), "r" (three), "r" (four)
        : "r0", "r1", "r2", "r3"
@@ -155,7 +155,7 @@ _sys_call6 (long sys_call, long one, long two, long three, long four, long five,
        "mov    r4, %6\n\t"
        "mov    r5, %7\n\t"
        "swi    $0\n\t"
-       "mov    r0, %0\n\t"
+       "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (sys_call), "r" (one), "r" (two), "r" (three), "r" (four), "r" (five), "r" (six)
        : "r0", "r1", "r2", "r3", "r4", "r5"
