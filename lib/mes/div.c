@@ -104,12 +104,6 @@ __aeabi_idiv (long a, long b)
   return result.quot;
 }
 
-typedef struct
-{
-  unsigned long quot;
-  unsigned long rem;
-} uidiv_t;
-
 /* Result: r0: quotient; r1: remainder */
 unsigned long
 __aeabi_uidivmod (unsigned long a, unsigned long b)
