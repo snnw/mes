@@ -87,11 +87,14 @@ ldiv_t ldiv(long a, long b)
 // /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: gcc-lib/libc.a(ntoab.o): in function `ntoab':
 // ntoab.c:(.text+0x54): undefined reference to `__aeabi_uidivmod'
 // /gnu/store/7sfr3vhxq7l4mai8m0fr1cd8w9xcj9dh-binutils-2.31.1/bin/ld: ntoab.c:(.text+0x62): undefined reference to `__aeabi_uidiv'
+/* Result: r0: quotient; r1: remainder */
 long
 __aeabi_idivmod (long a, long b)
 {
   ldiv_t result = ldiv(a, b);
-  return result.rem;
+  register long rem_result asm("r1");
+  rem_result = result.rem;
+  return result.quot;
 }
 
 long
@@ -101,12 +104,22 @@ __aeabi_idiv (long a, long b)
   return result.quot;
 }
 
+typedef struct
+{
+  unsigned long quot;
+  unsigned long rem;
+} uidiv_t;
+
+/* Result: r0: quotient; r1: remainder */
 unsigned long
 __aeabi_uidivmod (unsigned long a, unsigned long b)
 {
-  unsigned long remainder;
-  __mesabi_uldiv (a, b, &remainder);
-  return remainder;
+  unsigned long quot;
+  unsigned long rem;
+  register unsigned long rem_result asm("r1");
+  quot = __mesabi_uldiv (a, b, &rem);
+  rem_result = rem;
+  return quot;
 }
 
 unsigned long
