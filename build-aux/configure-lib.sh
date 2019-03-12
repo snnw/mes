@@ -143,7 +143,6 @@ lib/stdio/putc.c
 lib/stdio/putchar.c
 lib/stdio/ungetc.c
 lib/stdlib/free.c
-lib/stdlib/malloc.c
 lib/stdlib/realloc.c
 lib/string/memchr.c
 lib/string/memcmp.c
@@ -201,6 +200,7 @@ lib/linux/time.c
 lib/linux/unlink.c
 lib/linux/waitpid.c
 lib/linux/$mes_cpu-mes-$compiler/syscall.c
+lib/unix/malloc.c
 "
 fi
 
