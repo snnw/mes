@@ -52,6 +52,8 @@ fi
 
 libmes_SOURCES="
 $libc_mini_SOURCES
+lib/ctype/isnumber.c
+lib/mes/abtol.c
 lib/mes/itoa.c
 lib/mes/ltoa.c
 lib/mes/ltoab.c
@@ -70,11 +72,14 @@ lib/mes/oputc.c
 if test $mes_libc = mes; then
     libmes_SOURCES="$libmes_SOURCES
 lib/stdlib/atoi.c
-lib/mes/abtol.c
 lib/ctype/isdigit.c
-lib/ctype/isnumber.c
 lib/ctype/isspace.c
 lib/ctype/isxdigit.c
+"
+else
+    libmes_SOURCES="$libmes_SOURCES
+lib/mes/abtod.c
+lib/mes/dtoab.c
 "
 fi
 
@@ -136,57 +141,6 @@ lib/libtcc1.c
 
 libc_tcc_SOURCES="
 $libc_SOURCES
-lib/ctype/islower.c
-lib/ctype/isupper.c
-lib/ctype/tolower.c
-lib/ctype/toupper.c
-lib/mes/abtod.c
-lib/mes/dtoab.c
-lib/mes/search-path.c
-lib/posix/execvp.c
-lib/stdio/fclose.c
-lib/stdio/fdopen.c
-lib/stdio/ferror.c
-lib/stdio/fflush.c
-lib/stdio/fopen.c
-lib/stdio/fprintf.c
-lib/stdio/fread.c
-lib/stdio/fseek.c
-lib/stdio/ftell.c
-lib/stdio/fwrite.c
-lib/stdio/printf.c
-lib/stdio/remove.c
-lib/stdio/snprintf.c
-lib/stdio/sprintf.c
-lib/stdio/sscanf.c
-lib/stdio/vfprintf.c
-lib/stdio/vprintf.c
-lib/stdio/vsnprintf.c
-lib/stdio/vsprintf.c
-lib/stdio/vsscanf.c
-lib/stdlib/calloc.c
-lib/stdlib/qsort.c
-lib/stdlib/strtod.c
-lib/stdlib/strtof.c
-lib/stdlib/strtol.c
-lib/stdlib/strtold.c
-lib/stdlib/strtoll.c
-lib/stdlib/strtoul.c
-lib/stdlib/strtoull.c
-lib/string/memmem.c
-lib/string/memmove.c
-lib/string/strcat.c
-lib/string/strchr.c
-lib/string/strlwr.c
-lib/string/strncpy.c
-lib/string/strrchr.c
-lib/string/strstr.c
-lib/string/strupr.c
-lib/stub/sigaction.c
-lib/stub/ldexp.c
-lib/stub/mprotect.c
-lib/stub/localtime.c
-lib/stub/sigemptyset.c
 lib/ctype/islower.c
 lib/ctype/isupper.c
 lib/ctype/tolower.c
@@ -402,10 +356,12 @@ if test -e libmes.s; then
     cp libmes.s $mes_cpu-mes
 fi
 
-archive libc.a $libc_SOURCES
-cp libc.a $mes_cpu-mes
-if test -e libc.s; then
-    cp libc.S $mes_cpu-mes
+if test $mes_libc = mes; then
+    archive libc.a $libc_SOURCES
+    cp libc.a $mes_cpu-mes
+    if test -e libc.s; then
+        cp libc.s $mes_cpu-mes
+    fi
 fi
 
 archive libc+tcc.a $libc_tcc_SOURCES

@@ -19,6 +19,7 @@
  */
 
 #include <mes/lib.h>
+#include <errno.h>
 #include <grp.h>
 
 struct group *
@@ -28,7 +29,12 @@ getgrnam (char const *name)
   if (__mes_debug () && !stub)
     eputs ("getgrid stub\n");
   static char *groups[2] = { "root", 0 };
+#if SYSTEM_LIBC
+  static struct group root = { "root", 0, 0 };
+  root.gr_mem = groups;
+#else
   static struct group root = { "root", 0, groups };
+#endif
   stub = 1;
   errno = 0;
   return &root;
