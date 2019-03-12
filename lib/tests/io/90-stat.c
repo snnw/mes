@@ -25,7 +25,7 @@
 #include <sys/stat.h>
 
 
-#if __i386__
+#if __i386__ || __arm__
 #define stat xstat
 
 struct stat
