@@ -37,7 +37,13 @@
 #define O_EXCL         0x80
 #define O_TRUNC       0x200
 #define O_APPEND      0x400
+
+#ifdef __arm__
+#define O_DIRECTORY 0x4000
+/*#define O_DIRECT 0x10000*/
+#else
 #define O_DIRECTORY 0x10000
+#endif
 // *INDENT-ON*
 
 #define FD_CLOEXEC 1
