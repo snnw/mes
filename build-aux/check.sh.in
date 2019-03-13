@@ -32,7 +32,7 @@ if test $mes_cpu = arm; then
     CFLAGS="-marm"
 fi
 if test $mes_libc = mes; then
-    CFLAGS="
+    CFLAGS="${CFLAGS}
 -static
 -nostdinc
 -nostdlib
