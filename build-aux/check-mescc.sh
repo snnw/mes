@@ -255,12 +255,6 @@ lib/tests/scaffold/a0-call-trunc-int.c
     fi
 fi
 
-if test $mes_cpu = x86; then
-    XFAIL_TESTS="$XFAIL_TESTS
-lib/tests/mes/90-dtoab.c
-"
-fi
-
 if test $mes_cpu = x86_64; then
     XFAIL_TESTS="$XFAIL_TESTS
 lib/tests/stdio/70-printf-simple.c
