@@ -19,6 +19,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 size_t
 mbstowcs (wchar_t * wstring, char const *string, size_t size)
