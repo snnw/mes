@@ -21,34 +21,41 @@
 #include <setjmp.h>
 #include <stdlib.h>
 
+/* This assumes that both longjmp and setjmp either have frames, or both have no frames. */
+
 void
 longjmp (jmp_buf env, int val)
 {
-  val = val == 0 ? 1 : val;
   // *INDENT-OFF*
-#if 1
-  #warning LONGJMP not implemented
-#else
   asm (
-       "mov    0x8(%ebp),%ebp\n\t"     // env*
-
-       "mov    0x4(%ebp),%ebx\n\t"     // env->__pc
-       "mov    0x8(%ebp),%esp\n\t"     // env->__sp
-       "mov    0x0(%ebp),%ebp\n\t"     // env->__bp
-       "jmp    *%ebx\n\t"              // jmp *PC
-       );
-#endif
+       "mov r0, %0\n\t"
+       "mov r1, %1\n\t"
+       "cmp r1, #0\n\t"
+       "moveq r1, #1\n\t" /* returning 0 is not allowed, even when the user wanted to. */
+       "ldr r13, [r0], #4\n\t" /* stack pointer (sp) */
+       "ldr r14, [r0], #4\n\t" /* link register (lr) */
+       "ldmia r0!, {r4, r5, r6, r7, r8, r9, r10, r11}\n\t"
+       // TODO: If using VFP, vldmia r0!, {d8-d15}
+       "mov r0, r1\n\t"
+       :
+       : "r" (env), "r" (val));
   // *INDENT-ON*
   // not reached
-  exit (42);
 }
 
 int
 setjmp (jmp_buf env)
 {
-  long *p = (long *) &env;
-  env[0].__bp = p[-2];
-  env[0].__pc = p[-1];
-  env[0].__sp = (long) &env;
+  // *INDENT-OFF*
+  asm (
+       "mov r0, %0\n\t"
+       "str r13, [r0], #4\n\t" /* stack pointer (sp) */
+       "str r14, [r0], #4\n\t" /* link register (lr) */
+       "stmia r0!, {r4, r5, r6, r7, r8, r9, r10, r11}\n\t"
+       // TODO: If using VFP, vstmia r0!, {d8-d15}
+       :
+       : "r" (env)
+       : "r0");
+  // *INDENT-ON*
   return 0;
 }
