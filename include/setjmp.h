@@ -25,12 +25,28 @@
 #include_next <setjmp.h>
 #else // ! SYSTEM_LIBC
 
+#if __arm__
+typedef struct
+{
+  unsigned long __r13; /* sp */
+  unsigned long __r14; /* lr */
+  unsigned long __r4; /* v1 */
+  unsigned long __r5; /* v2 */
+  unsigned long __r6; /* v3 */
+  unsigned long __r7; /* v4 */
+  unsigned long __r8; /* v5 */
+  unsigned long __r9; /* v6 */
+  unsigned long __r10; /* sl */
+  unsigned long __r11; /* fp */
+} __jmp_buf;
+#else
 typedef struct
 {
   long __bp;
   long __pc;
   long __sp;
 } __jmp_buf;
+#endif
 typedef __jmp_buf jmp_buf[1];
 
 #if __MESC__
