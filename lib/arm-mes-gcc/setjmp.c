@@ -21,9 +21,8 @@
 #include <setjmp.h>
 #include <stdlib.h>
 
-/* This assumes that both longjmp and setjmp either have frames, or both have no frames. */
-
 void
+__attribute__ ((noinline))
 longjmp (jmp_buf env, int val)
 {
   // *INDENT-OFF*
@@ -44,6 +43,7 @@ longjmp (jmp_buf env, int val)
 }
 
 int
+__attribute__ ((noinline))
 setjmp (jmp_buf env)
 {
   // *INDENT-OFF*
