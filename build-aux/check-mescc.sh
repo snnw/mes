@@ -190,6 +190,10 @@ lib/tests/scaffold/82-define.c
 lib/tests/scaffold/83-heterogenoous-init.c
 lib/tests/scaffold/84-struct-field-list.c
 lib/tests/scaffold/85-sizeof.c
+"
+
+if test -z "$bootstrap"; then
+    TESTS="$TESTS
 lib/tests/dirent/90-readdir.c
 lib/tests/io/90-stat.c
 lib/tests/mes/90-abtod.c
@@ -216,6 +220,7 @@ lib/tests/scaffold/a0-math-divide-signed-negative.c
 lib/tests/scaffold/a1-global-no-align.c
 lib/tests/scaffold/a1-global-no-clobber.c
 "
+fi
 
 XFAIL_TESTS="
 lib/tests/mes/90-abtod.c
