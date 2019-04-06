@@ -80,6 +80,7 @@ fi
 libc_SOURCES="
 $libmes_SOURCES
 lib/mes/__assert_fail.c
+lib/mes/__buffered_read.c
 lib/mes/__mes_debug.c
 lib/posix/execv.c
 lib/posix/getcwd.c
@@ -103,6 +104,7 @@ lib/stdlib/realloc.c
 lib/string/memchr.c
 lib/string/memcmp.c
 lib/string/memcpy.c
+lib/string/memmove.c
 lib/string/memset.c
 lib/string/strcmp.c
 lib/string/strcpy.c
@@ -138,6 +140,7 @@ lib/libtcc1.c
 
 libc_tcc_SOURCES="
 $libc_SOURCES
+lib/linux/close.c
 lib/ctype/islower.c
 lib/ctype/isupper.c
 lib/ctype/tolower.c
@@ -176,7 +179,6 @@ lib/stdlib/strtoll.c
 lib/stdlib/strtoul.c
 lib/stdlib/strtoull.c
 lib/string/memmem.c
-lib/string/memmove.c
 lib/string/strcat.c
 lib/string/strchr.c
 lib/string/strlwr.c
@@ -194,7 +196,6 @@ lib/$mes_cpu-mes-$compiler/setjmp.c
 
 if test $mes_kernel = linux; then
     libc_tcc_SOURCES="$libc_tcc_SOURCES
-lib/linux/close.c
 lib/linux/lseek.c
 lib/linux/rmdir.c
 lib/linux/stat.c
