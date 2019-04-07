@@ -143,10 +143,10 @@ General help using GNU software: <http://gnu.org/gethelp/>
                                 "-nostartfiles"
                                 "-nostdinc"
                                 "-nostdlib"
-                                "-static"
-                                "-std"))
+                                "-static"))
          (args (map (lambda (o)
-                      (if (member o single-dash-options) (string-append "-" o)
+                      (if (or (member o single-dash-options)
+                              (string-prefix? "-std=" o)) (string-append "-" o)
                           o))
                     args))
          (args (append-map unclump-single args))

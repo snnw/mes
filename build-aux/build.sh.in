@@ -49,10 +49,11 @@ if test -n "$GUILE" -a "$GUILE" != true; then
 fi
 
 debug=
-#debug=-g
+debug=-g
 
 CFLAGS="
 -static
+-std=gnu99
 $debug
 "
 
