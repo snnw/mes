@@ -39,8 +39,8 @@ int
 setjmp (__jmp_buf *env)
 {
   long *p = (long*)&env;
-  env[0].__bp = p[-2];
-  env[0].__pc = p[-1];
-  env[0].__sp = (long)&env;
+  //env[0].__sp = p[-2];
+  //env[0].__r1 = p[-1];
+  env[0].__r13 = (long)&env;
   return 0;
 }

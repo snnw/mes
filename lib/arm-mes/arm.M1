@@ -250,6 +250,7 @@ DEFINE sxth__%r0,%r0 7000bfe6
 DEFINE uxtb__%r0,%r0 7000efe6
 DEFINE uxtb__%r1,%r1 7110efe6
 DEFINE uxth__%r0,%r0 7000ffe6
+DEFINE uxth__%r1,%r1 7110ffe6
 
 # deprecated, remove after 0.18
 #DEFINE sub____%r13,$i32 ec81
