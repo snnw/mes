@@ -106,6 +106,10 @@ reader_read_identifier_or_number (int c)
     }
   unreadchar (c);
   g_buf[i] = 0;
+#if __arm__ // FIXME: workaround for mescc end of file bug
+  if (c == -1 && i == 1)
+    exit (0);
+#endif
   return cstring_to_symbol (g_buf);
 }
 
