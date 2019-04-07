@@ -52,7 +52,7 @@ _write (int filedes, void const *buffer, size_t size)
        "mov    %0, r0\n\t"
        : "=r" (r)
        : "r" (filedes), "r" (buffer), "r" (size)
-       : "r0", "r1", "r2"//, "r7"
+       : "r0", "r1", "r2", "r7"
        );
   return r;
 }
