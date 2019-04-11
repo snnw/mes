@@ -48,12 +48,16 @@
 
 (define (immediate->r0 v)
   (if (< (abs v) #x80)
-     `(((#:immediate1 ,v) "mov____$i8,%r0"))
+      (if (< v 0)
+         `(((#:immediate1 ,(- -1 v)) "mvn____%r0,$i8"))
+         `(((#:immediate1 ,v) "mov____$i8,%r0")))
      `(("mov____$i32,%r0" (#:immediate ,v)))))
 
 (define (armv4:value->r info v)
   (let ((r (get-r info)))
-    `(((#:immediate1 ,v) ,(string-append "mov____$i8,%" r)))))
+    (if (< v 0)
+       `(((#:immediate1 ,(- -1 v)) ,(string-append "mvn____%" r ",$i8")))
+       `(((#:immediate1 ,v) ,(string-append "mov____$i8,%" r))))))
 
 (define (armv4:ret . rest)
   "Note: Pretends to be on x86 a lot"

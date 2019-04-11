@@ -95,6 +95,11 @@ DEFINE jne 1a
 DEFINE mov____$i8,%r0 00a0e3
 DEFINE mov____$i8,%r1 10a0e3 # mov     r1, #66
 DEFINE mov____$i8,%r7 70a0e3
+
+DEFINE mvn____%r0,$i8 00e0e3
+DEFINE mvn____%r1,$i8 10e0e3
+DEFINE mvn____%r7,$i8 70e0e3
+
 DEFINE mov____%r0,%r1 0010a0e1
 DEFINE mov____%r0,%r2 0020a0e1
 DEFINE mov____%r0,(%r1) 000081e5
