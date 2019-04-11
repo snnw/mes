@@ -334,10 +334,9 @@ DEFINE mov____0x32,%r2 04909fe5002099e5000000ea
 # e1a01009        mov     r1, r9
 DEFINE xchg___%r0,%r1 0090a0e10100a0e10910a0e1
 
-# e1a0900e        mov     r9, lr
 # e49de004        pop     {lr}            ; (ldr lr, [sp], #4)
-# e1a0f009        mov     pc, r9
-DEFINE ret 0e90a0e104e09de409f0a0e1
+# e1a0f00e        mov     pc, lr
+DEFINE ret 04e09de40ef0a0e1
 
 # The flags are also updated, but that's probably useless.
 DEFINE add____$i8,%esp d09de2
