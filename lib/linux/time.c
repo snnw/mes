@@ -22,7 +22,7 @@
 #include <syscall.h>
 #include <time.h>
 
-#if SYS_time
+#if defined (SYS_time)
 
 time_t
 time (time_t * result)
@@ -30,7 +30,7 @@ time (time_t * result)
   return _sys_call1 (SYS_time, (long) result);
 }
 
-#elif SYS_gettimeofday
+#elif defined (SYS_gettimeofday)
 
 #include <sys/time.h>
 
