@@ -19,6 +19,7 @@
  */
 
 #include <setjmp.h>
+#include <stdlib.h>
 
 void
 longjmp (jmp_buf env, int val)
