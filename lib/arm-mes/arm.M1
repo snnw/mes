@@ -174,7 +174,7 @@ DEFINE push___%lr 04e02de5 # str lr, [sp, #-4]!
 #DEFINE shl____$i8,%r1 xx # complicated encoding
 #DEFINE sub____$8,%r13 xx
 #DEFINE sub____$i32,%r13 xx
-DEFINE sub____%r1,%r0 e0500001 # subs    r0, r0, r1
+DEFINE sub____%r1,%r0 010050e0 # subs    r0, r0, r1
 #DEFINE test___%al,%al xx
 DEFINE test___%r0,%r0 000010e1
 DEFINE test___%r1,%r1 010011e1
