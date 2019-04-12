@@ -193,6 +193,43 @@ DEFINE xor____%r1,%r1 011031e0 # eors    r1, r1, r1
 DEFINE xor____%r3,%r3 033033e0 # eors    r3, r3, r3
 
 # Note: These are the native ARM instructions.
+# Note: i8 immediate
+DEFINE ldr____%r0,(%fp,+#$i8) 009be5
+DEFINE ldr____%r1,(%fp,+#$i8) 109be5
+DEFINE ldr____%r2,(%fp,+#$i8) 209be5
+DEFINE ldr____%r3,(%fp,+#$i8) 309be5
+DEFINE ldr____%r4,(%fp,+#$i8) 409be5
+DEFINE ldr____%r5,(%fp,+#$i8) 509be5
+DEFINE ldr____%r7,(%fp,+#$i8) 709be5
+DEFINE ldr____%fp,(%fp,+#$i8) b09be5
+DEFINE ldr____%sp,(%fp,+#$i8) d09be5
+DEFINE ldr____%r0,(%fp,-#$i8) 001be5
+DEFINE ldr____%r1,(%fp,-#$i8) 101be5
+DEFINE ldr____%r2,(%fp,-#$i8) 201be5
+DEFINE ldr____%r3,(%fp,-#$i8) 301be5
+DEFINE ldr____%r4,(%fp,-#$i8) 401be5
+DEFINE ldr____%r5,(%fp,-#$i8) 501be5
+DEFINE ldr____%r7,(%fp,-#$i8) 701be5
+DEFINE ldr____%fp,(%fp,-#$i8) b01be5
+DEFINE ldr____%sp,(%fp,-#$i8) d01be5
+DEFINE str____%r0,(%fp,+#$i8) 008be5
+DEFINE str____%r1,(%fp,+#$i8) 108be5
+DEFINE str____%r2,(%fp,+#$i8) 208be5
+DEFINE str____%r3,(%fp,+#$i8) 308be5
+DEFINE str____%r4,(%fp,+#$i8) 408be5
+DEFINE str____%r5,(%fp,+#$i8) 508be5
+DEFINE str____%r7,(%fp,+#$i8) 708be5
+DEFINE str____%fp,(%fp,+#$i8) b08be5
+DEFINE str____%sp,(%fp,+#$i8) d08be5
+DEFINE str____%r0,(%fp,-#$i8) 000be5
+DEFINE str____%r1,(%fp,-#$i8) 100be5
+DEFINE str____%r2,(%fp,-#$i8) 200be5
+DEFINE str____%r3,(%fp,-#$i8) 300be5
+DEFINE str____%r4,(%fp,-#$i8) 400be5
+DEFINE str____%r5,(%fp,-#$i8) 500be5
+DEFINE str____%r7,(%fp,-#$i8) 700be5
+DEFINE str____%fp,(%fp,-#$i8) b00be5
+DEFINE str____%sp,(%fp,-#$i8) d00be5
 # Note: Loads INTO register r0 (ARM original operand order)
 DEFINE ldrsb__%r0,(%r0) d000d0e1  # ldrsb   r0, [r0]
 DEFINE ldrsb__%r1,(%r1) d010d1e1  # ldrsb   r1, [r1]
@@ -295,25 +332,6 @@ DEFINE pop____%ebp 04b09de4 # ldr fp, [sp], #4
 DEFINE mov____%esp,%ebp 0db0a0e1 # mov     fp, sp
 DEFINE mov____%ebp,%esp 0bd0a0e1 # mov sp, fp
 DEFINE sub____$i8,%esp d04de2 # sub     sp, sp, #xx
-
-# Note: i8 immediate
-DEFINE mov____%r0,0x8(%ebp) 008be5
-DEFINE mov____%r1,0x8(%ebp) 108be5
-DEFINE mov____%r2,0x8(%ebp) 208be5
-DEFINE mov____%r3,0x8(%ebp) 308be5
-DEFINE mov____%r4,0x8(%ebp) 408be5
-DEFINE mov____%r5,0x8(%ebp) 508be5
-DEFINE mov____%r7,0x8(%ebp) 908be5
-# Note: i8 immediate
-DEFINE mov____0x8(%ebp),%r0 009be5
-DEFINE mov____0x8(%ebp),%r1 109be5
-DEFINE mov____0x8(%ebp),%r2 209be5
-DEFINE mov____0x8(%ebp),%r3 309be5
-DEFINE mov____0x8(%ebp),%r4 409be5
-DEFINE mov____0x8(%ebp),%r5 509be5
-DEFINE mov____0x8(%ebp),%r7 909be5
-DEFINE mov____0x8(%ebp),%ebp b09be5
-DEFINE mov____0x8(%ebp),%esp d09be5
 
 DEFINE jmp____*%r1 11ff2fe1
 

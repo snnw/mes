@@ -73,7 +73,11 @@
   (let ((r (get-r info))
         (n (- 0 (* 4 n))))
     (if (< (abs n) #x80)
-        `(((#:immediate1 ,n) ,(string-append "mov____0x8(%ebp),%" r)))
+        (if (< n 0)
+           `(((#:immediate1 ,(abs n))
+              ,(string-append "ldr____%" r ",(%fp,-#$i8)")))
+           `(((#:immediate1 ,n)
+              ,(string-append "ldr____%" r ",(%fp,+#$i8)"))))
         `((,(string-append "mov____0x32(%ebp),%" r) (#:immediate ,n))))))
 
 (define (armv4:r0+r1 info)
@@ -117,7 +121,11 @@
   (let ((n (+ (- 0 (* 4 id)) n))
         (r (get-r info)))
     `(,(if (< (abs n) #x80)
-           `((#:immediate1 ,n) ,(string-append "mov____%" r ",0x8(%ebp)"))
+           (if (< n 0)
+              `((#:immediate1 ,(abs n))
+                ,(string-append "str____%" r ",(%fp,-#$i8)"))
+              `((#:immediate1 ,n)
+                ,(string-append "str____%" r ",(%fp,+#$i8)")))
            `(,(string-append "mov____%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 ;; FIXME: Implement M1 part.
