@@ -35,9 +35,6 @@ DEFINE PC F
 DEFINE IMMEDIATE32BOX 000000ea
 
 # The E means "always".
-#DEFINE add____$i32,(%r0) xx
-#DEFINE add____$i32,(%r1) xx
-#DEFINE add____$i32,0x32(%r0) xx
 #                     020090e0 # adds r0, r0, r2; ADDS = '0' op3 op1 '09' op2 'e0'
 #                     030091e0 # adds r0, r1, r3
 #                     031091e0 # adds r1, r1, r3
@@ -47,11 +44,6 @@ DEFINE add____$i8,%r0   0090e2 # adds r0, r0, #xx; ADDSI = immediate op1 '09' op
 #                       1090e2 # adds r1, r0, #xx; ADDSI = immediate op1 '09' op2 'e2'
 DEFINE add____$i8,%r1   1091e2 # adds    r1, r1, #xx
 DEFINE add____$i8,%r13  d09de2 # adds    r13, r13, #xx
-#DEFINE add____$i8,(%r0) xx
-#DEFINE add____$i8,(%r1) xx
-#DEFINE add____$i8,0x32 xx
-#DEFINE add____$i8,0x32(%r0) xx
-#DEFINE add____$i8,0x8(%r0) xx
 DEFINE add____%r0,%r0 000090e0 # adds    r0, r0, r0
 DEFINE add____%r0,%r1 001091e0 # adds    r1, r1, r0
 DEFINE add____%r1,%r0 010090e0 # adds    r0, r0, r1
@@ -59,18 +51,11 @@ DEFINE add____%r1,%r1 011091e0 # adds    r1, r1, r1
 DEFINE and____%r1,%r0 010010e0 # ands    r0, r0, r1
 DEFINE and____$i8,%r0 0000e2
 DEFINE and____$i8,%r1 1001e2
-#DEFINE call32 xx
 DEFINE call___*%r0 00f0a0e1
 DEFINE call___*%r1 01f0a0e1
-#DEFINE cltd xx
-#DEFINE cmp____$0x32,%r0 xx
-#DEFINE cmp____$i32,%r0 xx
 DEFINE cmp____$i8,%r0 0050e3
 DEFINE cmp____$i8,%r1 0051e3
-#DEFINE div___%r1 xx
 DEFINE hlt 700000e1
-#DEFINE idiv___%r1 xx
-#DEFINE int xx
 DEFINE swi____$0 000000ef
 DEFINE ja 8a
 DEFINE jae 3a
@@ -82,8 +67,6 @@ DEFINE jge aa
 DEFINE jl ba
 DEFINE jle da
 DEFINE jne 1a
-#DEFINE lea____0x32(%ebp),%r0 xx
-#DEFINE lea____0x8(%ebp),%r0 xx
 
 # e3a00064        mov     r0, #100
 # e3a01064        mov     r1, #100
@@ -105,7 +88,6 @@ DEFINE mov____%r0,%r2 0020a0e1
 DEFINE mov____%r0,(%r1) 000081e5
 DEFINE mov____%r1,%r0 0100a0e1
 DEFINE mov____%r1,%r2 0120a0e1
-#DEFINE mov____%r1,0x32 xx
 DEFINE mov____%esp,%r0 0d00a0e1
 
 # fp -> r0
@@ -139,12 +121,9 @@ DEFINE mov____$i32,%r0 00009fe5000000ea
 DEFINE mov____$i32,%r1 00109fe5000000ea
 DEFINE mov____$i32,%r2 00209fe5000000ea
 DEFINE mov____$i32,%r7 00709fe5000000ea
-#DEFINE mov____%r1,0x32(%ebp) xx
-#DEFINE mov____%r1,0x8(%ebp) xx
 DEFINE mov____%r2,(%r1) 002081e5
 DEFINE mov____%r3,%r0 0300a0e1
 DEFINE mov____%r3,%r1 0e10a0e1
-#DEFINE mov____%r13,%ebp xx
 DEFINE mov____(%r0),%r0 000090e5
 DEFINE mov____(%r0),%r2 002090e5
 DEFINE mov____(%r1),%r1 001091e5
@@ -172,20 +151,9 @@ DEFINE push___%r2 04202de5 # str r2, [sp, #-4]!
 DEFINE push___%r3 04302de5 # str r3, [sp, #-4]!
 DEFINE push___%lr 04e02de5 # str lr, [sp, #-4]!
 
-#DEFINE push___(%r0) xx
-#DEFINE push___0x32(%ebp) xx
-#DEFINE push___0x8(%ebp) xx
-#DEFINE shl____$i8,%r0 xx # complicated encoding
-#DEFINE shl____$i8,%r1 xx # complicated encoding
-#DEFINE sub____$8,%r13 xx
-#DEFINE sub____$i32,%r13 xx
 DEFINE sub____%r1,%r0 010050e0 # subs    r0, r0, r1
-#DEFINE test___%al,%al xx
 DEFINE test___%r0,%r0 000010e1
 DEFINE test___%r1,%r1 010011e1
-#DEFINE xchg___%r0,%r1 xx
-#DEFINE xchg___%r0,(%r13) xx
-#DEFINE xchg___%r1,(%r13) xx
 DEFINE xor____$i8,%r0 0030e2 # eors    r0, r0, #xx
 DEFINE xor____%r0,%r0 000030e0 # eors    r0, r0, r0
 DEFINE xor____%r1,%r0 010030e0 # eors    r0, r0, r1
@@ -272,10 +240,6 @@ DEFINE movcc__%r1,$i8   10a033    # movcc   r1, #xx
 DEFINE movhi__%r1,$i8   10a083    # movhi   r1, #xx
 DEFINE moveq__%r1,$i8   10a003    # moveq   r1, #xx
 
-#DEFINE movseq_%r0,$i8   00b003    # movseq  r0, #xx
-#DEFINE movs___%r0,$i8   00b0e3    # movs    r0, #xx
-#DEFINE teq____%r0,%r0   000030e1  # teq     r0, r0
-#DEFINE teq____%r1,$i8   420031e3  # teq     r1, #xx
 DEFINE asr____%r0,%r0,%r1 5001a0e1  # asr %r0, %r0, %r1
 DEFINE lsl____%r0,%r0,%r1 1001a0e1  # lsl %r0, %r0, %r1
 DEFINE lsl____%r0,%r0,$i8 90a0e31009a0e1 # mov     r9, #xx; lsl %r0, %r0, %r9
@@ -294,10 +258,6 @@ DEFINE uxtb__%r0,%r0 7000efe6
 DEFINE uxtb__%r1,%r1 7110efe6
 DEFINE uxth__%r0,%r0 7000ffe6
 DEFINE uxth__%r1,%r1 7110ffe6
-
-# deprecated, remove after 0.18
-#DEFINE sub____%r13,$i32 ec81
-#DEFINE sub____%r13,$i8 ec83
 
 # See: https://github.com/torvalds/linux/blob/v4.19/arch/arm/tools/syscall.tbl
 DEFINE SYS_exit   01
@@ -364,10 +324,6 @@ DEFINE ret 04e09de40ef0a0e1
 
 # The flags are also updated, but that's probably useless.
 DEFINE add____$i8,%esp d09de2
-#DEFINE add____$i32,0x32(%ebp) xx
-#DEFINE add____$i8,0x32(%ebp) xx
-#DEFINE add____$i8,0x8(%ebp) xx
-#DEFINE add____%ebp,%r0 xx
 
 # e24ddeff        sub     sp, sp, #4080
 # e24dd064        sub     sp, sp, #100
