@@ -22,7 +22,7 @@ void
 _exit ()
 {
   asm ("SYS_exit mov____$i8,%r7");
-  asm ("!8 mov____0x8(%ebp),%r0");
+  asm ("!8 ldr____%r0,(%fp,+#$i8)");
   asm ("swi____$0");
 }
 
@@ -30,8 +30,8 @@ void
 _write ()
 {
   asm ("SYS_write mov____$i8,%r7");
-  asm ("!8 mov____0x8(%ebp),%r0");
-  asm ("!12 mov____0x8(%ebp),%r1");
-  asm ("!16 mov____0x8(%ebp),%r2");
+  asm ("!8 ldr____%r0,(%fp,+#$i8)");
+  asm ("!12 ldr____%r1,(%fp,+#$i8)");
+  asm ("!16 ldr____%r2,(%fp,+#$i8)");
   asm ("swi____$0");
 }

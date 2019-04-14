@@ -24,45 +24,45 @@
 int
 __sys_call (int sys_call)
 {
-  asm ("!8 mov____0x8(%ebp),%r7");
+  asm ("!8 ldr____%r7,(%fp,+#$i8)");
   asm ("swi____$0");
 }
 
 int
 __sys_call1 (int sys_call, int one)
 {
-  asm ("!8 mov____0x8(%ebp),%r7");
-  asm ("!12 mov____0x8(%ebp),%r0");
+  asm ("!8 ldr____%r7,(%fp,+#$i8)");
+  asm ("!12 ldr____%r0,(%fp,+#$i8)");
   asm ("swi____$0");
 }
 
 int
 __sys_call2 (int sys_call, int one, int two)
 {
-  asm ("!8 mov____0x8(%ebp),%r7");
-  asm ("!12 mov____0x8(%ebp),%r0");
-  asm ("!16 mov____0x8(%ebp),%r1");
+  asm ("!8 ldr____%r7,(%fp,+#$i8)");
+  asm ("!12 ldr____%r0,(%fp,+#$i8)");
+  asm ("!16 ldr____%r1,(%fp,+#$i8)");
   asm ("swi____$0");
 }
 
 int
 __sys_call3 (int sys_call, int one, int two, int three)
 {
-  asm ("!8 mov____0x8(%ebp),%r7");
-  asm ("!12 mov____0x8(%ebp),%r0");
-  asm ("!16 mov____0x8(%ebp),%r1");
-  asm ("!20 mov____0x8(%ebp),%r2");
+  asm ("!8 ldr____%r7,(%fp,+#$i8)");
+  asm ("!12 ldr____%r0,(%fp,+#$i8)");
+  asm ("!16 ldr____%r1,(%fp,+#$i8)");
+  asm ("!20 ldr____%r2,(%fp,+#$i8)");
   asm ("swi____$0");
 }
 
 int
 __sys_call4 (int sys_call, int one, int two, int three, int four)
 {
-  asm ("!8 mov____0x8(%ebp),%r7");
-  asm ("!12 mov____0x8(%ebp),%r0");
-  asm ("!16 mov____0x8(%ebp),%r1");
-  asm ("!20 mov____0x8(%ebp),%r2");
-  asm ("!24 mov____0x8(%ebp),%r3");
+  asm ("!8 ldr____%r7,(%fp,+#$i8)");
+  asm ("!12 ldr____%r0,(%fp,+#$i8)");
+  asm ("!16 ldr____%r1,(%fp,+#$i8)");
+  asm ("!20 ldr____%r2,(%fp,+#$i8)");
+  asm ("!24 ldr____%r3,(%fp,+#$i8)");
   asm ("swi____$0");
 }
 
