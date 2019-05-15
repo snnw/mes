@@ -345,13 +345,13 @@ DEFINE xchg___%r0,(%esp) 0090a0e100009de500908de5
 # e52d1004        push    {r1}            ; (str r1, [sp, #-4]!)
 # e59f1010        ldr     r1, [pc, #16]   ; 1c <WERT>
 # e5909000        ldr     r9, [r0]
-# e0811009        add     r1, r1, r9
+# e0999001        adds    r9, r9, r1
 # e5809000        str     r9, [r0]
 # e49d1004        pop     {r1}            ; (ldr r1, [sp], #4)
 # ea000000        b       20 <VD>
 # V: ...
 # VD:
-DEFINE add____$i32,(%r0) 04102de510109fe5009090e5091081e0009080e504109de4000000ea
+DEFINE add____$i32,(%r0) 04102de510109fe5009090e5019099e0009080e504109de4000000ea
 
 # mov %r9, #00
 # push {%r9}
