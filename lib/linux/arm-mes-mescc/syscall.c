@@ -67,6 +67,19 @@ __sys_call4 (int sys_call, int one, int two, int three, int four)
 }
 
 int
+__sys_call6 (int sys_call, int one, int two, int three, int four, int five, int six)
+{
+  asm ("!8 ldr____%r7,(%fp,+#$i8)");
+  asm ("!12 ldr____%r0,(%fp,+#$i8)");
+  asm ("!16 ldr____%r1,(%fp,+#$i8)");
+  asm ("!20 ldr____%r2,(%fp,+#$i8)");
+  asm ("!24 ldr____%r3,(%fp,+#$i8)");
+  asm ("!28 ldr____%r4,(%fp,+#$i8)");
+  asm ("!32 ldr____%r5,(%fp,+#$i8)");
+  asm ("swi____$0");
+}
+
+int
 _sys_call (int sys_call)
 {
   int r = __sys_call (sys_call);
@@ -126,6 +139,20 @@ int
 _sys_call4 (int sys_call, int one, int two, int three, int four)
 {
   int r = __sys_call4 (sys_call, one, two, three, four);
+  if (r < 0)
+    {
+      errno = -r;
+      r = -1;
+    }
+  else
+    errno = 0;
+  return r;
+}
+
+int
+_sys_call6 (int sys_call, int one, int two, int three, int four, int five, int six)
+{
+  int r = __sys_call6 (sys_call, one, two, three, four, five, six);
   if (r < 0)
     {
       errno = -r;
