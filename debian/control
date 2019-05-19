@@ -2,7 +2,7 @@ Source: mes
 Section: devel
 Priority: extra
 Maintainer: Vagrant Cascadian <vagrant@debian.org>
-Build-Depends: debhelper (>=11),
+Build-Depends: debhelper-compat (=12),
  guile-2.2,
  guile-2.2-dev,
  mescc-tools,
