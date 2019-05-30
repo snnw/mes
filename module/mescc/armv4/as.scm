@@ -486,7 +486,11 @@
   (let* ((n (+ (- 0 (* 4 id)) n))
          (r (get-r info)))
     `(,(if (< (abs n) #x80)
-           `((#:immediate1 ,n) ,(string-append "strh___%" r ",0x8(%ebp)"))
+           (if (< n 0)
+               `((#:immediate1 ,(abs n))
+                 ,(string-append "strh___%" r ",(%fp,-#$i8)"))
+               `((#:immediate1 ,n)
+                 ,(string-append "strh___%" r ",(%fp,+#$i8)")))
            `(,(string-append "strh___%" r ",0x32(%ebp)") (#:immediate ,n))))))
 
 (define (armv4:r-and info v)
