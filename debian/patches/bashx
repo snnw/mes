@@ -1,0 +1,45 @@
+Index: mes/build-aux/build.sh.in
+===================================================================
+--- mes.orig/build-aux/build.sh.in
++++ mes/build-aux/build.sh.in
+@@ -24,20 +24,20 @@ set -e
+ . ${srcdest}build-aux/config.sh
+ 
+ if [ -n "$GUILE" -a "$GUILE" != true ]; then
+-    sh ${srcdest}build-aux/build-guile.sh
++   bash -x ${srcdest}build-aux/build-guile.sh
+ fi
+ 
+ if [ ! "$mes_p" ]; then
+-    sh ${srcdest}build-aux/snarf.sh
++   bash -x ${srcdest}build-aux/snarf.sh
+ #elif [ ! -d "$MES_SEED" ]; then
+ #else
+ fi
+-sh ${srcdest}build-aux/snarf.sh --mes
++bash -x ${srcdest}build-aux/snarf.sh --mes
+ 
+ if [ "$gcc_p$tcc_p" ]; then
+-    sh ${srcdest}build-aux/build-mes.sh
++   bash -x ${srcdest}build-aux/build-mes.sh
+ elif [ -d "$MES_SEED" ]; then
+-    sh ${srcdest}build-aux/bootstrap-mes.sh
++   bash -x ${srcdest}build-aux/bootstrap-mes.sh
+ fi
+ 
+ ## FIXME: remove this and have user configure/build/install for each compiler?
+@@ -49,12 +49,12 @@ mes_arch=x86-mes
+ program_prefix=$mes_arch-
+ CC="./pre-inst-env mescc"
+ 
+-sh ${srcdest}build-aux/build-mes.sh
++bash -x ${srcdest}build-aux/build-mes.sh
+ cp src/${program_prefix}mes src/mes
+ 
+ if [ "$arch" = x86_64 ]; then
+     MES_CFLAGS='-m 64'
+     mes_arch=x86_64-mes
+     program_prefix=$mes_arch-
+-    sh ${srcdest}build-aux/build-mes.sh
++   bash -x ${srcdest}build-aux/build-mes.sh
+ fi
