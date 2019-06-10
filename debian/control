@@ -18,7 +18,8 @@ Homepage: https://www.gnu.org/software/mes/
 Package: mes
 Architecture: any
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends},
+ guile-2.2,
 Description: Maxwell Equations of Software
  Mes aims to help create full source bootstrapping for GuixSD as part
  of the bootstrappable builds effort.
