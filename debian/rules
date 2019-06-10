@@ -21,4 +21,4 @@ override_dh_strip:
 	dh_strip --exclude=.go
 
 override_dh_dwz:
-	dh_dwz --exclude=.go
+	dh_dwz --exclude=.go --exclude=mes
