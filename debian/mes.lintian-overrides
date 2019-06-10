@@ -1,0 +1,4 @@
+# These are guile byte-compiled objects
+mes binary: unstripped-binary-or-object *.go
+mes binary: binary-from-other-architecture *.go
+mes binary: shared-lib-without-dependency-information *.go
