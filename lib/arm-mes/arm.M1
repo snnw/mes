@@ -340,16 +340,22 @@ DEFINE add____$i8,%esp d09de2
 # e24dd064        sub     sp, sp, #100
 DEFINE allocate_stack_4180 ffde4de264d04de2
 
-# e59f9014        ldr     r9, [pc, #20]
+# e59f9008        ldr     r9, [pc, #8]
 # e089900b        add     r9, r9, fp
 # e5991000        ldr     r1, [r9]
-DEFINE mov____0x32(%ebp),%r1 14909fe50b9089e0001099e5
-DEFINE mov____0x32(%ebp),%r0 14909fe50b9089e0000099e5
+# ea000000        b       20 <VD>
+# V: ...
+# VD:
+DEFINE mov____0x32(%ebp),%r1 08909fe50b9089e0001099e5000000ea
+DEFINE mov____0x32(%ebp),%r0 08909fe50b9089e0000099e5000000ea
 
 # e1a09000        mov     r9, r0
 # e59d0000        ldr     r0, [sp]
 # e58d9000        str     r9, [sp]
-DEFINE xchg___%r0,(%esp) 0090a0e100009de500908de5
+# ea000000        b       20 <VD>
+# V: ...
+# VD:
+DEFINE xchg___%r0,(%esp) 0090a0e100009de500908de5000000ea
 
 # e52d1004        push    {r1}            ; (str r1, [sp, #-4]!)
 # e59f1010        ldr     r1, [pc, #16]   ; 1c <WERT>
