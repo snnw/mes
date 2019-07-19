@@ -233,6 +233,12 @@ DEFINE strh___%r4,(%r4) b040c4e1  # strh    r4, [r4]
 # strh %r0, [%r9]
 DEFINE strh___%r0,(%fp,+#$i8) 90a0e30b9099e0b000c9e1
 
+# There's a single instruction that does it--but I don't know how to encode it.
+# e3a090xx  mov %r9, immediate
+# e05b9009  subs %r9, %fp, %r9
+# e1c900b0  strh %r0, [%r9]
+DEFINE strh___%r0,(%fp,-#$i8) 90a0e309905be0b000c9e1
+
 DEFINE movle__%r0,$i8   00a0d3    # movle  r0, #xx
 DEFINE movlt__%r0,$i8   00a0b3    # movlt  r0, #xx
 DEFINE movge__%r0,$i8   00a0a3    # movge  r0, #xx
