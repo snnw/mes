@@ -1,5 +1,5 @@
-mes (0.19+152.b3fa6273-1~0) UNRELEASED; urgency=low
+mes (0.19+145.b3fa6273-1~0) UNRELEASED; urgency=low
 
-  * Initial release from git commit b3fa6273. Closes: #902174
+  * Initial release from git commit 856afdd6. Closes: #902174
 
- -- Vagrant Cascadian <vagrant@debian.org>  Mon, 10 Jun 2019 11:29:58 -0700
+ -- Vagrant Cascadian <vagrant@debian.org>  Wed, 14 Aug 2019 10:50:26 -0700
