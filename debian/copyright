@@ -3,95 +3,57 @@ Upstream-Name: mes
 Source: https://git.savannah.gnu.org/cgit/mes.git
 
 Files:     *
-Copyright: 1989-1992 Free Software Foundation, Inc.
+Copyright: 1989-2016 Free Software Foundation, Inc.
            2016-2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
            2017 Jan Nieuwenhuizen <janneke@gnu.org>
            2018 Han-Wen Nienhuys <hanwen@xs4all.nl>
            2016-2018 Jeremiah Orians <jeremiah@pdp10.guru>
-		   2008-2016 Free Software Foundation, Inc.
-		   2008 Derek Peschel
+           2008 Derek Peschel
            2016 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
-		   2015 David Thompson <davet@gnu.org>
+           2015 David Thompson <davet@gnu.org>
+           2005-2007 Oleg Kiselyov
+           2007 Daniel P. Friedman
+           2004 Andy Wingo <wingo at pobox dot com>
+           2001 Oleg Kiselyov <oleg at pobox dot com>
+           1991, Marc Feeley
 License:   GPL-3.0+
 
-Files:     module/mes/peg/cache.scm
-           module/mes/peg/codegen.scm
-           module/mes/peg/simplify-tree.scm
-           module/mes/peg/string-peg.scm
-           module/mes/peg/using-parsers.scm
-Copyright: 2010-2011 Free Software Foundation, Inc.
-License:   LGPL-3.0+
-
-Files:     module/mes/pretty-print.scm
-           module/srfi/srfi-26.scm
-Copyright: 2001-2006 Free Software Foundation, Inc.
-License:   LGPL-2.1+
-
-Files:     module/mes/quasisyntax.scm
+Files:     mes/module/mes/quasisyntax.scm
 Copyright: 2006 Andre van Tonder.
 License:   Expat
 
-Files:     lib/getopt.c
+Files:     lib/posix/getopt.c
 Copyright: 1987-1992 Free Software Foundation, Inc.
            2017-2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 License:   GPL-2.0+
+
+Files:     mes/module/mes/psyntax.ss
+Copyright: 1992-1997 Cadence Research Systems
+           2001-2006 Free Software Foundation, Inc.
+License: GPL-3.0+ and PERMISSIVE-alt
 
 Files:     module/mes/getopt-long.scm
 Copyright: 1998-2006 Free Software Foundation, Inc.
            2017-2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 License:   LGPL-2.1+
 
-Files:     module/mes/psyntax.ss
-Copyright: 1992-1997 Cadence Research Systems
-           2001-2006 Free Software Foundation, Inc.
-License:   LGPL-2.1+
-
-Files:     module/srfi/srfi-1.scm
-Copyright: 2001-2006 Free Software Foundation, Inc.
-License:   LGPL-2.1+
-
 Files:     module/mes/optargs.scm
 Copyright: 1997-2006 Free Software Foundation, Inc.
 License:   LGPL-3.0+
 
-Files:     module/mes/lalr.scm
+Files:     mes/module/mes/lalr.scm
 Copyright: 1993-2010 Dominique Boucher
            2014 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
-License:   LGPL-3.0+
-
-Files:     module/mes/pmatch.scm
-Copyright: 2005-2007 Oleg Kiselyov
-           2007 Daniel P. Friedman
-           2009-2012 Free Software Foundation, Inc
-           2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 License:   LGPL-3.0+
 
 Files:     NEWS
 Copyright: 2016-2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 License:   PERMISSIVE
 
-Files:     module/srfi/srfi-16.scm
-Copyright: 2001-2006 Free Software Foundation, Inc.
-License:   LGPL-2.1+
-
-Files:     module/sxml/xpath.scm
-Copyright: 2009 Free Software Foundation, Inc.
-License:   LGPL-3.0+
-
-Files:     guile/mes-0.scm
-Copyright: 2016-2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
-License:   GPL-3.0+
-
-Files:     lib/x86-mes/x86.M1
-Copyright: 2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
-License:   GPL-3.0+
-
-Files:     module/mes/syntax.scm
+Files:     mes/module/mes/syntax.scm
 Copyright: 1993-2004 Richard Kelsey and Jonathan Rees
-           1993-2004 Richard Kelsey and Jonathan Rees.
-           1993-2004 Richard Kelsey and Jonathan Rees. See file COPYING.
            2016 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
-License:   GPL-3.0+ or BSD-3-Clause
+License:   GPL-3.0+ and BSD-3-Clause
 
 License: BSD-3-Clause
  Redistribution and use in source and binary forms, with or without
@@ -208,3 +170,9 @@ License:   PERMISSIVE
  Copying and distribution of this file, with or without modification,
  are permitted in any medium without royalty provided the copyright
  notice and this notice are preserved.
+
+License: PERMISSIVE-alt
+ Permission to copy this software, in whole or in part, to use this
+ software for any lawful purpose, and to redistribute this software
+ is granted subject to the restriction that all copies made of this
+ software must include this copyright notice in full.
