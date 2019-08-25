@@ -264,7 +264,10 @@ DEFINE lsl____%r1,%r1,$i8 90a0e31119a0e1 # mov     r9, #xx; lsl %r1, %r1, %r9
 DEFINE lsr____%r0,%r0,%r1 3001a0e1  # lsr %r0, %r0, %r1
 DEFINE ldr____%r0,(%sp,#$i8) 009de5  # ldr r0, [r13+xx]
 DEFINE ldr____%r1,(%sp,#$i8) 109de5  # ldr r1, [r13+xx]
-DEFINE add____%r2,%r0,%r1,lsl#4 012280e0
+#DEFINE add____%r2,%r0,%r1,lsl#4 012280e0
+# Without carry
+DEFINE add____%r2,%r0,%r1,lsl#2 012180e0
+DEFINE add____%r2,%r1,%r0,lsl#2 002181e0
 DEFINE add____%r2,$i8 2082e2
 DEFINE bl eb
 DEFINE b ea

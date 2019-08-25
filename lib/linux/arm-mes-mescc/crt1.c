@@ -32,7 +32,7 @@ sp   -> argc
 
 environ = &argv[argc + 1]
 
-HOWEVER, the function entry already allocated space for locals on the stack (after saving fp, which moved sp again).  Hence, use fp instead of sp.
+HOWEVER, the function entry already allocated space for locals on the stack (after saving lr and fp, which moved sp again).  Hence, use fp instead of sp.
 */
 
   /* stdin = 0 */
@@ -52,9 +52,9 @@ HOWEVER, the function entry already allocated space for locals on the stack (aft
 
   /* Add "environ" to main's arguments */
 
-  asm ("!4 ldr____%r0,(%fp,+#$i8)"); /* "argc" */
-  asm ("!8 ldr____%r1,(%fp,+#$i8)"); /* "argv" */
-  asm ("add____%r2,%r0,%r1,lsl#4"); /* "environ": argv + argc */
+  asm ("!8 ldr____%r0,(%fp,+#$i8)"); /* "argc" */
+  asm ("!12 ldr____%r1,(%fp,+#$i8)"); /* "argv" */
+  asm ("add____%r2,%r1,%r0,lsl#2"); /* "environ": argv + argc */
   asm ("!4 add____%r2,$i8"); /* "environ": argv + argc + 1 */
 
   asm ("push___%r2");
