@@ -47,6 +47,10 @@ $CC -E \
     -U __GNUC__\
     -D const=\
     -D enum=\
+    -D function0_t=FUNCTION\
+    -D function1_t=FUNCTION\
+    -D function2_t=FUNCTION\
+    -D function3_t=FUNCTION\
     -D functionn_t=FUNCTION\
     -D gid_t=int\
     -D intptr_t=int\
