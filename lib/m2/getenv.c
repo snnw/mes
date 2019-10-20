@@ -1,6 +1,6 @@
-/* -*-comment-start: "//";comment-end:""-*-
+/* -*-comment-start: "
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,22 +18,30 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <string.h>
+#include <stdlib.h>
 
-int
-memcmp (void const *s1, void const *s2, size_t size)
+char *
+getenv (char *s)
 {
-  if (size == 0)
-    return 0;
-
-  char const *a = s1;
-  char const *b = s2;
-
-  while (a[0] == b[0] && size > 0)
+  /* eputs ("\ngetenv s="); eputs (s); eputs ("\n"); */
+  char **p = environ;
+  int length = strlen (s);
+  while (p[0] != 0)
     {
-      size = size - 1;
-      a = a + 1;
-      b = b + 1;
+      /* eputs ("getenv p[0]="); eputs (p[0]); eputs ("\n"); */
+      if (strncmp (s, p[0], length) == 0)
+        {
+          /* eputs ("found!\n"); */
+          char *q = p[0] + length;
+          if (q[0] == '=')
+            return q + 1;
+        }
+      /* else */
+      /*   eputs ("not found!\n"); */
+      p = p + sizeof (char *); /* FIXME! */
     }
-  return a[0] - b[0];
+
+  return 0;
 }

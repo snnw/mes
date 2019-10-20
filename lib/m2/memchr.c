@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -20,20 +20,18 @@
 
 #include <string.h>
 
-int
-memcmp (void const *s1, void const *s2, size_t size)
+void *
+memchr (void *block, int c, size_t size)
 {
-  if (size == 0)
-    return 0;
+  char *p = block;
 
-  char const *a = s1;
-  char const *b = s2;
-
-  while (a[0] == b[0] && size > 0)
+  while (size != 0)
     {
       size = size - 1;
-      a = a + 1;
-      b = b + 1;
+      if (c == p[0])
+        return p;
+      p = p + 1;
     }
-  return a[0] - b[0];
+
+  return 0;
 }

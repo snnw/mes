@@ -1,6 +1,6 @@
-/* -*-comment-start: "//";comment-end:""-*-
+/* -*-comment-start: "
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -20,20 +20,32 @@
 
 #include <string.h>
 
-int
-memcmp (void const *s1, void const *s2, size_t size)
+char *
+strcpy (char *dest, char *src)
 {
-  if (size == 0)
-    return 0;
+  /* eputs ("\nstrcpy: src="); */
+  /* eputs (src); */
+  /* eputs ("\n"); */
+  char *p = dest;
+  char *orig = dest;
 
-  char const *a = s1;
-  char const *b = s2;
+  /* eputs ("dest="); */
+  /* eputs (dest); */
+  /* eputs ("\n"); */
 
-  while (a[0] == b[0] && size > 0)
+  /* eputs ("c:" ); */
+  while (0 != src[0])
     {
-      size = size - 1;
-      a = a + 1;
-      b = b + 1;
+      /* eputc (src[0]); */
+      /* eputs (" "); */
+      dest[0] = src[0];
+      dest = dest + 1;
+      src = src + 1;
     }
-  return a[0] - b[0];
+  dest[0] = 0;
+  /* eputs ("\n   => orig="); */
+  /* eputs (orig); */
+  /* eputs ("\n"); */
+
+  return p;
 }

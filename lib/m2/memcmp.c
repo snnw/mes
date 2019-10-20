@@ -21,13 +21,13 @@
 #include <string.h>
 
 int
-memcmp (void const *s1, void const *s2, size_t size)
+memcmp (void *s1, void *s2, int size)
 {
   if (size == 0)
     return 0;
 
-  char const *a = s1;
-  char const *b = s2;
+  char *a = s1;
+  char *b = s2;
 
   while (a[0] == b[0] && size > 0)
     {

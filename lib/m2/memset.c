@@ -20,20 +20,15 @@
 
 #include <string.h>
 
-int
-memcmp (void const *s1, void const *s2, size_t size)
+void *
+memset (void *s, int c, int n)
 {
-  if (size == 0)
-    return 0;
-
-  char const *a = s1;
-  char const *b = s2;
-
-  while (a[0] == b[0] && size > 0)
+  char *p = s;
+  while (n != 0)
     {
-      size = size - 1;
-      a = a + 1;
-      b = b + 1;
+      n = n - 1;
+      s[0] = c;
+      s = s + 1;
     }
-  return a[0] - b[0];
+  return p;
 }
