@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -24,7 +24,11 @@ void *
 memset (void *s, int c, size_t n)
 {
   char *p = s;
-  while (n--)
-    *p++ = c;
-  return s;
+  while (n != 0)
+    {
+      n = n - 1;
+      s[0] = c;
+      s = s + 1;
+    }
+  return p;
 }
