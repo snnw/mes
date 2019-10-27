@@ -76,6 +76,7 @@ gc_init ()
   MAX_ARENA_SIZE = 100000000;
 #elif !__M2_PLANET__
   JAM_SIZE = 10;
+#if !__M2_PLANET__
   MAX_ARENA_SIZE = 10000000;
 #else
   JAM_SIZE = 10;
@@ -107,15 +108,16 @@ gc_init ()
     MAX_STRING = atoi (p);
 
   long arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);
-#if !POINTER_CELLS
-  long alloc_bytes = arena_bytes + (STACK_SIZE * sizeof (SCM));
+#if !POINTER_CELLS || GC_NOFLIP
+  long alloc_bytes = arena_bytes + (STACK_SIZE * sizeof (struct scm));
 #else
   long alloc_bytes = (arena_bytes * 2) + (STACK_SIZE * sizeof (struct scm*));
 #endif
+
   g_arena = malloc (alloc_bytes);
   g_cells = g_arena;
 
-#if !POINTER_CELLS
+#if !POINTER_CELLS || GC_NOFLIP
   g_stack_array = g_arena + arena_bytes;
 #else
   g_stack_array = g_arena + (arena_bytes * 2);
@@ -327,11 +329,16 @@ gc_init_news ()
   g_news = g_cells + g_free;
   SCM ncell_arena = cell_arena;
 #else
+
+#if GC_NOFLIP
+  g_news = g_free;
+#else
   char* p = g_cells - M2_CELL_SIZE;
   if (p == g_arena)
     g_news = g_free;
   else
     g_news = g_arena;
+#endif
 
   SCM ncell_arena = g_news;
 #endif
@@ -395,14 +402,138 @@ gc_up_arena ()
   g_cells = g_cells + M2_CELL_SIZE;
 }
 
+/* A pointer relocating memcpy for pointer cells to avoid using only
+   half of the allocated cells.
+
+   For number based cells a simply memcpy could be used, as number
+   references are relative.
+
+   A simple stop and copy (SICP 5.3) garbage collector allocates twice
+   the cell arena size only for the garbage collector.  The garbage
+   collector switches back and forth between cells and news, thus
+   utilizing only half the allocated memory. */
+void
+gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
+{
+  void *p = src;
+  void *q = dest;
+  long dist = p - q;
+  while (n != 0)
+    {
+      long t = src->type;
+      long a = src->car;
+      long d = src->cdr;
+      dest->type = t;
+      if (t == TBROKEN_HEART)
+        {
+          dest->type = 0;
+          a = 0;
+          d = 0;
+#if 0
+          assert_msg (0, "gc_cellcpy: broken heart");
+#endif
+        }
+      if (t == TMACRO
+          || t == TPAIR
+          || t == TREF
+          || t == TVARIABLE)
+        dest->car = a - dist;
+      else
+        dest->car = a;
+      if (t == TBYTES
+          || t == TCLOSURE
+          || t == TCONTINUATION
+          || t == TKEYWORD
+          || t == TMACRO
+          || t == TPAIR
+          || t == TPORT
+          || t == TSPECIAL
+          || t == TSTRING
+          || t == TSTRUCT
+          || t == TSYMBOL
+          || t == TVALUES
+          || t == TVECTOR)
+        dest->cdr = d - dist;
+      else
+        dest->cdr = d;
+      if (t == TBYTES)
+        {
+#if GC_TEST
+          eputs ("copying bytes[");
+          eputs (ntoab (cell_bytes (src), 16, 0));
+          eputs (", ");
+          eputs (ntoab (a, 10, 0));
+          eputs ("]: ");
+          eputs (cell_bytes (&src));
+          eputs ("\n to [");
+          eputs (ntoab (cell_bytes (dest), 16, 0));
+#endif
+          memcpy (cell_bytes (dest), cell_bytes (src), a);
+#if GC_TEST
+          eputs ("]: ");
+          eputs (cell_bytes (&dest));
+          eputs ("\n");
+#endif
+          int i = bytes_cells (a);
+          n = n - i;
+          int c = i * M2_CELL_SIZE;
+          dest = dest + c;
+          src = src + c;
+        }
+      else
+        {
+          n = n - 1;
+          dest = dest + M2_CELL_SIZE;
+          src = src + M2_CELL_SIZE;
+        }
+    }
+}
+
+/* We do not actually flip cells and news, instead we move news back to
+   cells. */
 void
 gc_flip ()
 {
 #if POINTER_CELLS
+  if (g_free - g_news > JAM_SIZE)
+    JAM_SIZE = (g_free - g_news) + ((g_free - g_news) / 2);
+
+#if GC_NOFLIP
+  cell_arena = g_cells - M2_CELL_SIZE; /* FIXME? */
+  gc_cellcpy (g_cells, g_news, (g_free - g_news) / M2_CELL_SIZE);
+
+  void *p = g_news;
+  void *q = g_cells;
+  long dist = p - q;
+
+  long i;
+  i = g_free;
+  g_free = i - dist;
+#if !GC_TEST
+  i = g_symbols;
+  g_symbols = i - dist;
+  i = g_macros;
+  g_macros = i - dist;
+  i = g_ports;
+  g_ports = i - dist;
+  i = M0;
+  M0 = i - dist;
+#endif
+
+  for (i = g_stack; i < STACK_SIZE; i = i + 1)
+    {
+      long s = g_stack_array[i];
+      /* copy_stack (i, gc_copy (g_stack_array[i])); */
+      g_stack_array[i] = s - dist;
+    }
+
+#else
+
   g_cells = g_news;
   cell_arena = g_news - M2_CELL_SIZE;
   cell_zero = cell_arena + M2_CELL_SIZE;
   cell_nil = cell_zero + M2_CELL_SIZE;
+#endif
 #endif
 
   if (g_debug > 2)
@@ -488,7 +619,14 @@ gc_loop (SCM scan)
     {
       long t = NTYPE (scan);
       if (t == TBROKEN_HEART)
-        assert_msg (0, "broken heart");
+        {
+          NTYPE (scan) = 0;
+          NCAR (scan) = 0;
+          NCDR (scan) = 0;
+#if 0
+          assert_msg (0, "gc_loop: broken heart");
+#endif
+        }
       /* *INDENT-OFF* */
       if (t == TMACRO
           || t == TPAIR
@@ -582,8 +720,9 @@ gc_ ()
   for (s = cell_nil; s < g_symbol_max; s = s + M2_CELL_SIZE)
     gc_copy (s);
 
-#if POINTER_CELLS
+#if POINTER_CELLS && !GC_NOFLIP
   cell_nil = new_cell_nil;
+  cell_arena = g_news - M2_CELL_SIZE; /* for debugging */
 
 #if GC_TEST
   cell_zero = cell_nil - M2_CELL_SIZE;
@@ -599,13 +738,16 @@ gc_ ()
 
 #endif
 
+#if !GC_TEST
   g_symbols = gc_copy (g_symbols);
   g_macros = gc_copy (g_macros);
   g_ports = gc_copy (g_ports);
   M0 = gc_copy (M0);
+
   long i;
   for (i = g_stack; i < STACK_SIZE; i = i + 1)
     copy_stack (i, gc_copy (g_stack_array[i]));
+#endif
 
   gc_loop (new_cell_nil);
 }
