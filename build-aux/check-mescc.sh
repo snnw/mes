@@ -256,6 +256,7 @@ fi
 if test $mes_cpu = x86_64; then
     XFAIL_TESTS="$XFAIL_TESTS
 lib/tests/stdio/70-printf-stdarg.c
+lib/tests/dirent/90-readdir.c
 "
 fi
 
