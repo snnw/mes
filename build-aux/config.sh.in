@@ -84,8 +84,45 @@ srcdir=${srcdir-"@srcdir@"}
 sysconfdir="@sysconfdir@"
 top_builddir="@top_builddir@"
 
+
 MES_PREFIX=${MES_PREFIX-$abs_top_srcdir}
 
+debug=${debug--g}
+
+AM_CFLAGS="
+-static
+$debug
+"
+
+if test $mes_libc = mes; then
+    AM_CFLAGS="$AM_CFLAGS
+-nostdinc
+-nostdlib
+-fno-builtin
+"
+fi
+
+AM_CPPFLAGS="
+-D HAVE_CONFIG_H=1
+-I ${srcdest}include
+-I ${srcdest}include/$mes_kernel/$mes_cpu
+"
+
+AM_LDFLAGS="
+$debug
+-L .
+"
+if test $mes_libc = mes; then
+    AM_LDFLAGS="$AM_LDFLAGS
+-nostdlib
+"
+fi
+LIBS=-lc
+
+export AM_CFLAGS CFLAGS
+export AM_CPPFLAGS CPPFLAGS
+export AM_LDFLAGS LDFLAGS
+export LIBS
 export PACKAGE
 export PACKAGE_NAME
 export PACKAGE_BUGREPORT
