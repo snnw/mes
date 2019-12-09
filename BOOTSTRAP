@@ -8,24 +8,24 @@ Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
   notice and this notice are preserved.
 
 * What?
-** Full source bootstrapping for GNU Guix
+** Full source bootstrapping for the GNU System
 
-A package in Guix is uniquely identified by the hash of its source code,
-its dependencies, and its build recipe.
+A package in GNU Guix is uniquely identified by the hash of its source
+code, its dependencies, and its build recipe.
 
 Every package can be built from source, except for the bootstrap
 binaries.
 
-*** From the Guix manual
+*** From the GNU Guix manual
 
-   The distribution is fully “bootstrapped” and “self-contained”: each
+The distribution is fully “bootstrapped” and “self-contained”: each
 package is built based solely on other packages in the distribution.
 
 The root of this dependency graph is a small set of “bootstrap
 binaries”, provided by the ‘(gnu packages bootstrap)’ module.  For more
 information on bootstrapping, *note Bootstrapping::.
 
-**** Guix bootstrap tarballs
+**** Guix v1.0 bootstrap binary seed
 
 $ du -schx $(readlink $(guix build bootstrap-tarballs)/*)
 2.1M	/gnu/store/9623n4bq6iq5c8cwwdq99qb7d0xj93ym-binutils-static-stripped-tarball-2.28.1/binutils-static-stripped-2.28.1-x86_64-linux.tar.xz
@@ -43,6 +43,43 @@ $ du -schx *
 51M	libexec
 5.2M	share
 252M	total
+
+**** Guix Reduced Binary Seed bootstrap binary seed
+
+$ du -schx $(readlink $(guix build bootstrap-tarballs)/*)
+5.7M	/gnu/store/9f8gi8raqfx9j3l9d00qrrc0jg3r1kyj-guile-static-stripped-tarball-2.2.6/guile-static-stripped-2.2.6-x86_64-linux.tar.xz
+80K	/gnu/store/b6rjl52hibhmvyw4dg8678pwryhla0h2-linux-libre-headers-stripped-tarball-4.19.56/linux-libre-headers-stripped-4.19.56-x86_64-linux.tar.xz
+12K	/gnu/store/d7zlxsjcnqilmvqwx7scija9x9bjw8cw-mescc-tools-static-stripped-tarball-0.5.2-0.bb062b0/mescc-tools-static-stripped-0.5.2-0.bb062b0-x86_64-linux.tar.xz
+428K	/gnu/store/n7zc4kpi8ny6jlfaikkzxlwhc5fvr1vr-mes-minimal-stripped-tarball-0.19/mes-minimal-stripped-0.19-x86_64-linux.tar.xz
+6.0M	/gnu/store/nv4djwlrljfqmynqr2cqvfwz0ydx7kxb-static-binaries-tarball-0/static-binaries-0-x86_64-linux.tar.xz
+13M	total
+$ for i in $(readlink $(guix build bootstrap-tarballs)/*);\
+  do sudo tar xf $i; done
+Password:
+$ du -schx *
+93M	bin
+700K	include
+38M	lib
+14M	share
+145M	total
+
+**** Guix Scheme-only bootstrap binary seed
+
+$ du -schx $(readlink $(~/src/guix/wip-bootstrap/pre-inst-env guix build bootstrap-tarballs)/*)
+388K	/gnu/store/49giv6b94zbv2pjl6a9ycgy5ny9x3jbc-gash-bootstrap-guile-tarball-0.1-9.32188ac/gash-bootstrap-guile-0.1-9.32188ac-x86_64-linux.tar.xz
+5.7M	/gnu/store/47qxvqs7rm7agdp86lxr2jzvval5hkqc-guile-static-stripped-tarball-2.2.6/guile-static-stripped-2.2.6-x86_64-linux.tar.xz
+80K	/gnu/store/l6m2rmqs31mc9w7rl99xxl6m35x7fg6v-linux-libre-headers-stripped-tarball-4.19.56/linux-libre-headers-stripped-4.19.56-x86_64-linux.tar.xz
+280K	/gnu/store/gnz5mlnzcb0nkaiyad5smblalfjvi8xc-mescc-tools-static-stripped-tarball-0.6.1/mescc-tools-static-stripped-0.6.1-x86_64-linux.tar.xz
+352K	/gnu/store/p32p46x5iic0sff2wcf5gilddvfibb19-mes-minimal-stripped-tarball-0.21/mes-minimal-stripped-0.21-x86_64-linux.tar.xz
+6.7M	total
+$ for i in $(readlink $(~/src/guix/wip-bootstrap/pre-inst-env guix build bootstrap-tarballs)/*);\
+  do sudo tar xf $i; done
+$ du -schx *
+6.2M	bin
+988K	include
+42M	lib
+8.3M	share
+58M	total
 
 * Why?
 ** Reproducibility is essential to Software Freedom
@@ -92,20 +129,22 @@ be source.
 
 *** mes.c: a Scheme interpreter in ~5,000LOC of simple C
 *** mescc: a C compiler written in Scheme (uses Nyacc C99 parser in Scheme)
-*** mes.M2: this Scheme interpreter in preprocessed M2
+*** mes.M2: this Scheme interpreter in bootstrappable M2
 
 ** TinyCC
 
     https://gitlab.com/janneke/tinycc
 
 * TODO
+** merge scheme-only bootstrap into Guix.
+** reduced binary seed bootstrap into NixOS, Debian.
 ** remove or upstream patches from tcc-boot
 ** prepare src/mes.c for M2-Planet transpiler.
 ** ARM, the Hurd
 ** fix bootstrap-loops: (Nyacc?, mes.M2, psyntax.pp?)
 ** make GNU gcc (8.0?) bootstrappable again, remove [need for] tcc stage
 * DONE
-** upstream mes-boot to Guix.
+** reduced binary seed bootstrap into Guix.
 ** replace Guix bootstrap for x86_64.
 ** replace Guix bootstrap for x86.
 ** add full source gcc-4.7 package build.
@@ -121,5 +160,6 @@ be source.
 ** tcc compiled with gcc is known to compile gcc
 
 * Contact
+** bug-mes@gnu.org
 ** #bootstrappable, #guix on freenode
 ** bootstrappable.org
