@@ -86,3 +86,13 @@ https://git.savannah.gnu.org/cgit/guix.git/tree/gnu/packages/commencement.scm
    #+BEGIN_SRC bash
    sh install.sh
    #+END_SRC
+* Regular build and bootstrap combine
+
+To build mes.c using MesCC, configure using --with-bootstrap:
+
+   #+BEGIN_SRC bash
+   ./configure --with-bootstrap
+   make
+   #+END_SRC
+
+This creates bin/mes-gcc and bin/mes-mescc.
