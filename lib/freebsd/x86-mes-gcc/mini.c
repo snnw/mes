@@ -30,8 +30,6 @@ _exit (int code)
   asm (
        "mov    $"SYS_exit",%%eax\n\t"
        "mov    %0,%%ebx\n\t"
-       "push   %%ebx\n\t"
-       "push   %%ebx\n\t"
        "int    $0x80\n\t"
        : // no outputs "=" (r)
        : "rm" (code)
@@ -47,13 +45,9 @@ _write (int filedes, void const *buffer, size_t size)
   long r;
   asm (
        "mov    $"SYS_write",%%eax\n\t"
-       "mov    %3,%%edx\n\t"
-       "push   %%edx\n\t"
-       "mov    %2,%%ecx\n\t"
-       "push   %%ecx\n\t"
        "mov    %1,%%ebx\n\t"
-       "push   %%ebx\n\t"
-       "push   %%ebx\n\t"
+       "mov    %2,%%ecx\n\t"
+       "mov    %3,%%edx\n\t"
        "int    $0x80\n\t"
        "mov    %%eax,%0\n\t"
        : "=r" (r)
