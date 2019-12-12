@@ -1,5 +1,5 @@
                                                               -*- org -*-
-#+TITLE: Tentative GNU Mes Road Map
+#+TITLE: Tentative GNU MES Road Map
 
 Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
@@ -7,7 +7,7 @@ Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
-The goals of the GNU Mes project are two-fold:
+The goals of the GNU MES project are two-fold:
 
   - to bootstrap the GNU System purely from source, without using any binary
     seeds.
@@ -16,7 +16,7 @@ The goals of the GNU Mes project are two-fold:
     importance of GNU and Software Freedom.
 
 Since its inception, the project has gone a long way towards that goal.  Below
-is a list of items we want for version "1.0" of GNU Mes.
+is a list of items we want for version "1.0" of GNU MES.
 
 You're welcome to discuss this road map on bug-mes@gnu.org or #bootstrappable
 on Freenode!
@@ -33,15 +33,15 @@ on Freenode!
     branches: wip-full-source-bootstrap, wip-m2-merge and wip-m2.
   - Full Guile-compatible module support: define-module, define-public,
     export, use-modules, ...
-  - ARMv7/AArch64 support: Mes C Library and MesCC.
+  - ARMv7/AArch64 support: MES C Library and MESCC.
   - Simplify eval-apply and other core functionality (see mes-m2).
   - Support native x86_64 bootstrap.
-  - Simplify MesCC ``MesCC should optimize ease of convincing us of its
+  - Simplify MESCC ``MESCC should optimize ease of convincing us of its
     correctness''
   - tcc: remove or upstream patches from tcc-boot.
   - tcc: build 0.9.27 directly instead of via 0.9.26, see tinycc
 ** after release 1.0
-  - Build Guix packages using Mes: run or simplify (guix build utils),
+  - Build Guix packages using MES: run or simplify (guix build utils),
     (guix build gnu-build-system).
   - Build Guix packages without guix-daemon.  See Ludovic's initrd build
     work.
@@ -49,7 +49,7 @@ on Freenode!
   - Replace the initial gcc-2.95.3 with gcc-4.6.4.
   - FreeBSD, *BSD?
     wip-bootstrappable@0.9.27 branch
-  - Skip tcc: Build gcc using MesCC.
+  - Skip tcc: Build gcc using MESCC.
   - better garbage collector.
   - mes/mescc: proper docstrings, api reference documentation.
   - mes/mescc: bootstrap a minimal Guile?
@@ -61,7 +61,7 @@ on Freenode!
       https://srfi.schemers.org/srfi-72/srfi-72.html, or
     + ... drop it?
 * DONE
-  - 0.22 GNU Mes now builds reproducibly cross-platform, runs on the
+  - 0.22 GNU MES now builds reproducibly cross-platform, runs on the
     Hurd and has better support for other distributions and kernels.
   - 0.21 GNU Mes now supports a Scheme-only bootstrap and is packaged in
     Debian GNU/Linux.

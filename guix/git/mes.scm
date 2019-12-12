@@ -1,24 +1,24 @@
-;;; GNU Mes --- Maxwell Equations of Software
+;;; GNU MES --- Maxwell Equations of Software
 ;;; Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
-;;; This file is part of GNU Mes.
+;;; This file is part of GNU MES.
 ;;;
 ;;; Also borrowing code from:
 ;;; guile-sdl2 --- FFI bindings for SDL2
 ;;; Copyright © 2015 David Thompson <davet@gnu.org>
 ;;;
-;;; GNU Mes is free software; you can redistribute it and/or modify it
+;;; GNU MES is free software; you can redistribute it and/or modify it
 ;;; under the terms of the GNU General Public License as published by
 ;;; the Free Software Foundation; either version 3 of the License, or (at
 ;;; your option) any later version.
 ;;;
-;;; GNU Mes is distributed in the hope that it will be useful, but
+;;; GNU MES is distributed in the hope that it will be useful, but
 ;;; WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
-;;; along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+;;; along with GNU MES.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (git mes)
   #:use-module (srfi srfi-1)
@@ -74,7 +74,7 @@
                   (delete 'configure))))
     (synopsis "Tools for the full source bootstrapping process")
     (description
-     "Mescc-tools is a collection of tools for use in a full source
+     "MEScc-tools is a collection of tools for use in a full source
 bootstrapping process.  It consists of the M1 macro assembler, the hex2
 linker, the blood-elf symbol table generator, the kaem shell, exec_enable and
 get_machine.")
@@ -142,7 +142,7 @@ extensive examples, including parsers for the Javascript and C99 languages.")
          ,@(if (string-prefix? "x86_64-linux" (or (%current-target-system)
                                                   (%current-system)))
                ;; Use cross-compiler rather than #:system "i686-linux" to get
-               ;; MesCC 64 bit .go files installed ready for use with Guile.
+               ;; MESCC 64 bit .go files installed ready for use with Guile.
                `(("i686-linux-binutils" ,(cross-binutils triplet))
                  ("i686-linux-gcc" ,(cross-gcc triplet)))
                '())
@@ -151,10 +151,10 @@ extensive examples, including parsers for the Javascript and C99 languages.")
          ("perl" ,perl)                ; build-aux/gitlog-to-changelog
          ("texinfo" ,texinfo)))
       (arguments
-       `(#:strip-binaries? #f)) ; binutil's strip b0rkes MesCC/M1/hex2 binaries
+       `(#:strip-binaries? #f)) ; binutil's strip b0rkes MESCC/M1/hex2 binaries
       (synopsis "Scheme interpreter and C compiler for full source bootstrapping")
       (description
-       "GNU Mes--Maxwell Equations of Software--brings the Reduced Binary Seed
+       "GNU MES--Maxwell Equations of Software--brings the Reduced Binary Seed
 bootstrap to Guix and aims to help create full source bootstrapping for
 GNU/Linux distributions.  It consists of a mutual self-hosting Scheme
 interpreter in C and a Nyacc-based C compiler in Scheme and is compatible with

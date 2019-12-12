@@ -1,22 +1,22 @@
 #! /bin/sh
 
-# GNU Mes --- Maxwell Equations of Software
+# GNU MES --- Maxwell Equations of Software
 # Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
-# This file is part of GNU Mes.
+# This file is part of GNU MES.
 #
-# GNU Mes is free software; you can redistribute it and/or modify it
+# GNU MES is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or (at
 # your option) any later version.
 #
-# GNU Mes is distributed in the hope that it will be useful, but
+# GNU MES is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+# along with GNU MES.  If not, see <http://www.gnu.org/licenses/>.
 
 set -ex
 
@@ -83,7 +83,7 @@ MES_DEBUG=4 MES=out-system-libc/mes tests/base.test
 # GC test
 MES_DEBUG=3 MES_ARENA=10000 MES_MAX_ARENA=10000 MES_BOOT=scaffold/gc-test.scm out-system-libc/mes
 
-# MesCC test
+# MESCC test
 MES_DEBUG=2 MES=out-system-libc/mes sh -x scripts/mescc -m $mes_bits -nostdlib\
          -I include -I include/$mes_kernel/$mes_cpu\
          -o out-system-libc/hello\
@@ -105,7 +105,7 @@ if [ $r != 42 ]; then
 fi
 
 ################################################################################
-# Mes C lib build
+# MES C lib build
 
 # To get a i686-unknown-linux-gnu-gcc, you may do:
 #    guix environment -l guix.scm
@@ -244,7 +244,7 @@ MES_DEBUG=4 MES=out-mes/mes tests/base.test
 # GC test
 MES_DEBUG=3 MES_ARENA=10000 MES_MAX_ARENA=10000 MES_BOOT=scaffold/gc-test.scm out-mes/mes
 
-# MesCC test
+# MESCC test
 MES_DEBUG=2 MES=out-mes/mes sh -x scripts/mescc -m $mes_bits -nostdlib\
          -I include -I include/$mes_kernel/$mes_cpu\
          -o out-mes/hello\

@@ -4,7 +4,7 @@
 @c %**start of header
 @setfilename mes.info
 @documentencoding UTF-8
-@settitle GNU Mes Reference Manual
+@settitle GNU MES Reference Manual
 @c %**end of header
 
 @include version.texi
@@ -25,15 +25,15 @@ Documentation License''.
 
 @dircategory Bootstrapping
 @direntry
-* Mes: (mes).       A system bootstrap worthy of GNU.
+* MES: (mes).       A system bootstrap worthy of GNU.
 
 
-* mes: (mes)Invoking mes.       Running Mes, a minimalist Guile lookalike.
-* mescc: (mes)Invoking mescc.   Running the MesCC bootstrap compiler.
+* mes: (mes)Invoking mes.       Running MES, a minimalist Guile lookalike.
+* mescc: (mes)Invoking mescc.   Running the MESCC bootstrap compiler.
 @end direntry
 
 @titlepage
-@title GNU Mes Reference Manual
+@title GNU MES Reference Manual
 @subtitle Full Source Bootstrapping for the GNU system
 @author Jan (janneke) Nieuwenhuizen
 
@@ -49,14 +49,14 @@ Edition @value{EDITION} @*
 
 @c *********************************************************************
 @node Top, Introduction, (dir), (dir)
-@top GNU Mes
+@top GNU MES
 
-This document describes GNU Mes version @value{VERSION}, a bootstrappable
+This document describes GNU MES version @value{VERSION}, a bootstrappable
 Scheme interpreter and C compiler written for bootstrapping the GNU system.
 
 @menu
-* Introduction::                What is Mes about?
-* Installation::                Installing Mes.
+* Introduction::                What is MES about?
+* Installation::                Installing MES.
 * Bootstrapping::               Would you strap my boots?
 * Contributing::                Your help needed!
 * Acknowledgments::             Thanks!
@@ -77,15 +77,15 @@ Software Freedom
 
 Installation
 
-* Regular Requirements::        Software needed to build and run Mes.
-* Bootstrap Requirements::      Software needed to bootstrap Mes.
-* Running the Test Suites::     Testing Mes.
+* Regular Requirements::        Software needed to build and run MES.
+* Bootstrap Requirements::      Software needed to bootstrap MES.
+* Running the Test Suites::     Testing MES.
 
 Bootstrapping
 
-* The Mes Bootstrap Process::   How Mes will make you yogurt from pure milk.
-* Invoking mes::                Running Mes, a minimalist Guile lookalike.
-* Invoking mescc::              Running the MesCC bootstrap compiler.
+* The MES Bootstrap Process::   How MES will make you yogurt from pure milk.
+* Invoking mes::                Running MES, a minimalist Guile lookalike.
+* Invoking mescc::              Running the MESCC bootstrap compiler.
 * Invoking mesar::
 
 Invoking mes
@@ -94,13 +94,13 @@ Invoking mes
 
 Invoking mescc
 
-* MesCC Environment Variables::  There's no NIX like POSIX.
+* MESCC Environment Variables::  There's no NIX like POSIX.
 
 Contributing
 
 * Building from Git::           The latest and greatest.
-* Running Mes From the Source Tree::  Hacker tricks.
-* Porting GNU Mes::             Teach Mes about your platform.
+* Running MES From the Source Tree::  Hacker tricks.
+* Porting GNU MES::             Teach MES about your platform.
 * The Perfect Setup::           The right tools.
 * Coding Style::                Hygiene of the contributor.
 * Submitting Patches::          Share your work.
@@ -118,11 +118,11 @@ These were “Maxwell’s Equations of Software!”
 @author Alan Kay
 @end quotation
 
-The purpose of GNU Mes@footnote{``Mes'' is an acronym for the Maxwell
+The purpose of GNU MES@footnote{``MES'' is an acronym for the Maxwell
 Equations of Software.} is to help create a computer operating system
 that we can trust.
 
-Mes consists of a mutual self-hosting Scheme interpreter written in C
+MES consists of a mutual self-hosting Scheme interpreter written in C
 and a Nyacc-based (see @pxref{NYACC User's Guide,,, nyacc-ug, NYACC
 User's Guide}) C compiler written in Scheme.  The Scheme interpreter
 @file{mes.c} is about 5,000LOC of restricted C, to be compiled with
@@ -433,7 +433,7 @@ to somehow close the gap to building the bootstrap binary seed, esp. GNU
 Gcc and the GNU C Library.  What better way to do that than by
 leveraging the powers of LISP?
 
-GNU Mes is a Scheme@footnote{Scheme is a modern LISP} interpreter that
+GNU MES is a Scheme@footnote{Scheme is a modern LISP} interpreter that
 will be indirectly bootstrapped from @file{hex0} and that wields the
 magical powers of LISP to close the bootstrap gap, asserting we can
 enjoy software Freedom 1.
@@ -475,7 +475,7 @@ a few helper functions---describe the core of the universe of computing.
 It will be a big day when our computers are fully bootstrapped from
 source.  It would be nice if that source code were readable, auditable
 and elegant.  To be honest, the elegance displayed above that we
-achieved at the very start of the Mes project is currently hard to find.
+achieved at the very start of the MES project is currently hard to find.
 It is our sincerest hope to bring back this level of quality and
 elegance..
 
@@ -483,28 +483,28 @@ elegance..
 @node Installation, Bootstrapping, Introduction, Top
 @chapter Installation
 
-@cindex installing Mes
-Mes is available for download from its website at
+@cindex installing MES
+MES is available for download from its website at
 @url{https://www.gnu.org/pub/gnu/mes/}.  This section describes the
-software requirements of Mes, as well as how to install it and get ready
+software requirements of MES, as well as how to install it and get ready
 to use it.
 
 
 @menu
-* Regular Requirements::        Software needed to build and run Mes.
-* Bootstrap Requirements::      Software needed to bootstrap Mes.
-* Running the Test Suites::     Testing Mes.
+* Regular Requirements::        Software needed to build and run MES.
+* Bootstrap Requirements::      Software needed to bootstrap MES.
+* Running the Test Suites::     Testing MES.
 @end menu
 
 @node Regular Requirements, Bootstrap Requirements, Installation, Installation
 @section Regular Requirements
 
-This section lists requirements when building Mes from source.  The
-build procedure for Mes is the same as for other GNU software, and is
+This section lists requirements when building MES from source.  The
+build procedure for MES is the same as for other GNU software, and is
 not covered here.  Please see the files @file{README} and @file{INSTALL}
-in the Mes source tree for additional details.
+in the MES source tree for additional details.
 
-GNU Mes depends on the following packages:
+GNU MES depends on the following packages:
 
 @itemize
 @item @url{http://gnu.org/software/guile/, GNU Guile}, version 2.0.13 or
@@ -516,15 +516,15 @@ later, including 2.2.x;
 @end itemize
 
 @cindex Guile, compatibility
-Mes is compatible with GNU Guile, so it is possible to share the same
-Scheme code between both.  Currently Mes only supports the minimal
-subset of R5RS and Guile extensions to run MesCC.
+MES is compatible with GNU Guile, so it is possible to share the same
+Scheme code between both.  Currently MES only supports the minimal
+subset of R5RS and Guile extensions to run MESCC.
 
 @node Bootstrap Requirements, Running the Test Suites, Regular Requirements, Installation
 @section Bootstrap Requirements
 
-This section lists requirements when building Mes as a bootstrap
-package.  The bootstrap build procedure for Mes is similar to building
+This section lists requirements when building MES as a bootstrap
+package.  The bootstrap build procedure for MES is similar to building
 GNU software and goes like this
 
 @example
@@ -537,7 +537,7 @@ sh install.sh
 See @file{configure.sh} and @file{bootstrap.sh} for inspiration on what
 environment variables to set.
 
-Bootstrapping Mes depends on the following packages:
+Bootstrapping MES depends on the following packages:
 
 @itemize
 @item a POSIX-compatible shell
@@ -556,32 +556,32 @@ idea to run the test suites.
 make check
 @end example
 
-Run Mes Scheme language semantics tests (@file{scaffold/boot}) only
+Run MES Scheme language semantics tests (@file{scaffold/boot}) only
 
 @example
 build-aux/check-boot.sh
 @end example
 
-Run a single Mes boot test
+Run a single MES boot test
 
 @example
 MES_BOOT=scaffold/boot/00-zero.scm bin/mes
 @end example
 
-Run a single Mes Scheme test
+Run a single MES Scheme test
 
 @example
 ./pre-inst-env tests/boot.test
 MES=guile ./pre-inst-env tests/boot.test
 @end example
 
-Run MesCC tests only
+Run MESCC tests only
 
 @example
 build-aux/check-mescc.sh
 @end example
 
-Run a single MesCC test
+Run a single MESCC test
 
 @example
 CC=gcc CC32=i686-unknown-linux-gnu-gcc MES=guile \
@@ -627,14 +627,14 @@ bootstrapping is not a technical one, it is a lack of awareness and
 responsibility.
 
 @menu
-* The Mes Bootstrap Process::   How Mes will make you yogurt from pure milk.
-* Invoking mes::                Running Mes, a minimalist Guile lookalike.
-* Invoking mescc::              Running the MesCC bootstrap compiler.
+* The MES Bootstrap Process::   How MES will make you yogurt from pure milk.
+* Invoking mes::                Running MES, a minimalist Guile lookalike.
+* Invoking mescc::              Running the MESCC bootstrap compiler.
 * Invoking mesar::
 @end menu
 
-@node The Mes Bootstrap Process, Invoking mes, Bootstrapping, Bootstrapping
-@section The Mes Bootstrap Process
+@node The MES Bootstrap Process, Invoking mes, Bootstrapping, Bootstrapping
+@section The MES Bootstrap Process
 
 The Reduced Binary Seed bootstrap currently adopted by Guix@footnote{See
 @file{gnu/packages/commencement.scm} in the @var{master} branch in Guix
@@ -711,12 +711,12 @@ Although we think these are less essential and thus less interesting
 than the GNU toolchain triplet that we focussed on initially, our next
 priority is to eleminate these one by one.
 
-@node Invoking mes, Invoking mescc, The Mes Bootstrap Process, Bootstrapping
+@node Invoking mes, Invoking mescc, The MES Bootstrap Process, Bootstrapping
 @section Invoking mes
 
 @cindex repl
 The @command{mes} command is the Scheme interpreter whose prime
-directive is to run the @command{MesCC} program.
+directive is to run the @command{MESCC} program.
 
 For convenience and testing purposes, @command{mes} tries to mimic
 guile.
@@ -756,7 +756,7 @@ the @code{command-line} function returns a list of strings of the form
 mes executable.
 
 @item -L,--load-path=@var{directory}
-Add @var{directory} to the front of Mes module load path.  The given
+Add @var{directory} to the front of MES module load path.  The given
 directories are searched in the order given on the command line and
 before any directories in the @env{GUILE_LOAD_PATH} environment
 variable.
@@ -802,7 +802,7 @@ mes:
 @item MES_BOOT
 @vindex MES_BOOT
 
-Set @env{Mes_BOOT} to change the initial Scheme program that mes runs.
+Set @env{MES_BOOT} to change the initial Scheme program that mes runs.
 
 @item MES_ARENA
 @vindex MES_ARENA
@@ -861,7 +861,7 @@ of directories.  If it contains the special path component @code{...}
 otherwise the default path is placed at the end.  The result is stored
 in @code{%load-path}.
 
-Mes uses @var{@strong{GUILE}_LOAD_PATH} for compatibility with Guile.
+MES uses @var{@strong{GUILE}_LOAD_PATH} for compatibility with Guile.
 
 @end table
 
@@ -943,22 +943,22 @@ specify LANGUAGE of the following input files
 @end table
 
 @menu
-* MesCC Environment Variables::  There's no NIX like POSIX.
+* MESCC Environment Variables::  There's no NIX like POSIX.
 @end menu
 
-@node MesCC Environment Variables,  , Invoking mescc, Invoking mescc
-@subsection MesCC Environment Variables
+@node MESCC Environment Variables,  , Invoking mescc, Invoking mescc
+@subsection MESCC Environment Variables
 
 @table @env
 @item MES
 @vindex MES
 
-Setting @env{Mes} to a mes-compatible Scheme will run mescc using that
+Setting @env{MES} to a mes-compatible Scheme will run mescc using that
 @example
 MES=guile mescc -c scaffold/main.c
 @end example
 
-See, now Guile has become compatible with Mes, instead of the other way
+See, now Guile has become compatible with MES, instead of the other way
 around ;-)
 
 @item C_INCLUDE_PATH
@@ -1010,27 +1010,27 @@ display version and exit
 
 @menu
 * Building from Git::           The latest and greatest.
-* Running Mes From the Source Tree::  Hacker tricks.
-* Porting GNU Mes::             Teach Mes about your platform.
+* Running MES From the Source Tree::  Hacker tricks.
+* Porting GNU MES::             Teach MES about your platform.
 * The Perfect Setup::           The right tools.
 * Coding Style::                Hygiene of the contributor.
 * Submitting Patches::          Share your work.
 @end menu
 
-@node Building from Git, Running Mes From the Source Tree, Contributing, Contributing
+@node Building from Git, Running MES From the Source Tree, Contributing, Contributing
 @section Building from Git
 
-If you want to hack GNU Mes itself, it is recommended to use the latest
+If you want to hack GNU MES itself, it is recommended to use the latest
 version from the Git repository:
 
 @example
 git clone git://git.savannah.gnu.org/mes.git
 @end example
 
-The easiest way to set up a development environment for Mes is, of
+The easiest way to set up a development environment for MES is, of
 course, by using Guix!  The following command starts a new shell where
 all the dependencies and appropriate environment variables are set up to
-hack on Mes:
+hack on MES:
 
 @example
 guix environment -l .guix.scm
@@ -1041,18 +1041,18 @@ Finally, you have to invoke @code{make check} to run tests
 installation instructions (@pxref{Installation}) or send a message to
 the @email{bug-mes@@gnu.org} mailing list.
 
-@node Running Mes From the Source Tree, Porting GNU Mes, Building from Git, Contributing
-@section Running Mes From the Source Tree
+@node Running MES From the Source Tree, Porting GNU MES, Building from Git, Contributing
+@section Running MES From the Source Tree
 
 First, you need to have an environment with all the dependencies
 available (@pxref{Building from Git}), and then simply prefix each
 command by @command{./pre-inst-env} (the @file{pre-inst-env} script
-lives in the top build tree of Mes).
+lives in the top build tree of MES).
 
-@node Porting GNU Mes, The Perfect Setup, Running Mes From the Source Tree, Contributing
-@section Porting GNU Mes
+@node Porting GNU MES, The Perfect Setup, Running MES From the Source Tree, Contributing
+@section Porting GNU MES
 
-Mes was written for x86-linux.  A 64 bit (x86_64) is almost done, only a
+MES was written for x86-linux.  A 64 bit (x86_64) is almost done, only a
 few bugs remain.  The Guix bootstrap for x86_64 uses x86 mes and that is
 not expected to change.
 
@@ -1070,7 +1070,7 @@ Initial scaffold, built by @file{build-aux/build-scaffold.sh}:
   @file{lib/linux/x86-mes/elf32-body-hello-mes.hex2}
 @end example
 
-Porting MesCC:
+Porting MESCC:
 @example
   @file{lib/x86-mes/x86.M1}
 
@@ -1082,10 +1082,10 @@ Porting MesCC:
   @file{mes/module/mescc/i386/info.mes}
 @end example
 
-@node The Perfect Setup, Coding Style, Porting GNU Mes, Contributing
+@node The Perfect Setup, Coding Style, Porting GNU MES, Contributing
 @section The Perfect Setup
 
-The Perfect Setup to hack on Mes is basically the perfect setup used
+The Perfect Setup to hack on MES is basically the perfect setup used
 for Guile hacking (@pxref{Using Guile in Emacs,,, guile, Guile Reference
 Manual}).  First, you need more than an editor, you need
 @url{http://www.gnu.org/software/emacs, Emacs}, empowered by the
@@ -1106,7 +1106,7 @@ Scheme, so here are some additional rules.
 
 @subsection Programming Paradigm
 
-Scheme code in Mes is written in a purely functional style.
+Scheme code in MES is written in a purely functional style.
 
 @subsection Formatting Code
 
@@ -1124,7 +1124,7 @@ please do read it.
 If you do not use Emacs, please make sure to let your editor knows these
 rules.
 
-Additionally, in Mes we prefer to format @code{if} statements like this
+Additionally, in MES we prefer to format @code{if} statements like this
 @example
 (if foo? trivial-then
     (let ((bar (the-longer @dots{})))
@@ -1148,7 +1148,7 @@ examples.
 @subsection Reporting Bugs
 
 Encountering a problem or bug can be very frustrating for you as a user
-or potential contributor.  For us as Mes maintainers, the preferred bug
+or potential contributor.  For us as MES maintainers, the preferred bug
 report includes a beautiful and tested patch that we can integrate
 without any effort.
 

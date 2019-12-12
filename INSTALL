@@ -1,5 +1,5 @@
                                                               -*- org -*-
-#+TITLE: Building and Installing GNU Mes
+#+TITLE: Building and Installing GNU MES
 
 Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
@@ -7,10 +7,10 @@ Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
   are permitted in any medium without royalty provided the copyright
   notice and this notice are preserved.
 
-Mes can be built in two modes: as a regulare package build or as a
+MES can be built in two modes: as a regulare package build or as a
 bootstrap package.
 
-After bootstrapping Mes it can be used to bootstrap TinyCC (tcc) in a
+After bootstrapping MES it can be used to bootstrap TinyCC (tcc) in a
 similar way.
 
 * Get it
@@ -88,7 +88,7 @@ https://git.savannah.gnu.org/cgit/guix.git/tree/gnu/packages/commencement.scm
    #+END_SRC
 * Regular build and bootstrap combine
 
-To build mes.c using MesCC, configure using --with-bootstrap:
+To build mes.c using MESCC, configure using --with-bootstrap:
 
    #+BEGIN_SRC bash
    ./configure --with-bootstrap

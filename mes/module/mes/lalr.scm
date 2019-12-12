@@ -93,7 +93,7 @@
         (set-source-property! lvalue 'loc (lexical-token-source tok)))
     lvalue))
 
- ;; -- Mes
+ ;; -- MES
   (mes
    (define pprint display)
    (define lalr-keyword? symbol?)

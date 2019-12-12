@@ -1,22 +1,22 @@
 ;;; -*-scheme-*-
 
-;;; GNU Mes --- Maxwell Equations of Software
+;;; GNU MES --- Maxwell Equations of Software
 ;;; Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
-;;; This file is part of GNU Mes.
+;;; This file is part of GNU MES.
 ;;;
-;;; GNU Mes is free software; you can redistribute it and/or modify it
+;;; GNU MES is free software; you can redistribute it and/or modify it
 ;;; under the terms of the GNU General Public License as published by
 ;;; the Free Software Foundation; either version 3 of the License, or (at
 ;;; your option) any later version.
 ;;;
-;;; GNU Mes is distributed in the hope that it will be useful, but
+;;; GNU MES is distributed in the hope that it will be useful, but
 ;;; WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
-;;; along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+;;; along with GNU MES.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -234,7 +234,7 @@
          (version? (option-ref options 'version #f)))
     (or
      (and version?
-          (display (string-append "mes (GNU Mes) " %version "\n"))
+          (display (string-append "mes (GNU MES) " %version "\n"))
           (exit 0))
      (and (or help? usage?)
           (display "Usage: mes [OPTION]... [FILE]...
@@ -260,7 +260,7 @@ Ignored for Guile compatibility:
   -C, --compiled-path=DIR
 
 Report bugs to: bug-mes@gnu.org
-GNU Mes home page: <http://gnu.org/software/mes/>
+GNU MES home page: <http://gnu.org/software/mes/>
 General help using GNU software: <http://gnu.org/gethelp/>
 " (or (and usage? (current-error-port)) (current-output-port)))
           (exit (or (and usage? 2) 0)))

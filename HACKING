@@ -1,5 +1,5 @@
                                                               -*- org -*-
-#+TITLE: Hacking GNU Mes
+#+TITLE: Hacking GNU MES
 
 * SETUP
     guix environment -l guix.scm     #64 bit + 32bit
@@ -8,17 +8,17 @@
 or
     ./configure
 
-The 64bit bootstrap is not supported; MesCC needs work to be able to
+The 64bit bootstrap is not supported; MESCC needs work to be able to
 compile a functional tinycc.
 
 * BUILD
 
-GNU Guile can be used as a replacement for Mes.  It's faster and has
+GNU Guile can be used as a replacement for MES.  It's faster and has
 much better error handling.
 
    #+BEGIN_SRC bash
-   make Mes=guile
-   make check Mes=guile
+   make MES=guile
+   make check MES=guile
    #+END_SRC
 
 Configure to compile with Tiny CC
@@ -49,7 +49,7 @@ Configure to compile with Tiny CC
   6) globals
 
 * Bugs
-** mes: performance, Mes is now 2-10x slower than Guile.
+** mes: performance, MES is now 2-10x slower than Guile.
 ** mes/mescc lack support for fork/exec on the Hurd.
 ** mes: gcc-x86_64 compiled mes segfaults with small arena, or gc_up_arena.
 ** mes: gcc-x86 compiled, tests/srfi-13.test number->string INT-MIN fails:
@@ -71,9 +71,9 @@ actual: -./,),(-*,(
   (modulo 1 #x100000000) => 1
 ** mescc: 7n-struct-struct-array.c:  struct file f = {"first.h"};
 ** test/match.test ("nyacc-simple"): hygiene problem in match
-* OLD: Booting from LISP-1.5 into Mes
+* OLD: Booting from LISP-1.5 into MES
 
-Mes started out experimenting with booting from a hex-coded minimal
+MES started out experimenting with booting from a hex-coded minimal
 LISP-1.5 (prototype in mes.c), into an almost-RRS Scheme.
 
 When EOF is read, the LISP-1.5 machine calls loop2 from loop2.mes,
@@ -103,7 +103,7 @@ p/x $edx
 set disassemble-next-line on
 gdb-display-disassembly-buffer
 b *0x804a79d
-** Create memory dump with 32 bit Gcc compiled Mes
+** Create memory dump with 32 bit Gcc compiled MES
 make out/i686-unknown-linux-gnu-mes
 out/i686-unknown-linux-gnu-mes --dump < module/mes/read-0.mes > module/mes/read-0-32.mo
 

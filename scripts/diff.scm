@@ -7,23 +7,23 @@ fi
 exec ${MES-mes} -L ${0%/*} -e '(diff)' -s "$0" "$@"
 !#
 
-;;; GNU Mes --- Maxwell Equations of Software
+;;; GNU MES --- Maxwell Equations of Software
 ;;; Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
-;;; mes-snarf.scm: This file is part of GNU Mes.
+;;; mes-snarf.scm: This file is part of GNU MES.
 ;;;
-;;; GNU Mes is free software; you can redistribute it and/or modify it
+;;; GNU MES is free software; you can redistribute it and/or modify it
 ;;; under the terms of the GNU General Public License as published by
 ;;; the Free Software Foundation; either version 3 of the License, or (at
 ;;; your option) any later version.
 ;;;
-;;; GNU Mes is distributed in the hope that it will be useful, but
+;;; GNU MES is distributed in the hope that it will be useful, but
 ;;; WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;; GNU General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU General Public License
-;;; along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+;;; along with GNU MES.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (diff)
   #:use-module (srfi srfi-1)
@@ -130,7 +130,7 @@ Options:
     (when (or (equal? (car files) "-V")
               (equal? (car files) "--version"))
       (display "
-diff.scm (GNU Mes) 0.20
+diff.scm (GNU MES) 0.20
 "))
     (let* ((files (if (string-prefix? "-" (car files)) (cdr files) files))
            (hunks (apply diff-files (list-head files 2))))

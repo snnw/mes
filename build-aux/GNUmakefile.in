@@ -1,20 +1,20 @@
-# GNU Mes --- Maxwell Equations of Software
+# GNU MES --- Maxwell Equations of Software
 # Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
-# This file is part of GNU Mes.
+# This file is part of GNU MES.
 #
-# GNU Mes is free software; you can redistribute it and/or modify it
+# GNU MES is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or (at
 # your option) any later version.
 #
-# GNU Mes is distributed in the hope that it will be useful, but
+# GNU MES is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+# along with GNU MES.  If not, see <http://www.gnu.org/licenses/>.
 
 SHELL=@BASH@
 srcdest=@srcdest@
@@ -148,7 +148,7 @@ check:
 check-mescc:
 	$(SHELL) pre-inst-env build-aux/check-mescc.sh
 
-# Mes does not feature post-install checks yet, so we're great!
+# MES does not feature post-install checks yet, so we're great!
 installcheck:
 	true
 
@@ -229,7 +229,7 @@ doc/mescc.1: scripts/mescc src/${program_prefix}mes | build
 
 doc/mesar.1: scripts/mescc src/${program_prefix}mes | build
 	MES_ARENA=10000000 ./pre-inst-env $(HELP2MAN)	\
-	    --name="Archiver for MesCC"			\
+	    --name="Archiver for MESCC"			\
 	    $(<F) > $@
 
 html: doc/html/index.html
@@ -258,7 +258,7 @@ WEB_IMAGES:=\
  doc/images/gcc-mesboot-graph.png
 
 web: info $(WEB_IMAGES)
-	GENDOCS_TEMPLATE_DIR=doc build-aux/gendocs.sh -I doc -s ${srcdest}doc/mes.texi -o doc/web/manual --email bug-mes@gnu.org mes "GNU Mes manual"
+	GENDOCS_TEMPLATE_DIR=doc build-aux/gendocs.sh -I doc -s ${srcdest}doc/mes.texi -o doc/web/manual --email bug-mes@gnu.org mes "GNU MES manual"
 
 ###  dist
 COMMIT=$(shell test -e ${srcdest}.git && (cd ${srcdir} && git describe --dirty 2>/dev/null) || cat ${srcdest}.tarball-version)
@@ -316,7 +316,7 @@ $(warning update-hash: no guix)
 endif
 
 tag:
-	git tag -s v$(VERSION) -m "GNU Mes $(VERSION)."
+	git tag -s v$(VERSION) -m "GNU MES $(VERSION)."
 
 # Release process
 #  0. doc: Release update, Release commit, test guix bootstrap

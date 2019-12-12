@@ -1,7 +1,7 @@
 #+COMMENT:                                                            -*- org -*-
-#+TITLE: Porting GNU Mes
+#+TITLE: Porting GNU MES
 
-* Porting GNU Mes to ARM
+* Porting GNU MES to ARM
 
 The ARM port can be found in wip-arm on savannah.
 
@@ -42,19 +42,19 @@ some failures are expected.
    make check
    #+END_SRC
 
-expect many failures.  Non-system-libc, i.e. using the Mes C Library is currently WIP.
+expect many failures.  Non-system-libc, i.e. using the MES C Library is currently WIP.
 
-* Porting GNU Mes to x86_64
+* Porting GNU MES to x86_64
 
 The x86_64 port is almost done, only a few bugs remain.  The Guix
 bootstrap for x86_64 uses x86 mes and that is not expected to change.
 
-* Porting GNU Mes to GNU/Hurd
+* Porting GNU MES to GNU/Hurd
 
 The Hurd port can be found in wip-hurd on savannah.  For development, we
 use a Debian GNU/Hurd vm.
 
-* Porting GNU Mes to FreeBSD
+* Porting GNU MES to FreeBSD
 The FreeBSD port can be found in wip-freebsd on savannah.
 
 * Porting the Reduced Binary Seed bootstrap to NixOS
@@ -67,9 +67,9 @@ such as Debian, two things need to happen: the bootstrap must be ported
 and the distribution build process needs to change to start from a only
 binary seed.
 
-The porting aspect is probably easiest: we start by packaging GNU Mes as
-a regular package.  Having Mes built as a regular package, we can then
-build a bootstrap Mes.  This bootstrap Mes can be used to build tinycc,
+The porting aspect is probably easiest: we start by packaging GNU MES as
+a regular package.  Having MES built as a regular package, we can then
+build a bootstrap MES.  This bootstrap MES can be used to build tinycc,
 and so on.
 
 Once we have shown that the Debian base system can be bootstrapped from

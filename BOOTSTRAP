@@ -100,8 +100,8 @@ about the bootstrap binaries and compilers?
 *** New solution: Full source bootstrapping path
 
 * How?
-** Software: MesCC-tools, M2-Planet, GNU Mes and MesCC
-** MesCC-tools
+** Software: MESCC-tools, M2-Planet, GNU MES and MESCC
+** MESCC-tools
 
     https://savannah.gnu.org/projects/mescc-tools
 
@@ -119,11 +119,11 @@ be source.
 *** M1: a macro assembler written in M0
 *** hex2: a hex2 linker written in M0
 *** M2-Planet: a self-hosting M2 (C-with-structs) transpiler written in M1
-*** GNU Mes: A Scheme interpreter written in C, with cpp transformed into M2
-*** MesCC: A C compiler written in Scheme
+*** GNU MES: A Scheme interpreter written in C, with cpp transformed into M2
+*** MESCC: A C compiler written in Scheme
 *** tcc-boot: a patched version of TinyCC
 
-** GNU Mes and MesCC
+** GNU MES and MESCC
 
     https://www.gnu.org/software/mes
 

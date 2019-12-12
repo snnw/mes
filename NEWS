@@ -12,23 +12,23 @@ Please send Mes bug reports to bug-mes@gnu.org.
 
 * Changes in 0.22 since 0.21
 ** Core
-*** Mes now builds reproducibly with MesCC, cross distribution
+*** MES now builds reproducibly with MESCC, cross distribution
 Using --with-bootstrap on x86, a bin/mes-mescc is compiled with
 mes+mescc, that shall have sha256sum
 
     9e0bcb1633c58e7bc415f6ea27cee7951d6b0658e13cdc147e992b31a14625fb  bin/mes-mescc
 
 This has been verified on GNU Guix, Debian GNU/Linux and NixOS.
-*** MES now builds reproducibly with Guile+MesCC vs Mes+MesCC.
-*** Mes now builds reproducibly with Tiny CC-built MesCC.
+*** MES now builds reproducibly with Guile+MESCC vs MES+MESCC.
+*** MES now builds reproducibly with Tiny CC-built MESCC.
 *** configure now respects the user's CFLAGS, CPPFLAGS and LDFLAGS.
-*** Mes now supports mescc-tools 0.5.2 next to 0.6.1.
+*** MES now supports mescc-tools 0.5.2 next to 0.6.1.
 This allows introducing the Scheme-only bootstrap without updating or
 adding new bootstrap binary seeds into GNU Guix.
-*** Mes now runs when configured --with-courage on the Hurd:
+*** MES now runs when configured --with-courage on the Hurd:
     GNU debian 0.9 GNU-Mach 1.8+git20170609-486/Hurd-0.9 i686-AT386 GNU
 Note that mescc does not run; fork and exec are not yet implemented.
-*** Mes now configures --with-courage on x86-FreeBSD 12.1
+*** MES now configures --with-courage on x86-FreeBSD 12.1
 The initial ELF scaffold tests: exit-42.S, 0exit-42.hex2,
 body-exit-42.hex2, hello-mes.S, 0hello-mes.hex2, body-hello-mes.hex2
 pass.
@@ -36,8 +36,8 @@ pass.
 This adds the reproducible bootstrap build of bin/mes-mescc, using
 mes+mescc.
 *** configure prefers $CC over gcc; tcc over gcc, gcc over cc.
-*** Mes now prints an error when attempting to read a file that does not exist.
-*** Mes no longer depends on GIT.
+*** MES now prints an error when attempting to read a file that does not exist.
+*** MES no longer depends on GIT.
 ** Noteworthy bug fixes
 *** Several annoying build problems were fixed, for non-Guix systems.
 * Changes in 0.21 since 0.20
