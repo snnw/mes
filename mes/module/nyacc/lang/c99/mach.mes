@@ -1,7 +1,7 @@
 ;;; -*-scheme-*-
 
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; This file is part of GNU Mes.
 ;;;
@@ -22,9 +22,13 @@
 
 ;;; Code:
 
-(mes-use-module (mes pretty-print))
-(mes-use-module (mes psyntax))
-(mes-use-module (srfi srfi-1))
-(mes-use-module (srfi srfi-9))
+(mes-use-module (mes guile))
 (mes-use-module (srfi srfi-43))
-(include-from-path "nyacc/lalr.scm")
+
+(mes-use-module (nyacc lang c99 cpp))
+(mes-use-module (nyacc lang util))
+(mes-use-module (nyacc lalr))
+(mes-use-module (nyacc parse))
+(mes-use-module (nyacc lex))
+(mes-use-module (nyacc util))
+(include-from-path "nyacc/lang/c99/mach.scm")

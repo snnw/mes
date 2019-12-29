@@ -20,9 +20,9 @@
 
 ;;; Taken from GNU Guile
 
-(define-module (ice-9 pretty-print)
-  :use-module (ice-9 optargs)
-  :export (pretty-print))
+(define-module (mes pretty-print)
+  #:use-module (ice-9 optargs)
+  #:export (pretty-print))
 
 ;; From SLIB.
 
