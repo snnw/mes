@@ -399,6 +399,7 @@ SCM read_string (SCM port);
 SCM string_append (SCM x);
 SCM string_length (SCM string);
 SCM string_ref (SCM str, SCM k);
+SCM string_set_x (SCM str, SCM k, SCM v);
 // src/struct.mes
 SCM make_struct (SCM type, SCM fields, SCM printer);
 SCM struct_length (SCM x);

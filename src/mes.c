@@ -1729,6 +1729,7 @@ mes_builtins (SCM a)            ///((internal))
   a = init_builtin (builtin_type, "string-append", -1, (function1_t) & string_append, a);
   a = init_builtin (builtin_type, "string-length", 1, (function1_t) & string_length, a);
   a = init_builtin (builtin_type, "string-ref", 2, (function1_t) & string_ref, a);
+  a = init_builtin (builtin_type, "string-set!", 3, (function1_t) & string_set_x, a);
   // src/struct.mes
   a = init_builtin (builtin_type, "make-struct", 3, (function1_t) & make_struct, a);
   a = init_builtin (builtin_type, "struct-length", 1, (function1_t) & struct_length, a);

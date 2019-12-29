@@ -252,3 +252,18 @@ string_ref (SCM str, SCM k)
   char const *p = CSTRING (str);
   return MAKE_CHAR (p[i]);
 }
+
+SCM
+string_set_x (SCM str, SCM k, SCM v)
+{
+  assert (TYPE (str) == TSTRING);
+  assert (TYPE (k) == TNUMBER);
+  assert (TYPE (v) == TCHAR);
+  size_t size = LENGTH (str);
+  size_t i = VALUE (k);
+  if (i > size)
+    error (cell_symbol_system_error, cons (MAKE_STRING0 ("value out of range"), k));
+  char *p = CSTRING (str);
+  p[i] = VALUE (v);
+  return cell_unspecified;
+}
