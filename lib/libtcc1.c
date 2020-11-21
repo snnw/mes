@@ -27,7 +27,13 @@ __divdi3 (double a, double b)
   if (__mes_debug () && !stub)
     eputs ("__divdi3 stub\n");
   stub = 1;
-  return ((long) a / (long) b);
+  long ai = a;
+  long bi = b;
+#if __arm__ && __TINYC__
+  return __mesabi_idiv (ai, bi);
+#else
+  return ai / bi;
+#endif
 }
 
 double
@@ -37,7 +43,13 @@ __moddi3 (double a, double b)
   if (__mes_debug () && !stub)
     eputs ("__moddi3 stub\n");
   stub = 1;
-  return ((long) a % (long) b);
+  long ai = a;
+  long bi = b;
+#if __arm__ && __TINYC__
+  return __mesabi_idiv (ai, bi);
+#else
+  return ai % bi;
+#endif
 }
 
 #if HAVE_LONG_LONG
@@ -52,11 +64,15 @@ __udivdi3 (unsigned long a, long ah, unsigned long b)
   if (__mes_debug () && !stub)
     eputs ("__udivdi3 stub\n");
   stub = 1;
-  if (!b)
-    return 0;
   unsigned long ai = a;
   unsigned long bi = b;
+#if __arm__ && __TINYC__
+  return __mesabi_idiv (ai, bi);
+#else
+  if (!b)
+    return 0;
   return ai / bi;
+#endif
 }
 
 #if HAVE_LONG_LONG
@@ -73,7 +89,11 @@ __umoddi3 (unsigned long a, long ah, unsigned long b)
   stub = 1;
   unsigned long ai = a;
   unsigned long bi = b;
+#if __arm__ && __TINYC__
+  return __mesabi_imod (ai, bi);
+#else
   return ai % bi;
+#endif
 }
 
 #if HAVE_LONG_LONG
@@ -88,13 +108,9 @@ __lshrdi3 (unsigned long a, long ah, long b)
   if (__mes_debug () && !stub)
     eputs ("__lshrdi3 stub\n");
   stub = 1;
-#if 0 // In some instances, this recurses
-  return a >> b;
-#else
   for (int i = 0; i < b; i++)
     a /= 2;
   return a;
-#endif
 }
 
 #if HAVE_LONG_LONG
@@ -109,13 +125,9 @@ __ashldi3 (long a, long ah, long b)
   if (__mes_debug () && !stub)
     eputs ("__ashldi3 stub\n");
   stub = 1;
-#if 0 // In some instances, this recurses
-  return a << b;
-#else
   for (int i = 0; i < b; i++)
     a += a;
   return a;
-#endif
 }
 
 #if HAVE_LONG_LONG
@@ -130,13 +142,9 @@ __ashrdi3 (long a, long ah, long b)
   if (__mes_debug () && !stub)
     eputs ("__ashrdi3 stub\n");
   stub = 1;
-#if 0 // In some instances, this recurses
-  return a >> b;
-#else
   for (int i = 0; i < b; i++)
     a /= 2;
   return a;
-#endif
 }
 
 #if HAVE_LONG_LONG && HAVE_FLOAT
