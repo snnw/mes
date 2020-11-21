@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -220,3 +220,49 @@ __fixsfdi (double a1)
   stub = 1;
   return 0;
 }
+
+#if __arm__ && __TINYC__
+int
+__divsi3 (int num, int den)
+{
+  return __mesabi_idiv (num, den);
+}
+
+double
+__fixunsdfdi (double num, double den)
+{
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("__fixunsdfdi stub\n");
+  stub = 1;
+  return 0;
+}
+
+int
+__fixunsdfsi (int a, int b)
+{
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("__fixunsdfsi stub\n");
+  stub = 1;
+  return 0;
+}
+
+unsigned
+__modsi3 (unsigned num, unsigned den)
+{
+  return __mesabi_umod (num, den);
+}
+
+unsigned
+__udivsi3 (unsigned num, unsigned den)
+{
+  return __mesabi_udiv (num, den);
+}
+
+unsigned
+__umodsi3 (unsigned num, unsigned den)
+{
+  return __mesabi_umod (num, den);
+}
+#endif
