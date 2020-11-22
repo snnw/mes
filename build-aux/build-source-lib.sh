@@ -60,7 +60,7 @@ cat > libtcc1.c <<EOF
 // system:   $mes_system
 
 EOF
-for c in $libc_gnu_SOURCES; do
+for c in $libtcc1_SOURCES; do
     echo "// $c" >> libtcc1.c
     cat ${srcdest}$c >> libtcc1.c
     echo >> libtcc1.c

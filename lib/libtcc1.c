@@ -23,10 +23,12 @@
 double
 __divdi3 (double a, double b)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__divdi3 stub\n");
   stub = 1;
+#endif
   long ai = a;
   long bi = b;
 #if __arm__ && __TINYC__
@@ -39,10 +41,12 @@ __divdi3 (double a, double b)
 double
 __moddi3 (double a, double b)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__moddi3 stub\n");
   stub = 1;
+#endif
   long ai = a;
   long bi = b;
 #if __arm__ && __TINYC__
@@ -60,10 +64,12 @@ unsigned long
 __udivdi3 (unsigned long a, long ah, unsigned long b)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__udivdi3 stub\n");
   stub = 1;
+#endif
   unsigned long ai = a;
   unsigned long bi = b;
 #if __arm__ && __TINYC__
@@ -83,10 +89,12 @@ unsigned long
 __umoddi3 (unsigned long a, long ah, unsigned long b)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__umoddi3 stub\n");
   stub = 1;
+#endif
   unsigned long ai = a;
   unsigned long bi = b;
 #if __arm__ && __TINYC__
@@ -104,10 +112,12 @@ unsigned long
 __lshrdi3 (unsigned long a, long ah, long b)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__lshrdi3 stub\n");
   stub = 1;
+#endif
   for (int i = 0; i < b; i++)
     a /= 2;
   return a;
@@ -121,10 +131,12 @@ long
 __ashldi3 (long a, long ah, long b)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__ashldi3 stub\n");
   stub = 1;
+#endif
   for (int i = 0; i < b; i++)
     a += a;
   return a;
@@ -138,10 +150,12 @@ long
 __ashrdi3 (long a, long ah, long b)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__ashrdi3 stub\n");
   stub = 1;
+#endif
   for (int i = 0; i < b; i++)
     a /= 2;
   return a;
@@ -155,10 +169,12 @@ double
 __floatundixf (unsigned long a)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__floatundixf stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
@@ -169,10 +185,12 @@ unsigned long
 #endif
 __fixunsxfdi (double a1)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__fixunsxfdi stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
@@ -185,10 +203,12 @@ long long
 #endif // !__TINYCC__
 __fixdfdi (double a1)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__fixdfdi stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
@@ -200,10 +220,12 @@ unsigned long
 __fixxfdi (double a1)
 #endif
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__fixxfdi stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
@@ -214,10 +236,12 @@ long
 #endif
 __fixsfdi (double a1)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__fixsfdi stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
@@ -231,20 +255,24 @@ __divsi3 (int num, int den)
 double
 __fixunsdfdi (double num, double den)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__fixunsdfdi stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
 int
 __fixunsdfsi (int a, int b)
 {
+#if !__TINYC__
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("__fixunsdfsi stub\n");
   stub = 1;
+#endif
   return 0;
 }
 
