@@ -48,7 +48,7 @@ ntoab (long x, int base, int signed_p)
   do
     {
       unsigned long i;
-#if __MESC__ && __arm__
+#if __arm__ && (__MESC__ || __TINYC__)
       u = __mesabi_uldiv (u, (unsigned long) base, &i);
 #else
       i = u % base;
