@@ -50,7 +50,7 @@ __moddi3 (double a, double b)
   long ai = a;
   long bi = b;
 #if __arm__ && __TINYC__
-  return __mesabi_idiv (ai, bi);
+  return __mesabi_imod (ai, bi);
 #else
   return ai % bi;
 #endif
