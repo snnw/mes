@@ -245,7 +245,7 @@ __fixsfdi (double a1)
   return 0;
 }
 
-#if __arm__ && __TINYC__
+#if __arm__
 int
 __divsi3 (int num, int den)
 {
