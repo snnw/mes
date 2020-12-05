@@ -161,6 +161,23 @@ __ashrdi3 (long a, long ah, long b)
   return a;
 }
 
+#if !(__arm__ && HAVE_FLOAT)
+double
+#if HAVE_LONG_LONG && HAVE_FLOAT
+__floatundidf (unsigned long long a)
+#else
+__floatundidf (unsigned long a)
+#endif
+{
+#if !__TINYC__
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("__floatundidf stub\n");
+  stub = 1;
+#endif
+  return 0;
+}
+
 #if HAVE_LONG_LONG && HAVE_FLOAT
 long double
 __floatundixf (unsigned long long a)
@@ -245,13 +262,6 @@ __fixsfdi (double a1)
   return 0;
 }
 
-#if __arm__
-int
-__divsi3 (int num, int den)
-{
-  return __mesabi_idiv (num, den);
-}
-
 double
 __fixunsdfdi (double num, double den)
 {
@@ -274,6 +284,40 @@ __fixunsdfsi (int a, int b)
   stub = 1;
 #endif
   return 0;
+}
+
+#endif // !(__arm__ && HAVE_FLOAT)
+
+#if __arm__
+
+int
+__floatdisf (int a, int b)
+{
+#if !__TINYC__
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("__floatdisf stub\n");
+  stub = 1;
+#endif
+  return 0;
+}
+
+int
+__floatdidf (int a, int b)
+{
+#if !__TINYC__
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("__floatdidf stub\n");
+  stub = 1;
+#endif
+  return 0;
+}
+
+int
+__divsi3 (int num, int den)
+{
+  return __mesabi_idiv (num, den);
 }
 
 unsigned
