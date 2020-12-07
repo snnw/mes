@@ -78,6 +78,7 @@ _start ()
 #else //__TINYC__
 void
 _start ()
+{
 #if 0
   __asm__ (".int 0xe320f000\n"); //nop   {0}
   __asm__ (".int 0xe320f000\n"); //nop   {0}
