@@ -43,28 +43,28 @@ longjmp (jmp_buf env, int val)
   // *INDENT-ON*
   // not reached
 }
+
 #else //__TINYC__
-__asm__ (".global longjmp\n");
-__asm__ ("longjmp:\n");
-__asm__ (".int 0xe52db004\n"); //push  {fp}      ; (str fp, [sp, #-4]!)
-__asm__ (".int 0xe28db000\n"); //add   fp, sp, #0
-__asm__ (".int 0xe24dd00c\n"); //sub   sp, sp, #12
-__asm__ (".int 0xe50b0008\n"); //str   r0, [fp, #-8]
-__asm__ (".int 0xe50b100c\n"); //str   r1, [fp, #-12]
-__asm__ (".int 0xe51b3008\n"); //ldr   r3, [fp, #-8]
-__asm__ (".int 0xe51b200c\n"); //ldr   r2, [fp, #-12]
-__asm__ (".int 0xe1a00003\n"); //mov   r0, r3
-__asm__ (".int 0xe1a01002\n"); //mov   r1, r2
-__asm__ (".int 0xe3510000\n"); //cmp   r1, #0
-__asm__ (".int 0x03a01001\n"); //moveq r1, #1
-__asm__ (".int 0xe490d004\n"); //ldr   sp, [r0], #4
-__asm__ (".int 0xe490e004\n"); //ldr   lr, [r0], #4
-__asm__ (".int 0xe8b00ff0\n"); //ldm   r0!, {r4, r5, r6, r7, r8, r9, sl, fp}
-__asm__ (".int 0xe1a00001\n"); //mov   r0, r1
-__asm__ (".int 0xe320f000\n"); //nop   {0}
-__asm__ (".int 0xe28bd000\n"); //add   sp, fp, #0
-__asm__ (".int 0xe49db004\n"); //pop   {fp}      ; (ldr fp, [sp], #4)
-__asm__ (".int 0xe12fff1e\n"); //bx    lr
+void
+__attribute__ ((noinline))
+longjmp (jmp_buf env, int val)
+{
+  //__asm__ (".int 0xe50b0008\n"); //str   r0, [fp, #-8]
+  //__asm__ (".int 0xe50b100c\n"); //str   r1, [fp, #-12]
+  //__asm__ (".int 0xe51b3008\n"); //ldr   r3, [fp, #-8]
+  //__asm__ (".int 0xe51b200c\n"); //ldr   r2, [fp, #-12]
+
+  // __asm__ (".int 0xe1a00003\n"); //mov   r0, r3
+  // __asm__ (".int 0xe1a01002\n"); //mov   r1, r2
+
+  __asm__ (".int 0xe3510000\n"); //cmp   r1, #0
+  __asm__ (".int 0x03a01001\n"); //moveq r1, #1
+  __asm__ (".int 0xe490d004\n"); //ldr   sp, [r0], #4
+  __asm__ (".int 0xe490e004\n"); //ldr   lr, [r0], #4
+  __asm__ (".int 0xe8b00ff0\n"); //ldm   r0!, {r4, r5, r6, r7, r8, r9, sl, fp}
+  __asm__ (".int 0xe1a00001\n"); //mov   r0, r1
+  __asm__ (".int 0xe320f000\n"); //nop   {0}
+}
 #endif //__TINYC__
 
 #if !__TINYC__
@@ -86,20 +86,15 @@ setjmp (jmp_buf env)
   return 0;
 }
 #else //__TINYC__
-__asm__ (".global setjmp\n");
-__asm__ ("setjmp:\n");
-__asm__ (".int 0xe52db004\n"); //push  {fp}      ; (str fp, [sp, #-4]!)
-__asm__ (".int 0xe28db000\n"); //add   fp, sp, #0
-__asm__ (".int 0xe24dd00c\n"); //sub   sp, sp, #12
-__asm__ (".int 0xe50b0008\n"); //str   r0, [fp, #-8]
-__asm__ (".int 0xe51b3008\n"); //ldr   r3, [fp, #-8]
-__asm__ (".int 0xe1a00003\n"); //mov   r0, r3
-__asm__ (".int 0xe480d004\n"); //str   sp, [r0], #4
-__asm__ (".int 0xe480e004\n"); //str   lr, [r0], #4
-__asm__ (".int 0xe8a00ff0\n"); //stmia r0!, {r4, r5, r6, r7, r8, r9, sl, fp}
-__asm__ (".int 0xe3a03000\n"); //mov   r3, #0
-__asm__ (".int 0xe1a00003\n"); //mov   r0, r3
-__asm__ (".int 0xe28bd000\n"); //add   sp, fp, #0
-__asm__ (".int 0xe49db004\n"); //pop   {fp}      ; (ldr fp, [sp], #4)
-__asm__ (".int 0xe12fff1e\n"); //bx    ylr
+int
+__attribute__ ((noinline))
+setjmp (jmp_buf env)
+{
+  __asm__ (".int 0xe480d004\n"); //str   sp, [r0], #4
+  __asm__ (".int 0xe480e004\n"); //str   lr, [r0], #4
+  __asm__ (".int 0xe8a00ff0\n"); //stmia r0!, {r4, r5, r6, r7, r8, r9, sl, fp}
+  // __asm__ (".int 0xe3a03000\n"); //mov   r3, #0
+  // __asm__ (".int 0xe1a00003\n"); //mov   r0, r3
+  __asm__ (".int 0xe3a00000\n"); // mov   r0, #0
+}
 #endif //__TINYC__
