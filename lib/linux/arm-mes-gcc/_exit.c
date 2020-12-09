@@ -44,8 +44,8 @@ void
 _exit (int code)
 {
   int c = SYS_exit;
-  __asm__ (".int 0xe51b7004\n"); //ldr  r7, [fp, #-4] ; "c"
-  __asm__ (".int 0xe1a00000\n"); //mov  r0, r0
+  __asm__ (".int 0xe51b7004\n"); //ldr   r7, [fp, #-4] ; "c"
+  __asm__ (".int 0xe59b000c\n"); //ldr   r0, [fp, #12] ; code
   __asm__ (".int 0xef000000\n"); //svc   0x00000000
 }
 #endif //__TINYC__
