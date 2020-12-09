@@ -49,6 +49,9 @@ _write (int filedes, void const *buffer, size_t size)
   long r;
   int c = SYS_write;
   __asm__ (".int 0xe51b7008\n"); //ldr   r7, [fp, #-8] ; <c>
+  __asm__ (".int 0xe59b000c\n"); //ldr   r0, [fp, #12] ; filedes
+  __asm__ (".int 0xe59b1010\n"); //ldr   r1, [fp, #16] ; buffer
+  __asm__ (".int 0xe59b2014\n"); //ldr   r2, [fp, #20] ; size
   __asm__ (".int 0xef000000\n"); //svc   0x00000000
   __asm__ (".int 0xe50b0004\n"); //str   r0, [fp, #-4]
   return r;
