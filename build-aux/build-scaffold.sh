@@ -47,6 +47,10 @@ case "$mes_cpu" in
         stage0_arch=40
         stage0_cpu=armv7l
         ;;
+    aarch64)
+        stage0_arch=80
+        stage0_cpu=aarch64
+        ;;
     x86_64)
         stage0_arch=2
         stage0_cpu=amd64

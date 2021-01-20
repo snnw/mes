@@ -207,6 +207,8 @@ esac
 case "$mes_cpu" in
     x86_64)
         mes_bits=64;;
+    aarch64)
+        mes_bits=64;;
     *)
         mes_bits=32;;
 esac
