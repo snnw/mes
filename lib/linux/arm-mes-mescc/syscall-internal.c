@@ -38,7 +38,7 @@ __sys_call2_internal (int sys_call, int one, int two)
 
 /* Returns < 0 on error (errno-like value from kernel), or 0 on success */
 int
-__raise (int signum)
+raise (int signum)
 {
   int pid = __sys_call_internal (SYS_getpid);
   if (pid < 0)

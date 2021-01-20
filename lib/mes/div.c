@@ -30,12 +30,12 @@ typedef struct
   long rem;
 } ldiv_t;
 
-int __raise(int);
+int raise(int);
 
 void
 __mesabi_div0 (void)
 {
-  if (__raise(SIGFPE) < 0) { /* could not raise SIGFPE */
+  if (raise(SIGFPE) < 0) { /* could not raise SIGFPE */
     /* Fail in any way possible */
     unsigned char* x = (unsigned char*) 0;
     *x = 2;

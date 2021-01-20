@@ -20,12 +20,12 @@
 
 #include <signal.h>
 
-int __raise(int);
+int raise(int);
 
 void
 abort (void)
 {
-  if (__raise(SIGABRT) < 0) { /* could not raise SIGABRT */
+  if (raise(SIGABRT) < 0) { /* could not raise SIGABRT */
     /* Fail in any way possible */
     unsigned char* x = (unsigned char*) 0;
     *x = 2;
