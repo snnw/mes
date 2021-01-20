@@ -1426,6 +1426,9 @@ mes_environment (int argc, char *argv[])
   arch = "arm";
 #elif __x86_64__
   arch = "x86_64";
+#elif __aarch64__
+#warning aarch64 port not supported yet
+  arch = "aarch64";
 #else
 #error arch not supported
 #endif
