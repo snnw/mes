@@ -26,7 +26,11 @@
 int
 _open3 (char const *file_name, int flags, int mask)
 {
+#if __aarch64__
+  int r = _sys_call4 (SYS_openat, (long) AT_FDCWD, (long) file_name, (int) flags, (int) mask);
+#else
   int r = _sys_call3 (SYS_open, (long) file_name, (int) flags, (int) mask);
+#endif
   __ungetc_init ();
   if (r > 2)
     {
