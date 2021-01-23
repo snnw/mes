@@ -20,9 +20,15 @@
 
 #include <linux/syscall.h>
 #include <syscall.h>
+#include <signal.h>
 
 int
 fork ()
 {
+#if __aarch64__
+  long flags = SIGCHLD;
+  return _sys_call5 (SYS_clone, flags, 0, NULL, 0, NULL);
+#else
   return _sys_call (SYS_fork);
+#endif
 }

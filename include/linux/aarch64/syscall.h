@@ -28,6 +28,7 @@
 // libc
 #define SYS_brk       214
 #define SYS_clock_gettime 113
+#define SYS_clone 220
 #define SYS_dup       23
 #define SYS_dup3      24
 #define SYS_execve  221

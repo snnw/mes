@@ -26,6 +26,7 @@ long _sys_call1 (long sys_call, long one);
 long _sys_call2 (long sys_call, long one, long two);
 long _sys_call3 (long sys_call, long one, long two, long three);
 long _sys_call4 (long sys_call, long one, long two, long three, long four);
+long _sys_call5 (long sys_call, long one, long two, long three, long four, long five);
 long _sys_call6 (long sys_call, long one, long two, long three, long four, long five, long six);
 
 #endif //__MES_SYSCALL_H
