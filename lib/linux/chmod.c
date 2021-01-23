@@ -25,5 +25,9 @@
 int
 chmod (char const *file_name, mode_t mask)
 {
+#if __aarch64__
+  return _sys_call4 (SYS_fchmodat, AT_FDCWD, (long) file_name, (long) mask, 0);
+#else
   return _sys_call2 (SYS_chmod, (long) file_name, (long) mask);
+#endif
 }
