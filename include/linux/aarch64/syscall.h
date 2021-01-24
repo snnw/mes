@@ -26,6 +26,7 @@
 #define SYS_lseek  62
 
 // libc
+#define SYS_brk       214
 #define SYS_faccessat 48
 
 // libc+tcc
