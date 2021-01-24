@@ -39,6 +39,7 @@
 #define SYS_gettimeofday 169
 #define SYS_ioctl   29
 #define SYS_openat    56
+#define SYS_read    63
 
 // libc+tcc
 
