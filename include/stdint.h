@@ -93,7 +93,7 @@ typedef unsigned uintmax_t;
 #define LLONG_MIN INT64_MIN
 #define LLONG_MAX INT64_MAX
 #define SIZE_MAX UINT32_MAX
-#elif __x86_64__
+#elif __x86_64__ || __aarch64__
 #define LONG_MIN INT64_MIN
 #define LONG_MAX INT64_MAX
 #define UINT_MAX UINT32_MAX
