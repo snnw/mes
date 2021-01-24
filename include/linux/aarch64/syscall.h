@@ -20,4 +20,7 @@
 #ifndef __MES_LINUX_AARCH64_SYSCALL_H
 #define __MES_LINUX_AARCH64_SYSCALL_H 1
 
+// libmes
+#define SYS_lseek  62
+
 #endif // __MES_LINUX_AARCH64_SYSCALL_H
