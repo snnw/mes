@@ -36,6 +36,7 @@
 #define SYS_fchmodat   53
 #define SYS_fsync   82
 #define SYS_getcwd 17
+#define SYS_getpid    172
 #define SYS_gettimeofday 169
 #define SYS_ioctl   29
 #define SYS_openat    56
