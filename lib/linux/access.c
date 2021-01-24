@@ -24,5 +24,9 @@
 int
 access (char const *file_name, int how)
 {
+#if __aarch64__
+  return _sys_call3 (SYS_faccessat, AT_FDCWD, (long) file_name, (int) how);
+#else
   return _sys_call2 (SYS_access, (long) file_name, (int) how);
+#endif
 }

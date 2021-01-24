@@ -20,7 +20,14 @@
 #ifndef __MES_LINUX_AARCH64_SYSCALL_H
 #define __MES_LINUX_AARCH64_SYSCALL_H 1
 
+#define AT_FDCWD -100
+
 // libmes
 #define SYS_lseek  62
+
+// libc
+#define SYS_faccessat 48
+
+// libc+tcc
 
 #endif // __MES_LINUX_AARCH64_SYSCALL_H
