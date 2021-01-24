@@ -34,6 +34,7 @@
 #define SYS_execve  221
 #define SYS_faccessat 48
 #define SYS_fchmodat   53
+#define SYS_fsync   82
 
 // libc+tcc
 
