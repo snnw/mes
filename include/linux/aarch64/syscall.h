@@ -35,6 +35,7 @@
 #define SYS_faccessat 48
 #define SYS_fchmodat   53
 #define SYS_fsync   82
+#define SYS_getcwd 17
 
 // libc+tcc
 
