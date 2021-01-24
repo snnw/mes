@@ -24,5 +24,11 @@
 int
 dup2 (int old, int new)
 {
+  if (old == new)
+    return new;
+#if __aarch64__
+  return _sys_call3 (SYS_dup3, (int) old, (int) new, /*flags*/0);
+#else
   return _sys_call2 (SYS_dup2, (int) old, (int) new);
+#endif
 }
