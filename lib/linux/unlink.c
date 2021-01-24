@@ -24,5 +24,9 @@
 int
 unlink (char const *file_name)
 {
+#if __aarch64__
+  return _sys_call2 (SYS_unlinkat, AT_FDCWD, (long) file_name);
+#else
   return _sys_call1 (SYS_unlink, (long) file_name);
+#endif
 }

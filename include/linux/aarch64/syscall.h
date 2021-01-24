@@ -40,6 +40,7 @@
 #define SYS_ioctl   29
 #define SYS_openat    56
 #define SYS_read    63
+#define SYS_unlinkat 35
 
 // libc+tcc
 
